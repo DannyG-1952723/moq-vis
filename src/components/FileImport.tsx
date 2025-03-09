@@ -10,18 +10,18 @@ import { LogFile } from "@/model/LogFile";
 export default function FileImport() {
     const [files, setFiles] = useState<LogFile[]>([]);
 
-    // TODO: Implement
     function handleImport(event: ChangeEvent<HTMLInputElement>) {
         // Checks if it isn't undefined and isn't null
         if (!event.target.files) {
             return;
         }
 
-        let newFiles: LogFile[] = [];
+        const newFiles: LogFile[] = [];
 
         for (let i = 0; i < event.target.files.length; i++) {
             const file = event.target.files[i];
 
+            // TODO: Fix so files aren't being listed when invalid (they are listed anyway when invalid now)
             try {
                 if (!containsFile(files, file.name)) {
                     newFiles.push(new LogFile(file));
@@ -52,7 +52,7 @@ export default function FileImport() {
             <label htmlFor="files">Import file(s): </label>
             <input type="file" id="files" name="files" accept=".sqlog" multiple onChange={handleImport} />
             <p>Only <InlineCode>.sqlog</InlineCode> files are currently supported</p>
-            <p>Files won't be uploaded to the server</p>
+            <p>Files won&apos;t be uploaded to the server</p>
             <FileList files={files} />
         </form>
     );

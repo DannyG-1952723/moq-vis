@@ -1,6 +1,8 @@
 // List of FileDetails components
 
 import { LogFile } from "@/model/LogFile";
+import FileDetails from "./FileDetails";
+import { MouseEvent } from "react";
 
 interface FileListProps {
     files: LogFile[];
@@ -8,7 +10,12 @@ interface FileListProps {
 
 // TODO: Implement
 export default function FileList({ files }: FileListProps) {
-    const fileElements = files.map((file) => <li key={file.name}>{file.name}</li>);
+    function handleDelete(event: MouseEvent<HTMLButtonElement>) {
+        event.stopPropagation();
+        console.log("Delete clicked: " + event.target);
+    }
+
+    const fileElements = files.map((file) => <FileDetails key={file.name} file={file} handleDelete={handleDelete} />);
 
     return <ul>{fileElements}</ul>;
 }

@@ -1,4 +1,6 @@
 // TODO: Fix error handling
+// TODO: Fix serialization of some classes (like Epoch)
+// These classes use snake_case instead of camelCase to serialize easily back into the original format
 
 import { DateTime } from "luxon";
 
@@ -53,11 +55,11 @@ export class LogFile {
 }
 
 class LogFileDetails {
-    fileSchema: string;
-    serializationFormat: string;
+    file_schema: string;
+    serialization_format: string;
     title: string | undefined;
     description: string | undefined;
-    eventSchemas: string[];
+    event_schemas: string[];
     trace: LogFileTrace;
 
     // JSON.parse() returns any
@@ -66,11 +68,11 @@ class LogFileDetails {
             throw new InvalidFileError(fileName);
         }
 
-        this.fileSchema = json["file_schema"];
-        this.serializationFormat = json["serialization_format"];
+        this.file_schema = json["file_schema"];
+        this.serialization_format = json["serialization_format"];
         this.title = json["title"];
         this.description = json["description"];
-        this.eventSchemas = json["event_schemas"];
+        this.event_schemas = json["event_schemas"];
         this.trace = new LogFileTrace(json["trace"], fileName);
     }
 }
@@ -78,44 +80,44 @@ class LogFileDetails {
 class LogFileTrace {
     title: string | undefined;
     description: string | undefined;
-    commonFields: CommonFields | undefined;
-    VantagePoint: VantagePoint | undefined;
+    common_fields: CommonFields | undefined;
+    vantage_point: VantagePoint | undefined;
 
     constructor(json: any, fileName: string) {
         this.title = json["title"];
         this.description = json["description"];
 
         if ("common_fields" in json) {
-            this.commonFields = new CommonFields(json["common_fields"], fileName);
+            this.common_fields = new CommonFields(json["common_fields"], fileName);
         }
 
         if ("vantage_point" in json) {
-            this.VantagePoint = new VantagePoint(json["vantage_point"], fileName);
+            this.vantage_point = new VantagePoint(json["vantage_point"], fileName);
         }
     }
 }
 
 class CommonFields {
     path: string | undefined;
-    timeFormat: TimeFormat | undefined;
-    referenceTime: ReferenceTime | undefined;
-    protocolTypes: string[] | undefined;
-    groupId: string | undefined;
+    time_format: TimeFormat | undefined;
+    reference_time: ReferenceTime | undefined;
+    protocol_types: string[] | undefined;
+    group_id: string | undefined;
     // TODO: Maybe replace 'any'
-    customFields: any;
+    custom_fields: any;
 
     constructor(json: any, fileName: string) {
         this.path = json["path"];
-        this.protocolTypes = json["protocol_types"];
-        this.groupId = json["group_id"];
-        this.customFields = json["custom_fields"];
+        this.protocol_types = json["protocol_types"];
+        this.group_id = json["group_id"];
+        this.custom_fields = json["custom_fields"];
 
         if ("time_format" in json && typeof json["time_format"] === "string") {
-            this.timeFormat = stringToTimeFormat(json["time_format"], fileName);
+            this.time_format = stringToTimeFormat(json["time_format"], fileName);
         }
 
         if ("reference_time" in json) {
-            this.referenceTime = new ReferenceTime(json["reference_time"], fileName);
+            this.reference_time = new ReferenceTime(json["reference_time"], fileName);
         }
     }
 }
@@ -139,20 +141,20 @@ function stringToTimeFormat(string: string, fileName: string): TimeFormat {
 }
 
 class ReferenceTime {
-    clockType: ClockType;
+    clock_type: ClockType;
     epoch: Epoch;
     // TODO: Figure out the exact type
-    wallClockTime: DateTime | undefined;
+    wall_clock_time: DateTime | undefined;
 
     constructor(json: any, fileName: string) {
         if (!("clock_type" in json) || !("epoch" in json)) {
             throw new InvalidFileError(fileName);
         }
 
-        this.clockType = new ClockType(json["clock_type"]);
+        this.clock_type = new ClockType(json["clock_type"]);
         this.epoch = new Epoch(json["epoch"]);
         // TODO: Add error handling
-        this.wallClockTime = DateTime.fromISO(json["wall_clock_time"]);
+        this.wall_clock_time = DateTime.fromISO(json["wall_clock_time"]);
     }
 }
 
@@ -230,12 +232,12 @@ class LogFileEvent {
     // TODO: Maybe change
     data: any;
     path: string | undefined;
-    timeFormat: TimeFormat | undefined;
-    protocolTypes: string[] | undefined;
-    groupId: string | undefined;
-    systemInfo: SystemInformation | undefined;
+    time_format: TimeFormat | undefined;
+    protocol_types: string[] | undefined;
+    group_id: string | undefined;
+    system_information: SystemInformation | undefined;
     // TODO: Maybe replace 'any'
-    customFields: any;
+    custom_fields: any;
 
     constructor(json: any, fileName: string) {
         if (!("time" in json) || !("name" in json)) {
@@ -247,16 +249,16 @@ class LogFileEvent {
         this.name = json["name"];
         this.data = json["data"];
         this.path = json["path"];
-        this.protocolTypes = json["protocol_types"];
-        this.groupId = json["group_id"];
-        this.customFields = json["custom_fields"];
+        this.protocol_types = json["protocol_types"];
+        this.group_id = json["group_id"];
+        this.custom_fields = json["custom_fields"];
 
         if ("time_format" in json && typeof json["time_format"] === "string") {
-            this.timeFormat = stringToTimeFormat(json["time_format"], fileName);
+            this.time_format = stringToTimeFormat(json["time_format"], fileName);
         }
 
         if ("system_information" in json) {
-            this.systemInfo = new SystemInformation(json["system_information"], fileName);
+            this.system_information = new SystemInformation(json["system_information"], fileName);
         }
 
     }

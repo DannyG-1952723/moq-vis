@@ -17,5 +17,5 @@ export default function FileList({ files }: FileListProps) {
 
     const fileElements = files.map((file) => <FileDetails key={file.name} file={file} handleDelete={handleDelete} />);
 
-    return <ul>{fileElements}</ul>;
+    return <div className="flex flex-wrap mt-4">{fileElements}</div>;
 }

@@ -21,7 +21,7 @@ export default function FileDetails({ file, handleDelete }: FileDetailsProps) {
 
     return (
         <>
-            <div onClick={() => setShowModal(true)} className="flex cursor-pointer items-center max-w-xs px-5 py-3 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 gap-x-4">
+            <div onClick={() => setShowModal(true)} className="mr-2 mb-2 flex cursor-pointer items-center w-2xs px-5 py-3 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 gap-x-4">
                 <ToggleButton />
                 <p className="flex-grow truncate">{file.name}</p>
                 <IconButton type="button" onClick={handleDelete} icon={<Trash />} />

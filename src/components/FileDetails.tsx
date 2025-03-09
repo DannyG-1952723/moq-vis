@@ -4,7 +4,7 @@
 // Click handler that shows file details on click (and maybe extra options regarding showing MoQ and/or QUIC, which connections to show, ...)
 
 import { LogFile } from "@/model/LogFile";
-import { MouseEventHandler, useState } from "react";
+import { MouseEvent, useState } from "react";
 import ToggleButton from "./ToggleButton";
 import IconButton from "./IconButton";
 import Trash from "./icons/Trash";
@@ -13,7 +13,7 @@ import { createPortal } from "react-dom";
 
 interface FileDetailsProps {
     file: LogFile;
-    handleDelete: MouseEventHandler;
+    handleDelete: (event: MouseEvent<HTMLButtonElement>) => void;
 }
 
 export default function FileDetails({ file, handleDelete }: FileDetailsProps) {

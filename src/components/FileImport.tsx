@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, MouseEvent, useState } from "react";
 
 import FileList from "./FileList";
 import InlineCode from "./InlineCode";
@@ -38,6 +38,15 @@ export default function FileImport() {
         setFiles([...files, ...newFiles])
     }
 
+    function handleDelete(event: MouseEvent<HTMLButtonElement>, fileName: string) {
+        event.stopPropagation();
+
+        const newFiles = [...files];
+        const fileIndex = newFiles.findIndex(file => file.name === fileName);
+        newFiles.splice(fileIndex, 1);
+        setFiles(newFiles);
+    }
+
     // Just checks based on file name
     function containsFile(files: LogFile[], fileName: string): boolean {
         for (let i = 0; i < files.length; i++) {
@@ -54,7 +63,7 @@ export default function FileImport() {
             <FileInput handleImport={handleImport} />
             <Note>Only <InlineCode>.sqlog</InlineCode> files are currently supported</Note>
             <Note>Files won&apos;t be uploaded to the server</Note>
-            <FileList files={files} />
+            <FileList files={files} handleDelete={handleDelete} />
         </form>
     );
 }

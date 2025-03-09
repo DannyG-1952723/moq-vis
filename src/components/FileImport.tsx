@@ -6,6 +6,7 @@ import FileList from "./FileList";
 import InlineCode from "./InlineCode";
 
 import { LogFile } from "@/model/LogFile";
+import FileInput from "./FileInput";
 
 export default function FileImport() {
     const [files, setFiles] = useState<LogFile[]>([]);
@@ -49,8 +50,7 @@ export default function FileImport() {
 
     return (
         <form>
-            <label htmlFor="files">Import file(s): </label>
-            <input type="file" id="files" name="files" accept=".sqlog" multiple onChange={handleImport} />
+            <FileInput handleImport={handleImport} />
             <p>Only <InlineCode>.sqlog</InlineCode> files are currently supported</p>
             <p>Files won&apos;t be uploaded to the server</p>
             <FileList files={files} />

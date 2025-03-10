@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export default function Header() {
@@ -9,7 +10,7 @@ export default function Header() {
     const inactiveLinkStyling = "block p-0 text-gray-900 rounded-sm hover:bg-transparent border-0 hover:text-blue-700 dark:hover:text-blue-500 dark:hover:text-white dark:hover:bg-transparent";
 
     const links = [{ name: "Files", path: "/" }, { name: "Sequence", path: "/sequence" }];
-    const linkElements = links.map((link) => <li key={link.path}><a href={link.path} className={pathName === link.path ? activeLinkStyling : inactiveLinkStyling}>{link.name}</a></li>);
+    const linkElements = links.map((link) => <li key={link.path}><Link href={link.path} className={pathName === link.path ? activeLinkStyling : inactiveLinkStyling}>{link.name}</Link></li>);
 
     return (
         <nav className="border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-700">

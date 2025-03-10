@@ -33,16 +33,19 @@ export function useFilesDispatch() {
 export class FileAction {
     type: ActionType;
     files: LogFile[];
+    active: boolean;
 
-    constructor(type: ActionType, files: LogFile[]) {
+    constructor(type: ActionType, files: LogFile[], active: boolean) {
         this.type = type;
         this.files = files;
+        this.active = active;
     }
 }
 
 export enum ActionType {
     Add,
-    Delete
+    Delete,
+    Toggle
 }
 
 function filesReducer(files: LogFile[], action: FileAction) {
@@ -55,6 +58,19 @@ function filesReducer(files: LogFile[], action: FileAction) {
             }
 
             return files.filter(file => file.name !== action.files[0].name);
+        }
+        case ActionType.Toggle: {
+            if (action.files.length !== 1) {
+                throw new Error("Provide a single file to delete");
+            }
+
+            return files.map(file => {
+                if (file.name === action.files[0].name) {
+                    file.active = action.active;
+                }
+
+                return file;
+            });
         }
         default:
             return files;

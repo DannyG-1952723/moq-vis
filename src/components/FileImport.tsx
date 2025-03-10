@@ -35,7 +35,7 @@ export default function FileImport() {
             }
         }
 
-        dispatch!(new FileAction(ActionType.Add, newFiles));
+        dispatch!(new FileAction(ActionType.Add, newFiles, true));
     }
 
     // Just checks based on file name

@@ -1,21 +1,13 @@
 "use client";
 
-import { LogFile } from "@/model/LogFile";
 import FileDetails from "./FileDetails";
-import { MouseEvent } from "react";
 import Note from "./Note";
-import { ActionType, FileAction, useFiles, useFilesDispatch } from "@/contexts/FilesContext";
+import { useFiles } from "@/contexts/FilesContext";
 
 export default function FileList() {
     const files = useFiles();
-    const dispatch = useFilesDispatch();
 
-    function handleDelete(event: MouseEvent<HTMLButtonElement>, file: LogFile) {
-        event.stopPropagation();
-        dispatch!(new FileAction(ActionType.Delete, [file]));
-    }
-
-    const fileElements = files.map((file) => <FileDetails key={file.name} file={file} handleDelete={(event: MouseEvent<HTMLButtonElement>) => handleDelete(event, file)} />);
+    const fileElements = files.map((file) => <FileDetails key={file.name} file={file} />);
     const note = <Note>No files have been imported</Note>;
 
     return (

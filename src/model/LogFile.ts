@@ -8,11 +8,13 @@ import { InvalidFileError } from "@/errors/InvalidFileError";
 
 export class LogFile {
     name: string;
+    active: boolean;
     details!: LogFileDetails;
     events: LogFileEvent[];
 
     constructor(file: File) {
         this.name = file.name;
+        this.active = true;
         this.events = [];
 
         try {

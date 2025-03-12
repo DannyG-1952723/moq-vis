@@ -1,11 +1,11 @@
 import { ChangeEvent } from "react";
 
 import FileList from "./FileList";
-import InlineCode from "./InlineCode";
+import InlineCode from "@/components/InlineCode";
 
 import { LogFile } from "@/model/LogFile";
 import FileInput from "./FileInput";
-import Note from "./Note";
+import Note from "@/components/Note";
 import { ActionType, FileAction, useFiles, useFilesDispatch } from "@/contexts/FilesContext";
 
 export default function FileImport() {

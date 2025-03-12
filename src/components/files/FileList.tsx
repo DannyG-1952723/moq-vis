@@ -1,7 +1,7 @@
 "use client";
 
 import FileDetails from "./FileDetails";
-import Note from "./Note";
+import Note from "@/components/Note";
 import { useFiles } from "@/contexts/FilesContext";
 
 export default function FileList() {

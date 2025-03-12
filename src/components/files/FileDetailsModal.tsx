@@ -1,7 +1,7 @@
 import { MouseEventHandler } from "react";
-import CodeBlock from "./CodeBlock";
-import IconButton from "./IconButton";
-import Close from "./icons/Close";
+import CodeBlock from "@/components/CodeBlock";
+import IconButton from "@/components/IconButton";
+import Close from "@/components/icons/Close";
 
 interface FileDetailsModalProps {
     fileName: string;

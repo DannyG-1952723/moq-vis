@@ -5,9 +5,9 @@
 
 import { LogFile } from "@/model/LogFile";
 import { ChangeEvent, MouseEvent, useState } from "react";
-import ToggleButton from "./ToggleButton";
-import IconButton from "./IconButton";
-import Trash from "./icons/Trash";
+import ToggleButton from "@/components/ToggleButton";
+import IconButton from "@/components/IconButton";
+import Trash from "@/components/icons/Trash";
 import FileDetailsModal from "./FileDetailsModal";
 import { createPortal } from "react-dom";
 import { ActionType, FileAction, useFilesDispatch } from "@/contexts/FilesContext";

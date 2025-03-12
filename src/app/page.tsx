@@ -1,6 +1,6 @@
 "use client";
 
-import FileImport from "@/components/FileImport";
+import FileImport from "@/components/files/FileImport";
 
 export default function Page() {
     return (

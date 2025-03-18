@@ -227,7 +227,7 @@ function stringToVantagePointType(string: string, fileName: string): VantagePoin
     }
 }
 
-class LogFileEvent {
+export class LogFileEvent {
     // TODO: Maybe change due to how numbers in JS work
     time: number;
     name: string;
@@ -263,6 +263,16 @@ class LogFileEvent {
             this.system_information = new SystemInformation(json["system_information"], fileName);
         }
 
+    }
+}
+
+export class FileEvent {
+    fileName: string;
+    logFileEvent: LogFileEvent;
+
+    constructor(fileName: string, logFileEvent: LogFileEvent) {
+        this.fileName = fileName;
+        this.logFileEvent = logFileEvent;
     }
 }
 

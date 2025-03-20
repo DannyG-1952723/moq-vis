@@ -1,10 +1,9 @@
 import { useFiles } from "@/contexts/FilesContext";
 import * as d3 from "d3";
 import Note from "../Note";
-import Event from "./Event";
 import { FileEvent, LogFile, LogFileEvent } from "@/model/LogFile";
-import Axis from "./Axis";
 import { Network } from "@/model/Network";
+import Connection from "./Connection";
 
 function eventsToFileEvents(eventList: LogFileEvent[], fileName: string): FileEvent[] {
     return eventList.map(event => new FileEvent(fileName, event));
@@ -45,13 +44,12 @@ export default function SequenceDiagram() {
     const innerHeight = height - margin.top - margin.bottom;
 
     const xScale = d3.scalePoint().domain(activeFiles.map(file => file.name)).range([0, innerWidth]);
-    const yScale = d3.scaleLinear().domain([0, allEvents.length - 1]).range([innerHeight - axisMargin - eventBlockSize / 2, axisMargin + eventBlockSize / 2]);
+    const yScale = d3.scaleLinear().domain([0, allEvents.length - 1]).range([axisMargin + eventBlockSize / 2, innerHeight - axisMargin - eventBlockSize / 2]);
 
     const diagram = (
         <svg width={width} height={height} className="bg-white border border-gray-200 rounded-lg shadow-inner dark:bg-gray-700 dark:border-gray-700">
             <g transform={`translate(${margin.left}, ${margin.top})`}>
-                {activeFiles.map(file => <Axis key={file.name} xPos={xScale(file.name)! + eventBlockSize / 2} yPos={0} height={innerHeight} fileName={file.name} />)}
-                {allEvents.map((event, index) => <Event event={event} eventNum={index} blockSize={eventBlockSize} xScale={xScale} yScale={yScale} />)}
+                {network.connections.map(conn => <Connection key={conn.startingConn.connId} conn={conn} xScale={xScale} yScale={yScale} height={innerHeight} eventBlockSize={eventBlockSize} />)}
             </g>
         </svg>
     );

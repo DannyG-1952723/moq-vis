@@ -83,33 +83,40 @@ export class Network {
     }
 }
 
-class Connection {
-    connectionNode1: ConnectionNode;
-    connectionNode2: ConnectionNode;
+export class Connection {
+    startingConn: ConnectionNode;
+    acceptingConn: ConnectionNode;
 
-    constructor(connectionNode1: ConnectionNode, connectionNode2: ConnectionNode) {
-        this.connectionNode1 = connectionNode1;
-        this.connectionNode2 = connectionNode2;
+    constructor(connNode1: ConnectionNode, connNode2: ConnectionNode) {
+        // Both nodes have at least 1 event
+        if (connNode1.connEvents[0].event.time < connNode2.connEvents[0].event.time) {
+            this.startingConn = connNode1;
+            this.acceptingConn = connNode2;
+        }
+        else {
+            this.startingConn = connNode2;
+            this.acceptingConn = connNode1;
+        }
     }
 }
 
 class ConnectionNode {
     fileName: string
-    connectionId: string
-    connectionEvents: ConnectionEvent[];
+    connId: string
+    connEvents: ConnectionEvent[];
 
-    constructor(fileName: string, connectionId: string, connectionEvents: ConnectionEvent[] = []) {
+    constructor(fileName: string, connId: string, connEvents: ConnectionEvent[] = []) {
         this.fileName = fileName;
-        this.connectionId = connectionId;
-        this.connectionEvents = connectionEvents;
+        this.connId = connId;
+        this.connEvents = connEvents;
     }
 
     addEvent(event: ConnectionEvent) {
-        this.connectionEvents.push(event);
+        this.connEvents.push(event);
     }
 }
 
-class ConnectionEvent {
+export class ConnectionEvent {
     event: LogFileEvent;
     eventNum: number;
     fileName: string;

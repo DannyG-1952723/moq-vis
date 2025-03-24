@@ -12,9 +12,12 @@ function getEventsFromFiles(events: ConnectionEvent[], logFile: LogFile): Connec
 export class Network {
     nodes: string[];
     connections: Connection[];
+    numEvents: number;
 
     constructor(logFiles: LogFile[]) {
         const allEvents = d3.reduce(logFiles, getEventsFromFiles, []).sort((event1, event2) => event1.event.time - event2.event.time);
+
+        this.numEvents = allEvents.length;
 
         for (let i = 0; i < allEvents.length; i++) {
             allEvents[i].eventNum = i;
@@ -125,5 +128,43 @@ export class ConnectionEvent {
         this.event = event;
         this.eventNum = eventNum;
         this.fileName = fileName;
+    }
+
+    isMessageEvent(): boolean {
+        if (this.event.name.endsWith("created") || this.event.name.endsWith("parsed")) {
+            return true;
+        }
+
+        return (this.event.name.endsWith("session_started") || this.event.name.endsWith("subscription_started"))
+    }
+
+    isCorrespondingEvent(other: ConnectionEvent): boolean {
+        if (this.event.name.endsWith("created") && !other.event.name.endsWith("parsed")) {
+            return false;
+        }
+
+        if (this.event.name.endsWith("session_started") && !other.event.name.endsWith("session_started")) {
+            return false;
+        }
+
+        if (this.event.name.endsWith("subscription_started") && !other.event.name.endsWith("subscription_started")) {
+            return false;
+        }
+
+        // TODO: Compare event data
+        return true;
+    }
+
+    isCreatedEvent(): boolean {
+        if (this.event.name.endsWith("created")) {
+            return true;
+        }
+
+        // TODO: Check event data
+        if (!this.event.name.endsWith("parsed")) {
+            return true;
+        }
+
+        return false;
     }
 }

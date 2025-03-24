@@ -266,16 +266,6 @@ export class LogFileEvent {
     }
 }
 
-export class FileEvent {
-    fileName: string;
-    logFileEvent: LogFileEvent;
-
-    constructor(fileName: string, logFileEvent: LogFileEvent) {
-        this.fileName = fileName;
-        this.logFileEvent = logFileEvent;
-    }
-}
-
 class SystemInformation {
     processorId: number | undefined;
     processId: number | undefined;

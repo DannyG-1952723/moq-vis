@@ -1,22 +1,12 @@
 import { useFiles } from "@/contexts/FilesContext";
 import * as d3 from "d3";
 import Note from "../Note";
-import { FileEvent, LogFile, LogFileEvent } from "@/model/LogFile";
 import { Network } from "@/model/Network";
 import Connection from "./Connection";
-
-function eventsToFileEvents(eventList: LogFileEvent[], fileName: string): FileEvent[] {
-    return eventList.map(event => new FileEvent(fileName, event));
-}
-
-function getEventsFromFiles(events: FileEvent[], logFile: LogFile): FileEvent[] {
-    return events.concat(eventsToFileEvents(logFile.events, logFile.name));
-}
 
 export default function SequenceDiagram() {
     const files = useFiles();
     const activeFiles = files.filter((file) => file.active);
-    const allEvents = d3.reduce(activeFiles, getEventsFromFiles, []).sort((event1, event2) => event2.logFileEvent.time - event1.logFileEvent.time);
 
     const title = <h3 className="block mt-5 mb-2 text-md font-medium text-gray-900 dark:text-white">Sequence diagram</h3>;
 
@@ -38,16 +28,21 @@ export default function SequenceDiagram() {
     const eventBlockSize = 30;
 
     const width = 1280;
-    const height = (allEvents.length - 1) * 50 + eventBlockSize + margin.top + margin.bottom + 2 * axisMargin;
+    const height = (network.numEvents - 1) * 50 + eventBlockSize + margin.top + margin.bottom + 2 * axisMargin;
 
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
     const xScale = d3.scalePoint().domain(activeFiles.map(file => file.name)).range([0, innerWidth]);
-    const yScale = d3.scaleLinear().domain([0, allEvents.length - 1]).range([axisMargin + eventBlockSize / 2, innerHeight - axisMargin - eventBlockSize / 2]);
+    const yScale = d3.scaleLinear().domain([0, network.numEvents - 1]).range([axisMargin + eventBlockSize / 2, innerHeight - axisMargin - eventBlockSize / 2]);
 
     const diagram = (
         <svg width={width} height={height} className="bg-white border border-gray-200 rounded-lg shadow-inner dark:bg-gray-700 dark:border-gray-700">
+            <defs>
+                <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 0 L 10 5 L 0 10 z" />
+                </marker>
+            </defs>
             <g transform={`translate(${margin.left}, ${margin.top})`}>
                 {network.connections.map(conn => <Connection key={conn.startingConn.connId} conn={conn} xScale={xScale} yScale={yScale} height={innerHeight} eventBlockSize={eventBlockSize} />)}
             </g>

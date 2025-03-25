@@ -8,7 +8,7 @@ import { ChangeEvent, MouseEvent, useState } from "react";
 import ToggleButton from "@/components/ToggleButton";
 import IconButton from "@/components/IconButton";
 import Trash from "@/components/icons/Trash";
-import FileDetailsModal from "./FileDetailsModal";
+import Modal from "@/components/Modal";
 import { createPortal } from "react-dom";
 import { ActionType, FileAction, useFilesDispatch } from "@/contexts/FilesContext";
 
@@ -38,7 +38,7 @@ export default function FileDetails({ file }: FileDetailsProps) {
                 <IconButton type="button" onClick={(event: MouseEvent<HTMLButtonElement>) => handleDelete(event, file)} icon={<Trash />} />
             </div>
             {showModal && createPortal(
-                <FileDetailsModal fileName={file.name} fileDetails={JSON.stringify(file.details, null, 4)} handleClose={() => setShowModal(false)} />,
+                <Modal title={`Details of ${file.name}`} code={JSON.stringify(file.details, null, 4)} handleClose={() => setShowModal(false)} />,
                 document.body
             )}
         </>

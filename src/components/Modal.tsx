@@ -3,13 +3,13 @@ import CodeBlock from "@/components/CodeBlock";
 import IconButton from "@/components/IconButton";
 import Close from "@/components/icons/Close";
 
-interface FileDetailsModalProps {
-    fileName: string;
-    fileDetails: string;
+interface ModalProps {
+    title: string;
+    code: string;
     handleClose: MouseEventHandler;
 }
 
-export default function FileDetailsModal({ fileName, fileDetails, handleClose }: FileDetailsModalProps) {
+export default function Modal({ title, code, handleClose }: ModalProps) {
     const handleOverlayClick = (event: React.MouseEvent<HTMLDivElement>) => {
         if (event.target === event.currentTarget) {
             handleClose(event);
@@ -22,12 +22,12 @@ export default function FileDetailsModal({ fileName, fileDetails, handleClose }:
                 <div className="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
                     <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
                         <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                            Details of {fileName}
+                            {title}
                         </h3>
                         <IconButton type="button" onClick={handleClose} icon={<Close />} />
                     </div>
                     <CodeBlock>
-                        {fileDetails}
+                        {code}
                     </CodeBlock>
                 </div>
             </div>

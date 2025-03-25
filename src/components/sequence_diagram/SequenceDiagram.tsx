@@ -40,7 +40,7 @@ export default function SequenceDiagram() {
     const diagram = (
         <svg width={width} height={height} className="bg-white border border-gray-200 rounded-lg shadow-inner dark:bg-gray-700 dark:border-gray-700">
             <defs>
-                <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse" className="fill-gray-600">
+                <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse" className="fill-gray-600">
                     <path d="M 0 0 L 10 5 L 0 10 z" />
                 </marker>
             </defs>

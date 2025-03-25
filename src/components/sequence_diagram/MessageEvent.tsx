@@ -1,5 +1,6 @@
 import { ConnectionEvent } from "@/model/Network";
 import { useEffect, useRef } from "react";
+import EventBlock from "./EventBlock";
 
 interface MessageEventProps {
     createdEvent: ConnectionEvent;
@@ -14,12 +15,12 @@ const arrowOffset = 15;
 const textBgPaddingX = 6;
 const textBgPaddingY = 4;
 
-const sessionColor = "#003f5c";
-const announceColor = "#444e86";
-const subscribeColor = "#955196";
-const fetchColor = "#dd5182";
-const infoColor = "#ff6e54";
-const groupColor = "#ffa600";
+const sessionColors = ["#003f5c", "#002f45"];
+const announceColors = ["#444e86", "#333a64"];
+const subscribeColors = ["#955196", "#703d70"];
+const fetchColors = ["#dd5182", "#bd255a"];
+const infoColors = ["#ff6e54", "#fe2700"];
+const groupColors = ["#ffa600", "#bf7d00"];
 
 export default function MessageEvent({createdEvent, parsedEvent, blockSize, xScale, yScale}: MessageEventProps) {
     const textRef = useRef<SVGTextElement>(null);
@@ -65,14 +66,14 @@ export default function MessageEvent({createdEvent, parsedEvent, blockSize, xSca
 
     const shortName = getShortName(createdEvent.event.name);
 
-    const color = getColor(createdEvent);
+    const colors = getColors(createdEvent);
 
     return (
         <>
-            <rect transform={`translate(${createdX}, ${createdY})`} y={-15} width={blockSize} height={blockSize} rx={5} fill={color} />
-            <rect transform={`translate(${parsedX}, ${parsedY})`} y={-15} width={blockSize} height={blockSize} rx={5} fill={color} />
+            <EventBlock xPos={createdX} yPos={createdY} size={blockSize} colors={colors} event={createdEvent.event} />
+            <EventBlock xPos={parsedX} yPos={parsedY} size={blockSize} colors={colors} event={parsedEvent.event} />
             <line x1={arrowStartX} y1={arrowStartY} x2={arrowEndX} y2={arrowEndY} stroke="black" strokeWidth={4} markerEnd="url(#arrow)" strokeLinecap="round" className="stroke-gray-600" />
-            <rect ref={textBgRef} rx={5} fill={color} />
+            <rect ref={textBgRef} rx={5} fill={colors[0]} />
             <text ref={textRef} transform={`rotate(${textAngle}, ${textMiddleX}, ${textMiddleY})`} x={textMiddleX} y={textMiddleY} style={{textAnchor: "middle"}} fill="white">{shortName}</text>
         </>
     );
@@ -93,39 +94,38 @@ export default function MessageEvent({createdEvent, parsedEvent, blockSize, xSca
         return noNamespace;
     }
 
-    function getColor(event: ConnectionEvent): string {
+    function getColors(event: ConnectionEvent): string[] {
         const name = event.event.name;
 
         if (name.includes("stream")) {
-            // TODO: Check stream type in event data
-            return getColorByName(event.event.data["stream_type"]);
+            return getColorsByName(event.event.data["stream_type"]);
         }
         else {
-            return getColorByName(name);
+            return getColorsByName(name);
         }
     }
 
-    function getColorByName(name: string): string {
+    function getColorsByName(name: string): string[] {
         if (name.includes("session")) {
-            return sessionColor;
+            return sessionColors;
         }
         if (name.includes("announce")) {
-            return announceColor;
+            return announceColors;
         }
         if (name.includes("subscription") || name.includes("subscribe")) {
-            return subscribeColor;
+            return subscribeColors;
         }
         if (name.includes("info")) {
-            return infoColor;
+            return infoColors;
         }
         if (name.includes("fetch")) {
-            return fetchColor;
+            return fetchColors;
         }
         if (name.includes("group") || name.includes("frame")) {
-            return groupColor;
+            return groupColors;
         }
         else {
-            return "black";
+            return ["black", "black"];
         }
     }
 }

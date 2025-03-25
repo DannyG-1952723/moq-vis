@@ -3,6 +3,7 @@ import * as d3 from "d3";
 import Note from "../Note";
 import { Network } from "@/model/Network";
 import Connection from "./Connection";
+import Axis from "./Axis";
 
 export default function SequenceDiagram() {
     const files = useFiles();
@@ -39,11 +40,12 @@ export default function SequenceDiagram() {
     const diagram = (
         <svg width={width} height={height} className="bg-white border border-gray-200 rounded-lg shadow-inner dark:bg-gray-700 dark:border-gray-700">
             <defs>
-                <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse" className="fill-gray-600">
                     <path d="M 0 0 L 10 5 L 0 10 z" />
                 </marker>
             </defs>
             <g transform={`translate(${margin.left}, ${margin.top})`}>
+                {network.nodes.map(node => <Axis xPos={xScale(node)! + eventBlockSize / 2} yPos={0} height={innerHeight} fileName={node} />)}
                 {network.connections.map(conn => <Connection key={conn.startingConn.connId} conn={conn} xScale={xScale} yScale={yScale} height={innerHeight} eventBlockSize={eventBlockSize} />)}
             </g>
         </svg>

@@ -72,8 +72,6 @@ export default function Connection({ conn, xScale, yScale, height, eventBlockSiz
 
     return (
         <>
-            <Axis xPos={xScale(conn.startingConn.fileName)! + eventBlockSize / 2} yPos={0} height={height} fileName={conn.startingConn.fileName} />
-            <Axis xPos={xScale(conn.acceptingConn.fileName)! + eventBlockSize / 2} yPos={0} height={height} fileName={conn.acceptingConn.fileName} />
             {createEvents()}
         </>
     );

@@ -43,6 +43,9 @@ export default function SequenceDiagram() {
                 <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse" className="fill-gray-600">
                     <path d="M 0 0 L 10 5 L 0 10 z" />
                 </marker>
+                <marker id="hover-arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse" className="fill-gray-800">
+                    <path d="M 0 0 L 10 5 L 0 10 z" />
+                </marker>
             </defs>
             <g transform={`translate(${margin.left}, ${margin.top})`}>
                 {network.nodes.map(node => <Axis xPos={xScale(node)! + eventBlockSize / 2} yPos={0} height={innerHeight} fileName={node} />)}

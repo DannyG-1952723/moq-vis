@@ -278,3 +278,24 @@ class SystemInformation {
         this.threadId = parseInt(json["thread_id"]);
     }
 }
+
+export class MessageEvent {
+    time_sent: number;
+    time_received: number;
+    name: string;
+    // TODO: Maybe change
+    data: any;
+    group_id: string | undefined;
+
+    constructor(createdEvent: LogFileEvent, parsedEvent: LogFileEvent) {
+        this.time_sent = createdEvent.time;
+        this.time_received = parsedEvent.time;
+
+        this.name = `${createdEvent.name} / ${parsedEvent.name}`;
+
+        // Both events should have the same data
+        this.data = createdEvent.data;
+        this.group_id = createdEvent.group_id;
+
+    }
+}

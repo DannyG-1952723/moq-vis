@@ -7,11 +7,10 @@ interface ConnectionProps {
     conn: Conn;
     xScale: d3.ScalePoint<string>;
     yScale: d3.ScaleLinear<number, number, never>;
-    eventBlockSize: number;
     startTime: number;
 }
 
-export default function Connection({ conn, xScale, yScale, eventBlockSize, startTime }: ConnectionProps) {
+export default function Connection({ conn, xScale, yScale, startTime }: ConnectionProps) {
     function createEvents(): JSX.Element[] {
         const events: JSX.Element[] = [];
 
@@ -57,16 +56,15 @@ export default function Connection({ conn, xScale, yScale, eventBlockSize, start
     }
 
     function createEvent(event: ConnectionEvent): JSX.Element {
-        return <Event event={event} blockSize={eventBlockSize} xScale={xScale} yScale={yScale} />;
+        return <Event event={event} xScale={xScale} yScale={yScale} />;
     }
 
     function createMessageEvent(event1: ConnectionEvent, event2: ConnectionEvent): JSX.Element {
-        // TODO: Check which one is 'created' and which one is 'parsed'
         if (event1.isCreatedEvent()) {
-            return <MessageEvent createdEvent={event1} parsedEvent={event2} blockSize={eventBlockSize} xScale={xScale} yScale={yScale} startTime={startTime} />;
+            return <MessageEvent createdEvent={event1} parsedEvent={event2} xScale={xScale} yScale={yScale} startTime={startTime} />;
         }
 
-        return <MessageEvent createdEvent={event2} parsedEvent={event1} blockSize={eventBlockSize} xScale={xScale} yScale={yScale} startTime={startTime} />;
+        return <MessageEvent createdEvent={event2} parsedEvent={event1} xScale={xScale} yScale={yScale} startTime={startTime} />;
     }
 
     return (

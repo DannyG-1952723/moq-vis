@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Modal from "@/components/Modal";
 import { MessageEvent } from "@/model/LogFile";
+import { BLOCK_SIZE, Colors, getShortNameWithoutAction } from "@/model/util";
 
 interface MessageEventArrowProps {
     createdEvent: ConnectionEvent;
@@ -11,8 +12,7 @@ interface MessageEventArrowProps {
     y1: number;
     x2: number;
     y2: number;
-    blockSize: number;
-    colors: string[];
+    colors: Colors;
 }
 
 const lineOffset = 8;
@@ -25,8 +25,8 @@ const hoverArrowClassName = "stroke-gray-800";
 const normalArrowMarker = "url(#arrow)";
 const hoverArrowmarker = "url(#hover-arrow)";
 
-export default function MessageEventArrow({createdEvent, parsedEvent, x1, y1, x2, y2, blockSize, colors}: MessageEventArrowProps) {
-    const [color, setColor] = useState(colors[0]);
+export default function MessageEventArrow({createdEvent, parsedEvent, x1, y1, x2, y2, colors}: MessageEventArrowProps) {
+    const [color, setColor] = useState(colors.normal);
     const [arrowClassName, setArrowClassName] = useState(normalArrowClassName);
     const [arrowMarker, setArrowMarker] = useState(normalArrowMarker);
     const [showModal, setShowModal] = useState(false);
@@ -51,19 +51,19 @@ export default function MessageEventArrow({createdEvent, parsedEvent, x1, y1, x2
     }, [createdEvent, parsedEvent]);
 
     function handleMouseEnter() {
-        setColor(colors[1]);
+        setColor(colors.hover);
         setArrowClassName(hoverArrowClassName);
         setArrowMarker(hoverArrowmarker);
     }
 
     function handleMouseLeave() {
-        setColor(colors[0]);
+        setColor(colors.normal);
         setArrowClassName(normalArrowClassName);
         setArrowMarker(normalArrowMarker);
     }
 
-    const lineStartX = x1 < x2 ? x1 + blockSize : x1;
-    const lineEndX = x1 < x2 ? x2 : x2 + blockSize;
+    const lineStartX = x1 < x2 ? x1 + BLOCK_SIZE : x1;
+    const lineEndX = x1 < x2 ? x2 : x2 + BLOCK_SIZE;
 
     // y = m * x + q
     const m = (y2 - y1) / (lineEndX - lineStartX);
@@ -79,7 +79,7 @@ export default function MessageEventArrow({createdEvent, parsedEvent, x1, y1, x2
     const textMiddleY = (y1 + y2) / 2;
     const textAngle = radiansToDegrees(Math.atan(m));
 
-    const shortName = getShortName(createdEvent.event.name);
+    const shortName = getShortNameWithoutAction(createdEvent.event.name);
 
     const messageEvent = new MessageEvent(createdEvent.event, parsedEvent.event);
 
@@ -88,7 +88,7 @@ export default function MessageEventArrow({createdEvent, parsedEvent, x1, y1, x2
             <g onClick={_ => setShowModal(true)} className="cursor-pointer" onMouseEnter={_ => handleMouseEnter()} onMouseLeave={_ => handleMouseLeave()}>
                 <line x1={arrowStartX} y1={arrowStartY} x2={arrowEndX} y2={arrowEndY} stroke="black" strokeWidth={4} markerEnd={arrowMarker} strokeLinecap="round" className={arrowClassName} />
                 <rect ref={textBgRef} rx={5} fill={color} />
-                <text ref={textRef} transform={`rotate(${textAngle}, ${textMiddleX}, ${textMiddleY})`} x={textMiddleX} y={textMiddleY} style={{textAnchor: "middle"}} fill="white">{shortName}</text>
+                <text ref={textRef} transform={`rotate(${textAngle}, ${textMiddleX}, ${textMiddleY})`} x={textMiddleX} y={textMiddleY} textAnchor="middle" fill="white">{shortName}</text>
             </g>
 
             {showModal && createPortal(
@@ -96,18 +96,6 @@ export default function MessageEventArrow({createdEvent, parsedEvent, x1, y1, x2
             )}
         </>
     );
-}
-
-function getShortName(name: string): string {
-    const noNamespace = name.substring(name.lastIndexOf(":") + 1);
-
-    const index = Math.max(noNamespace.indexOf("_created"), noNamespace.indexOf("_parsed"));
-
-    if (index > -1) {
-        return noNamespace.substring(0, index);
-    }
-
-    return noNamespace;
 }
 
 function radiansToDegrees(radians: number) {

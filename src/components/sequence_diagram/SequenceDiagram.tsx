@@ -4,6 +4,7 @@ import Note from "../Note";
 import { Network } from "@/model/Network";
 import Connection from "./Connection";
 import Axis from "./Axis";
+import { BLOCK_SIZE } from "@/model/util";
 
 export default function SequenceDiagram() {
     const files = useFiles();
@@ -26,16 +27,15 @@ export default function SequenceDiagram() {
     
     const margin = {top: 50, right: 145, bottom: 50, left: 115}
     const axisMargin = 25;
-    const eventBlockSize = 30;
 
     const width = 1280;
-    const height = (network.numEvents - 1) * 50 + eventBlockSize + margin.top + margin.bottom + 2 * axisMargin;
+    const height = (network.numEvents - 1) * 50 + BLOCK_SIZE + margin.top + margin.bottom + 2 * axisMargin;
 
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
     const xScale = d3.scalePoint().domain(activeFiles.map(file => file.name)).range([0, innerWidth]);
-    const yScale = d3.scaleLinear().domain([0, network.numEvents - 1]).range([axisMargin + eventBlockSize / 2, innerHeight - axisMargin - eventBlockSize / 2]);
+    const yScale = d3.scaleLinear().domain([0, network.numEvents - 1]).range([axisMargin + BLOCK_SIZE / 2, innerHeight - axisMargin - BLOCK_SIZE / 2]);
 
     const diagram = (
         <svg width={width} height={height} className="bg-white border border-gray-200 rounded-lg shadow-inner dark:bg-gray-700 dark:border-gray-700">
@@ -48,8 +48,8 @@ export default function SequenceDiagram() {
                 </marker>
             </defs>
             <g transform={`translate(${margin.left}, ${margin.top})`}>
-                {network.nodes.map(node => <Axis xPos={xScale(node)! + eventBlockSize / 2} yPos={0} height={innerHeight} fileName={node} />)}
-                {network.connections.map(conn => <Connection key={conn.startingConn.connId} conn={conn} xScale={xScale} yScale={yScale} eventBlockSize={eventBlockSize} startTime={network.startTime} />)}
+                {network.nodes.map(node => <Axis xPos={xScale(node)! + BLOCK_SIZE / 2} yPos={0} height={innerHeight} fileName={node} />)}
+                {network.connections.map(conn => <Connection key={conn.startingConn.connId} conn={conn} xScale={xScale} yScale={yScale} startTime={network.startTime} />)}
             </g>
         </svg>
     );

@@ -1,5 +1,4 @@
 import { Connection as Conn, ConnectionEvent } from "@/model/Network";
-import Axis from "./Axis";
 import Event from "./Event";
 import { JSX } from "react";
 import MessageEvent from "./MessageEvent";
@@ -8,11 +7,11 @@ interface ConnectionProps {
     conn: Conn;
     xScale: d3.ScalePoint<string>;
     yScale: d3.ScaleLinear<number, number, never>;
-    height: number;
     eventBlockSize: number;
+    startTime: number;
 }
 
-export default function Connection({ conn, xScale, yScale, height, eventBlockSize }: ConnectionProps) {
+export default function Connection({ conn, xScale, yScale, eventBlockSize, startTime }: ConnectionProps) {
     function createEvents(): JSX.Element[] {
         const events: JSX.Element[] = [];
 
@@ -64,10 +63,10 @@ export default function Connection({ conn, xScale, yScale, height, eventBlockSiz
     function createMessageEvent(event1: ConnectionEvent, event2: ConnectionEvent): JSX.Element {
         // TODO: Check which one is 'created' and which one is 'parsed'
         if (event1.isCreatedEvent()) {
-            return <MessageEvent createdEvent={event1} parsedEvent={event2} blockSize={eventBlockSize} xScale={xScale} yScale={yScale} />;
+            return <MessageEvent createdEvent={event1} parsedEvent={event2} blockSize={eventBlockSize} xScale={xScale} yScale={yScale} startTime={startTime} />;
         }
 
-        return <MessageEvent createdEvent={event2} parsedEvent={event1} blockSize={eventBlockSize} xScale={xScale} yScale={yScale} />;
+        return <MessageEvent createdEvent={event2} parsedEvent={event1} blockSize={eventBlockSize} xScale={xScale} yScale={yScale} startTime={startTime} />;
     }
 
     return (

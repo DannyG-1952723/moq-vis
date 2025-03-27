@@ -13,9 +13,17 @@ export class Network {
     nodes: string[];
     connections: Connection[];
     numEvents: number;
+    startTime: number;
 
     constructor(logFiles: LogFile[]) {
         const allEvents = d3.reduce(logFiles, getEventsFromFiles, []).sort((event1, event2) => event1.event.time - event2.event.time);
+
+        if (allEvents.length > 0) {
+            this.startTime = allEvents[0].event.time;
+        }
+        else {
+            this.startTime = 0;
+        }
 
         this.numEvents = allEvents.length;
 

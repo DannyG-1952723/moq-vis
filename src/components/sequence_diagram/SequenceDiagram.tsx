@@ -24,7 +24,7 @@ export default function SequenceDiagram() {
     const network = new Network(activeFiles);
     console.log(network);
     
-    const margin = {top: 50, right: 105, bottom: 50, left: 75}
+    const margin = {top: 50, right: 145, bottom: 50, left: 115}
     const axisMargin = 25;
     const eventBlockSize = 30;
 
@@ -49,7 +49,7 @@ export default function SequenceDiagram() {
             </defs>
             <g transform={`translate(${margin.left}, ${margin.top})`}>
                 {network.nodes.map(node => <Axis xPos={xScale(node)! + eventBlockSize / 2} yPos={0} height={innerHeight} fileName={node} />)}
-                {network.connections.map(conn => <Connection key={conn.startingConn.connId} conn={conn} xScale={xScale} yScale={yScale} height={innerHeight} eventBlockSize={eventBlockSize} />)}
+                {network.connections.map(conn => <Connection key={conn.startingConn.connId} conn={conn} xScale={xScale} yScale={yScale} eventBlockSize={eventBlockSize} startTime={network.startTime} />)}
             </g>
         </svg>
     );

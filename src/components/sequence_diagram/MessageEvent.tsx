@@ -8,6 +8,7 @@ interface MessageEventProps {
     blockSize: number;
     xScale: d3.ScalePoint<string>;
     yScale: d3.ScaleLinear<number, number, never>;
+    startTime: number;
 }
 
 const sessionColors = ["#003f5c", "#002f45"];
@@ -17,7 +18,7 @@ const fetchColors = ["#dd5182", "#bd255a"];
 const infoColors = ["#ff6e54", "#fe2700"];
 const groupColors = ["#ffa600", "#bf7d00"];
 
-export default function MessageEvent({createdEvent, parsedEvent, blockSize, xScale, yScale}: MessageEventProps) {
+export default function MessageEvent({createdEvent, parsedEvent, blockSize, xScale, yScale, startTime}: MessageEventProps) {
     const createdX = xScale(createdEvent.fileName)!;
     const createdY = yScale(createdEvent.eventNum);
     const parsedX = xScale(parsedEvent.fileName)!;
@@ -25,10 +26,12 @@ export default function MessageEvent({createdEvent, parsedEvent, blockSize, xSca
 
     const colors = getColors(createdEvent);
 
+    const isLeft = createdX < parsedX;
+
     return (
         <>
-            <EventBlock xPos={createdX} yPos={createdY} size={blockSize} colors={colors} event={createdEvent.event} />
-            <EventBlock xPos={parsedX} yPos={parsedY} size={blockSize} colors={colors} event={parsedEvent.event} />
+            <EventBlock xPos={createdX} yPos={createdY} size={blockSize} colors={colors} event={createdEvent.event} startTime={startTime} isLeft={isLeft} />
+            <EventBlock xPos={parsedX} yPos={parsedY} size={blockSize} colors={colors} event={parsedEvent.event} startTime={startTime} isLeft={!isLeft} />
             <MessageEventArrow createdEvent={createdEvent} parsedEvent={parsedEvent} x1={createdX} y1={createdY} x2={parsedX} y2={parsedY} blockSize={blockSize} colors={colors} />
         </>
     );

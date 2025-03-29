@@ -23,8 +23,8 @@ export default function MessageEvent({createdEvent, parsedEvent, xScale, yScale,
 
     return (
         <>
-            <EventBlock xPos={createdX} yPos={createdY} colors={colors} event={createdEvent.event} startTime={startTime} isLeft={isLeft} />
-            <EventBlock xPos={parsedX} yPos={parsedY} colors={colors} event={parsedEvent.event} startTime={startTime} isLeft={!isLeft} />
+            <EventBlock xPos={createdX} yPos={createdY} colors={colors} event={createdEvent.event} startTime={startTime} isLeft={isLeft} extended={false} noAction={true} />
+            <EventBlock xPos={parsedX} yPos={parsedY} colors={colors} event={parsedEvent.event} startTime={startTime} isLeft={!isLeft} extended={false} noAction={true} />
             <MessageEventArrow createdEvent={createdEvent} parsedEvent={parsedEvent} x1={createdX} y1={createdY} x2={parsedX} y2={parsedY} colors={colors} />
         </>
     );

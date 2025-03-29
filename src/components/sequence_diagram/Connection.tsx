@@ -2,6 +2,7 @@ import { Connection as Conn, ConnectionEvent } from "@/model/Network";
 import Event from "./Event";
 import { JSX } from "react";
 import MessageEvent from "./MessageEvent";
+import HalfMessageEvent from "./HalfMessageEvent";
 
 interface ConnectionProps {
     conn: Conn;
@@ -11,6 +12,12 @@ interface ConnectionProps {
 }
 
 export default function Connection({ conn, xScale, yScale, startTime }: ConnectionProps) {
+    return (
+        <>
+            {createEvents()}
+        </>
+    );
+
     function createEvents(): JSX.Element[] {
         const events: JSX.Element[] = [];
 
@@ -24,8 +31,7 @@ export default function Connection({ conn, xScale, yScale, startTime }: Connecti
                 const index = findCorrespondingEvent(event, acceptingConnEvents);
 
                 if (index === -1) {
-                    // TODO: Create message event that doesn't arrive at the receiver
-                    events.push(createEvent(event));
+                    events.push(createHalfMessageEvent(event, conn.acceptingConn.fileName));
                 }
                 else {
                     events.push(createMessageEvent(event, acceptingConnEvents[index]));
@@ -37,9 +43,9 @@ export default function Connection({ conn, xScale, yScale, startTime }: Connecti
             }
         }
 
-        // There shouldn't be any message events left
+        // There shouldn't be any message events left (except maybe at the end when abruptly ending connections)
         for (let i = 0; i < acceptingConnEvents.length; i++) {
-            events.push(createEvent(acceptingConnEvents[i]));
+            events.push(createHalfMessageEvent(acceptingConnEvents[i], conn.startingConn.fileName));
         }
 
         return events;
@@ -67,9 +73,7 @@ export default function Connection({ conn, xScale, yScale, startTime }: Connecti
         return <MessageEvent createdEvent={event2} parsedEvent={event1} xScale={xScale} yScale={yScale} startTime={startTime} />;
     }
 
-    return (
-        <>
-            {createEvents()}
-        </>
-    );
+    function createHalfMessageEvent(event: ConnectionEvent, otherFileName: string): JSX.Element {
+        return <HalfMessageEvent event={event} otherFileName={otherFileName} xScale={xScale} yScale={yScale} startTime={startTime} />
+    }
 }

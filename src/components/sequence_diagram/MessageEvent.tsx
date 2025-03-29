@@ -11,7 +11,7 @@ interface MessageEventProps {
     startTime: number;
 }
 
-export default function MessageEvent({createdEvent, parsedEvent, xScale, yScale, startTime}: MessageEventProps) {
+export default function MessageEvent({ createdEvent, parsedEvent, xScale, yScale, startTime }: MessageEventProps) {
     const createdX = xScale(createdEvent.fileName)!;
     const createdY = yScale(createdEvent.eventNum);
     const parsedX = xScale(parsedEvent.fileName)!;

@@ -12,6 +12,15 @@ export default function FileImport() {
     const files = useFiles();
     const dispatch = useFilesDispatch();
 
+    return (
+        <form className="w-full">
+            <FileInput handleImport={handleImport} />
+            <Note>Only <InlineCode>.sqlog</InlineCode> files are currently supported</Note>
+            <Note>Files won&apos;t be uploaded to the server</Note>
+            <FileList />
+        </form>
+    );
+
     function handleImport(event: ChangeEvent<HTMLInputElement>) {
         // Checks if it isn't undefined and isn't null
         if (!event.target.files) {
@@ -48,13 +57,4 @@ export default function FileImport() {
 
         return false;
     }
-
-    return (
-        <form className="w-full">
-            <FileInput handleImport={handleImport} />
-            <Note>Only <InlineCode>.sqlog</InlineCode> files are currently supported</Note>
-            <Note>Files won&apos;t be uploaded to the server</Note>
-            <FileList />
-        </form>
-    );
 }

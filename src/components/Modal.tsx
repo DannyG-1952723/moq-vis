@@ -1,4 +1,4 @@
-import { MouseEventHandler } from "react";
+import { MouseEvent, MouseEventHandler } from "react";
 import CodeBlock from "@/components/CodeBlock";
 import IconButton from "@/components/IconButton";
 import Close from "@/components/icons/Close";
@@ -10,12 +10,6 @@ interface ModalProps {
 }
 
 export default function Modal({ title, code, handleClose }: ModalProps) {
-    const handleOverlayClick = (event: React.MouseEvent<HTMLDivElement>) => {
-        if (event.target === event.currentTarget) {
-            handleClose(event);
-        }
-    };
-
     return (
         <div onClick={handleOverlayClick} tabIndex={-1} className="fixed inset-0 z-50 flex justify-center items-center bg-black/50">
             <div className="relative p-4 w-full max-w-2xl max-h-full">
@@ -33,4 +27,10 @@ export default function Modal({ title, code, handleClose }: ModalProps) {
             </div>
         </div>
     );
+
+    function handleOverlayClick(event: MouseEvent<HTMLDivElement>) {
+        if (event.target === event.currentTarget) {
+            handleClose(event);
+        }
+    }
 }

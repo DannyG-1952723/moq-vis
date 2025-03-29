@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from "react"
+import { useState } from "react"
 import { createPortal } from "react-dom";
 import Modal from "../Modal";
 import { LogFileEvent } from "@/model/LogFile";
 import { BLOCK_SIZE, Colors, getShortName, getShortNameWithoutAction } from "@/model/util";
+import { useTextBackground } from "@/hooks/useTextBackground";
 
 interface EventBlockProps {
     xPos: number;
@@ -15,28 +16,11 @@ interface EventBlockProps {
     noAction: boolean;
 }
 
-const textBgPaddingX = 6;
-const textBgPaddingY = 4;
-
 export default function EventBlock({ xPos, yPos, colors, event, startTime, isLeft, extended, noAction }: EventBlockProps) {
     const [color, setColor] = useState(colors.normal);
     const [showModal, setShowModal] = useState(false);
 
-    const textRef = useRef<SVGTextElement>(null);
-    const textBgRef = useRef<SVGRectElement>(null);
-
-    useEffect(() => {
-        if (!textRef.current || !textBgRef.current) {
-            return;
-        }
-
-        const boundingBox = textRef.current.getBBox();
-
-        textBgRef.current.setAttribute("x", `${boundingBox.x - textBgPaddingX}`);
-        textBgRef.current.setAttribute("y", `${boundingBox.y - textBgPaddingY}`);
-        textBgRef.current.setAttribute("width", `${boundingBox.width + 2 * textBgPaddingX}`);
-        textBgRef.current.setAttribute("height", `${boundingBox.height + 2 * textBgPaddingY}`);
-    }, [event]);
+    const [textRef, textBgRef] = useTextBackground([event]);
 
     const anchor = isLeft ? "end" : "start";
     const margin = isLeft ? -5 : BLOCK_SIZE + 5;

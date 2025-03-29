@@ -1,9 +1,10 @@
 import { ConnectionEvent } from "@/model/Network";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { createPortal } from "react-dom";
 import Modal from "@/components/Modal";
 import { MessageEvent } from "@/model/LogFile";
 import { ArrowProperties, Colors, getShortNameWithoutAction, radiansToDegrees } from "@/model/util";
+import { useTextBackground } from "@/hooks/useTextBackground";
 
 interface MessageEventArrowProps {
     createdEvent: ConnectionEvent;
@@ -14,9 +15,6 @@ interface MessageEventArrowProps {
     y2: number;
     colors: Colors;
 }
-
-const textBgPaddingX = 6;
-const textBgPaddingY = 4;
 
 const normalArrowClassName = "stroke-gray-600";
 const hoverArrowClassName = "stroke-gray-800";
@@ -29,29 +27,12 @@ export default function MessageEventArrow({ createdEvent, parsedEvent, x1, y1, x
     const [arrowMarker, setArrowMarker] = useState(normalArrowMarker);
     const [showModal, setShowModal] = useState(false);
 
-    const textRef = useRef<SVGTextElement>(null);
-    const textBgRef = useRef<SVGRectElement>(null);
-
-    useEffect(() => {
-        if (!textRef.current || !textBgRef.current) {
-            return;
-        }
-
-        const boundingBox = textRef.current.getBBox();
-
-        textRef.current.setAttribute("transform", `rotate(${textAngle}, ${textMiddleX}, ${textMiddleY})`);
-
-        textBgRef.current.setAttribute("x", `${boundingBox.x - textBgPaddingX}`);
-        textBgRef.current.setAttribute("y", `${boundingBox.y - textBgPaddingY}`);
-        textBgRef.current.setAttribute("width", `${boundingBox.width + 2 * textBgPaddingX}`);
-        textBgRef.current.setAttribute("height", `${boundingBox.height + 2 * textBgPaddingY}`);
-        textBgRef.current.setAttribute("transform", `rotate(${textAngle}, ${textMiddleX}, ${textMiddleY})`);
-    }, [createdEvent, parsedEvent]);
-
     const arrow = new ArrowProperties(x1, y1, x2, y2);
 
     const [textMiddleX, textMiddleY] = arrow.getMiddleCoords();
     const textAngle = radiansToDegrees(Math.atan(arrow.m));
+
+    const [textRef, textBgRef] = useTextBackground([createdEvent, parsedEvent], textAngle, textMiddleX, textMiddleY);
 
     const shortName = getShortNameWithoutAction(createdEvent.event.name);
 

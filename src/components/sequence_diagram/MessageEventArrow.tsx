@@ -3,7 +3,7 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 import Modal from "@/components/Modal";
 import { MessageEvent } from "@/model/LogFile";
-import { ArrowProperties, Colors, getShortNameWithoutAction, radiansToDegrees } from "@/model/util";
+import { ArrowProperties, Colors, getShortNameWithoutAction, HOVER_ARROW_CLASS_NAME, HOVER_ARROW_MARKER, NORMAL_ARROW_CLASS_NAME, NORMAL_ARROW_MARKER, radiansToDegrees } from "@/model/util";
 import { useTextBackground } from "@/hooks/useTextBackground";
 
 interface MessageEventArrowProps {
@@ -16,15 +16,10 @@ interface MessageEventArrowProps {
     colors: Colors;
 }
 
-const normalArrowClassName = "stroke-gray-600";
-const hoverArrowClassName = "stroke-gray-800";
-const normalArrowMarker = "url(#arrow)";
-const hoverArrowmarker = "url(#hover-arrow)";
-
 export default function MessageEventArrow({ createdEvent, parsedEvent, x1, y1, x2, y2, colors }: MessageEventArrowProps) {
     const [color, setColor] = useState(colors.normal);
-    const [arrowClassName, setArrowClassName] = useState(normalArrowClassName);
-    const [arrowMarker, setArrowMarker] = useState(normalArrowMarker);
+    const [arrowClassName, setArrowClassName] = useState(NORMAL_ARROW_CLASS_NAME);
+    const [arrowMarker, setArrowMarker] = useState(NORMAL_ARROW_MARKER);
     const [showModal, setShowModal] = useState(false);
 
     const arrow = new ArrowProperties(x1, y1, x2, y2);
@@ -54,13 +49,13 @@ export default function MessageEventArrow({ createdEvent, parsedEvent, x1, y1, x
 
     function handleMouseEnter() {
         setColor(colors.hover);
-        setArrowClassName(hoverArrowClassName);
-        setArrowMarker(hoverArrowmarker);
+        setArrowClassName(HOVER_ARROW_CLASS_NAME);
+        setArrowMarker(HOVER_ARROW_MARKER);
     }
 
     function handleMouseLeave() {
         setColor(colors.normal);
-        setArrowClassName(normalArrowClassName);
-        setArrowMarker(normalArrowMarker);
+        setArrowClassName(NORMAL_ARROW_CLASS_NAME);
+        setArrowMarker(NORMAL_ARROW_MARKER);
     }
 }

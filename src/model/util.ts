@@ -2,6 +2,11 @@ import { LogFileEvent } from "./LogFile";
 
 export const BLOCK_SIZE: number = 30;
 
+export const NORMAL_ARROW_CLASS_NAME = "stroke-gray-600";
+export const HOVER_ARROW_CLASS_NAME = "stroke-gray-800";
+export const NORMAL_ARROW_MARKER = "url(#arrow)";
+export const HOVER_ARROW_MARKER = "url(#hover-arrow)";
+
 export function getShortName(eventName: string): string {
     return eventName.substring(eventName.lastIndexOf(":") + 1);
 }

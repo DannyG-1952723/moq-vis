@@ -1,5 +1,5 @@
 import { ConnectionEvent } from "@/model/Network";
-import { ArrowProperties, Colors, getShortName, radiansToDegrees } from "@/model/util";
+import { ArrowProperties, Colors, getShortName, HOVER_ARROW_CLASS_NAME, HOVER_ARROW_MARKER, NORMAL_ARROW_CLASS_NAME, NORMAL_ARROW_MARKER, radiansToDegrees } from "@/model/util";
 import { useState } from "react";
 import Modal from "../Modal";
 import { createPortal } from "react-dom";
@@ -18,20 +18,14 @@ interface HalfMessageEventArrowProps {
 }
 
 const lengthPercentage = 0.75;
-
 const iconSize = 36;
-
-const normalArrowClassName = "stroke-gray-600";
-const hoverArrowClassName = "stroke-gray-800";
-const normalArrowMarker = "url(#arrow)";
-const hoverArrowmarker = "url(#hover-arrow)";
 const iconColors = new Colors("#cc0000", "#a30000");
 
 export default function HalfMessageEventArrow({ event, x1, y1, x2, y2, colors, isCreatedEvent }: HalfMessageEventArrowProps) {
     const [color, setColor] = useState(colors.normal);
     const [iconColor, setIconColor] = useState(iconColors.normal);
-    const [arrowClassName, setArrowClassName] = useState(normalArrowClassName);
-    const [arrowMarker, setArrowMarker] = useState(normalArrowMarker);
+    const [arrowClassName, setArrowClassName] = useState(NORMAL_ARROW_CLASS_NAME);
+    const [arrowMarker, setArrowMarker] = useState(NORMAL_ARROW_MARKER);
     const [showModal, setShowModal] = useState(false);
 
     const arrow = new ArrowProperties(x1, y1, x2, y2);
@@ -65,14 +59,14 @@ export default function HalfMessageEventArrow({ event, x1, y1, x2, y2, colors, i
     function handleMouseEnter() {
         setColor(colors.hover);
         setIconColor(iconColors.hover);
-        setArrowClassName(hoverArrowClassName);
-        setArrowMarker(hoverArrowmarker);
+        setArrowClassName(HOVER_ARROW_CLASS_NAME);
+        setArrowMarker(HOVER_ARROW_MARKER);
     }
 
     function handleMouseLeave() {
         setColor(colors.normal);
         setIconColor(iconColors.normal);
-        setArrowClassName(normalArrowClassName);
-        setArrowMarker(normalArrowMarker);
+        setArrowClassName(NORMAL_ARROW_CLASS_NAME);
+        setArrowMarker(NORMAL_ARROW_MARKER);
     }
 }

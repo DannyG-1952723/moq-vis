@@ -23,7 +23,6 @@ export default function SequenceDiagram() {
     }
 
     const network = new Network(activeFiles);
-    console.log(network);
     
     const margin = {top: 50, right: 145, bottom: 50, left: 115}
     const axisMargin = 25;

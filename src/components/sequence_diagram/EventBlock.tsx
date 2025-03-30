@@ -1,8 +1,8 @@
 import { useState } from "react"
 import { createPortal } from "react-dom";
 import Modal from "../Modal";
-import { LogFileEvent } from "@/model/LogFile";
-import { BLOCK_SIZE, Colors, getShortName, getShortNameWithoutAction } from "@/model/util";
+import { LogFileEvent } from "@/model/Events";
+import { BLOCK_SIZE, Colors} from "@/model/util";
 import { useTextBackground } from "@/hooks/useTextBackground";
 
 interface EventBlockProps {
@@ -24,7 +24,7 @@ export default function EventBlock({ xPos, yPos, colors, event, startTime, isLef
 
     const anchor = isLeft ? "end" : "start";
     const margin = isLeft ? -5 : BLOCK_SIZE + 5;
-    const shortName = noAction ? getShortNameWithoutAction(event.name) : getShortName(event.name);
+    const shortName = noAction ? event.getShortNameWithoutAction() : event.getShortName();
 
     return (
         <>

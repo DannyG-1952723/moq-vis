@@ -5,6 +5,7 @@
 import { DateTime } from "luxon";
 
 import { InvalidFileError } from "@/errors/InvalidFileError";
+import { LogFileEvent } from "./Events";
 
 export class LogFile {
     name: string;
@@ -59,8 +60,8 @@ export class LogFile {
 class LogFileDetails {
     file_schema: string;
     serialization_format: string;
-    title: string | undefined;
-    description: string | undefined;
+    title?: string;
+    description?: string;
     event_schemas: string[];
     trace: LogFileTrace;
 
@@ -80,10 +81,10 @@ class LogFileDetails {
 }
 
 class LogFileTrace {
-    title: string | undefined;
-    description: string | undefined;
-    common_fields: CommonFields | undefined;
-    vantage_point: VantagePoint | undefined;
+    title?: string;
+    description?: string;
+    common_fields?: CommonFields;
+    vantage_point?: VantagePoint;
 
     constructor(json: any, fileName: string) {
         this.title = json["title"];
@@ -100,13 +101,13 @@ class LogFileTrace {
 }
 
 class CommonFields {
-    path: string | undefined;
-    time_format: TimeFormat | undefined;
-    reference_time: ReferenceTime | undefined;
-    protocol_types: string[] | undefined;
-    group_id: string | undefined;
+    path?: string;
+    time_format?: TimeFormat;
+    reference_time?: ReferenceTime;
+    protocol_types?: string[];
+    group_id?: string;
     // TODO: Maybe replace 'any'
-    custom_fields: any;
+    custom_fields?: any;
 
     constructor(json: any, fileName: string) {
         this.path = json["path"];
@@ -124,12 +125,12 @@ class CommonFields {
     }
 }
 
-enum TimeFormat {
+export enum TimeFormat {
     RelativeToEpoch = "relative_to_epoch",
     RelativeToPreviousEvent = "relative_to_previous_event"
 }
 
-function stringToTimeFormat(string: string, fileName: string): TimeFormat {
+export function stringToTimeFormat(string: string, fileName: string): TimeFormat {
     switch(string) {
         case TimeFormat.RelativeToEpoch.valueOf(): {
             return TimeFormat.RelativeToEpoch;
@@ -146,7 +147,7 @@ class ReferenceTime {
     clock_type: ClockType;
     epoch: Epoch;
     // TODO: Figure out the exact type
-    wall_clock_time: DateTime | undefined;
+    wall_clock_time?: DateTime;
 
     constructor(json: any, fileName: string) {
         if (!("clock_type" in json) || !("epoch" in json)) {
@@ -183,9 +184,9 @@ class Epoch {
 }
 
 class VantagePoint {
-    name: string | undefined;
+    name?: string;
     type: VantagePointType;
-    flow: VantagePointType | undefined;
+    flow?: VantagePointType;
 
     constructor(json: any, fileName: string) {
         if (!("type" in json)) {
@@ -224,78 +225,5 @@ function stringToVantagePointType(string: string, fileName: string): VantagePoin
         }
         default:
             throw new InvalidFileError(fileName);
-    }
-}
-
-export class LogFileEvent {
-    // TODO: Maybe change due to how numbers in JS work
-    time: number;
-    name: string;
-    // TODO: Maybe change
-    data: any;
-    path: string | undefined;
-    time_format: TimeFormat | undefined;
-    protocol_types: string[] | undefined;
-    group_id: string | undefined;
-    system_information: SystemInformation | undefined;
-    // TODO: Maybe replace 'any'
-    custom_fields: any;
-
-    constructor(json: any, fileName: string) {
-        if (!("time" in json) || !("name" in json)) {
-            throw new InvalidFileError(fileName);
-        }
-
-        // TODO: Add error handling
-        this.time = parseInt(json["time"]);
-        this.name = json["name"];
-        this.data = json["data"];
-        this.path = json["path"];
-        this.protocol_types = json["protocol_types"];
-        this.group_id = json["group_id"];
-        this.custom_fields = json["custom_fields"];
-
-        if ("time_format" in json && typeof json["time_format"] === "string") {
-            this.time_format = stringToTimeFormat(json["time_format"], fileName);
-        }
-
-        if ("system_information" in json) {
-            this.system_information = new SystemInformation(json["system_information"], fileName);
-        }
-
-    }
-}
-
-class SystemInformation {
-    processorId: number | undefined;
-    processId: number | undefined;
-    threadId: number | undefined;
-
-    constructor(json: any, fileName: string) {
-        // TODO: Add error handling
-        this.processorId = parseInt(json["processor_id"]);
-        this.processId = parseInt(json["process_id"]);
-        this.threadId = parseInt(json["thread_id"]);
-    }
-}
-
-export class MessageEvent {
-    time_sent: number;
-    time_received: number;
-    name: string;
-    // TODO: Maybe change
-    data: any;
-    group_id: string | undefined;
-
-    constructor(createdEvent: LogFileEvent, parsedEvent: LogFileEvent) {
-        this.time_sent = createdEvent.time;
-        this.time_received = parsedEvent.time;
-
-        this.name = `${createdEvent.name} / ${parsedEvent.name}`;
-
-        // Both events should have the same data
-        this.data = createdEvent.data;
-        this.group_id = createdEvent.group_id;
-
     }
 }

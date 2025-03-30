@@ -2,8 +2,8 @@ import { ConnectionEvent } from "@/model/Network";
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import Modal from "@/components/Modal";
-import { MessageEvent } from "@/model/LogFile";
-import { ArrowProperties, Colors, getShortNameWithoutAction, HOVER_ARROW_CLASS_NAME, HOVER_ARROW_MARKER, NORMAL_ARROW_CLASS_NAME, NORMAL_ARROW_MARKER, radiansToDegrees } from "@/model/util";
+import { MessageEvent } from "@/model/Events";
+import { ArrowProperties, Colors, HOVER_ARROW_CLASS_NAME, HOVER_ARROW_MARKER, NORMAL_ARROW_CLASS_NAME, NORMAL_ARROW_MARKER, radiansToDegrees } from "@/model/util";
 import { useTextBackground } from "@/hooks/useTextBackground";
 
 interface MessageEventArrowProps {
@@ -29,7 +29,7 @@ export default function MessageEventArrow({ createdEvent, parsedEvent, x1, y1, x
 
     const [textRef, textBgRef] = useTextBackground([createdEvent, parsedEvent], textAngle, textMiddleX, textMiddleY);
 
-    const shortName = getShortNameWithoutAction(createdEvent.event.name);
+    const shortName = createdEvent.event.getShortNameWithoutAction();
 
     const messageEvent = new MessageEvent(createdEvent.event, parsedEvent.event);
 

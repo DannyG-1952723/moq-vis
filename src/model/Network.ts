@@ -1,5 +1,6 @@
 import * as d3 from "d3";
-import { LogFile, LogFileEvent } from "./LogFile";
+import { LogFile } from "./LogFile";
+import { LogFileEvent } from "./Events";
 
 function eventsToConnectionEvents(eventList: LogFileEvent[], fileName: string): ConnectionEvent[] {
     return eventList.map(event => new ConnectionEvent(event, 0, fileName));
@@ -147,32 +148,24 @@ export class ConnectionEvent {
     }
 
     isCorrespondingEvent(other: ConnectionEvent): boolean {
-        if (this.event.name.endsWith("created") && !other.event.name.endsWith("parsed")) {
+        const validCombo1 = this.event.name.endsWith("created") && other.event.name.endsWith("parsed");
+        const validCombo2 = this.event.name.endsWith("parsed") && other.event.name.endsWith("created");
+
+        if (!(validCombo1 || validCombo2)) {
             return false;
         }
 
-        if (this.event.name.endsWith("session_started") && !other.event.name.endsWith("session_started")) {
-            return false;
-        }
+        const shortName1 = this.event.getShortNameWithoutAction();
+        const shortName2 = other.event.getShortNameWithoutAction();
 
-        if (this.event.name.endsWith("subscription_started") && !other.event.name.endsWith("subscription_started")) {
-            return false;
-        }
-
-        // TODO: Compare event data
-        return true;
-    }
-
-    isCreatedEvent(): boolean {
-        if (this.event.name.endsWith("created")) {
-            return true;
-        }
-
-        // TODO: Check event data
-        if (!this.event.name.endsWith("parsed")) {
-            return true;
+        if (shortName1 === shortName2) {
+            return this.event.dataEquals(other.event);
         }
 
         return false;
+    }
+
+    isCreatedEvent(): boolean {
+        return this.event.name.endsWith("created");
     }
 }

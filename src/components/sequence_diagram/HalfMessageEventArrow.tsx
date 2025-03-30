@@ -1,5 +1,5 @@
 import { ConnectionEvent } from "@/model/Network";
-import { ArrowProperties, Colors, getShortName, HOVER_ARROW_CLASS_NAME, HOVER_ARROW_MARKER, NORMAL_ARROW_CLASS_NAME, NORMAL_ARROW_MARKER, radiansToDegrees } from "@/model/util";
+import { ArrowProperties, Colors, HOVER_ARROW_CLASS_NAME, HOVER_ARROW_MARKER, NORMAL_ARROW_CLASS_NAME, NORMAL_ARROW_MARKER, radiansToDegrees } from "@/model/util";
 import { useState } from "react";
 import Modal from "../Modal";
 import { createPortal } from "react-dom";
@@ -36,7 +36,7 @@ export default function HalfMessageEventArrow({ event, x1, y1, x2, y2, colors, i
 
     const [textRef, textBgRef] = useTextBackground([event], textAngle, textMiddleX, textMiddleY);
 
-    const shortName = getShortName(event.event.name);
+    const shortName = event.event.getShortName();
 
     const [iconX, iconY] = arrow.getIconCoords(isCreatedEvent);
     const icon = isCreatedEvent ? <Close x={iconX} y={iconY - iconSize / 2} width={iconSize} height={iconSize} color={iconColor} /> : <QuestionMark x={iconX} y={iconY - iconSize / 2} width={iconSize - 8} height={iconSize - 8} fill={iconColor} />;

@@ -23,7 +23,7 @@ export default function Connection({ conn, xScale, yScale, startTime }: Connecti
         const events: JSX.Element[] = [];
 
         // Copies the array
-        let acceptingConnEvents = [...conn.acceptingConn.connEvents];
+        const acceptingConnEvents = [...conn.acceptingConn.connEvents];
 
         for (let i = 0; i < conn.startingConn.connEvents.length; i++) {
             const event = conn.startingConn.connEvents[i];

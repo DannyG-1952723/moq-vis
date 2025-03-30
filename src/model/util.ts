@@ -1,4 +1,4 @@
-import { LogFileEvent } from "./LogFile";
+import { LogFileEvent, MoqEventData, Stream } from "./Events";
 
 export const BLOCK_SIZE: number = 30;
 
@@ -6,22 +6,6 @@ export const NORMAL_ARROW_CLASS_NAME = "stroke-gray-600";
 export const HOVER_ARROW_CLASS_NAME = "stroke-gray-800";
 export const NORMAL_ARROW_MARKER = "url(#arrow)";
 export const HOVER_ARROW_MARKER = "url(#hover-arrow)";
-
-export function getShortName(eventName: string): string {
-    return eventName.substring(eventName.lastIndexOf(":") + 1);
-}
-
-export function getShortNameWithoutAction(eventName: string): string {
-    const noNamespace = getShortName(eventName);
-
-    const index = Math.max(noNamespace.indexOf("_created"), noNamespace.indexOf("_parsed"));
-
-    if (index > -1) {
-        return noNamespace.substring(0, index);
-    }
-
-    return noNamespace;
-}
 
 export class Colors {
     normal: string;
@@ -44,8 +28,8 @@ const OTHER_COLORS = new Colors("black", "black");
 export function getColors(event: LogFileEvent): Colors {
     const name = event.name;
 
-    if (name.includes("stream")) {
-        return getColorsByName(event.data["stream_type"]);
+    if (event.data instanceof MoqEventData && event.data.payload instanceof Stream) {
+        return getColorsByName(event.data.payload.stream_type);
     }
     else {
         return getColorsByName(name);

@@ -1,0 +1,282 @@
+{
+  "qlog_version": "draft-02",
+  "qlog_format": "JSON-SEQ",
+  "file_schema": "urn:ietf:params:qlog:file:sequential",
+  "serialization_format": "application/qlog+json-seq",
+  "title": "MoQ Clock Logs",
+  "event_schemas": [
+    "urn:ietf:params:qlog:events:moq-transfork-03"
+  ],
+  "trace": {
+    "title": "Publisher",
+    "description": "Logs taken from the perspective of the publisher",
+    "common_fields": {
+      "time_format": "relative_to_epoch",
+      "reference_time": {
+        "clock_type": "system",
+        "epoch": "1970-01-01T00:00:00Z"
+      },
+      "protocol_types": [
+        "MoQ"
+      ]
+    },
+    "vantage_point": {
+      "name": "clock-pub",
+      "type": "client"
+    }
+  }
+}
+{
+  "time": 1743361857021,
+  "name": "moq-transfork-03:stream_created",
+  "data": {
+    "stream_type": "session"
+  },
+  "group_id": "400573524543043893"
+}
+{
+  "time": 1743361857021,
+  "name": "moq-transfork-03:session_started_created",
+  "data": {
+    "supported_versions": [
+      4278955268
+    ],
+    "extension_ids": [],
+    "tracing_id": 400573524543043893
+  },
+  "group_id": "400573524543043893"
+}
+{
+  "time": 1743361857097,
+  "name": "moq-transfork-03:session_started_parsed",
+  "data": {
+    "selected_version": 4278955268,
+    "extension_ids": []
+  },
+  "group_id": "400573524543043893"
+}
+{
+  "time": 1743361857097,
+  "name": "moq-transfork-03:stream_parsed",
+  "data": {
+    "stream_type": "announced"
+  },
+  "group_id": "400573524543043893"
+}
+{
+  "time": 1743361857097,
+  "name": "moq-transfork-03:announce_please_parsed",
+  "data": {
+    "track_prefix_parts": []
+  },
+  "group_id": "400573524543043893"
+}
+{
+  "time": 1743361857098,
+  "name": "moq-transfork-03:announce_created",
+  "data": {
+    "announce_status": "active",
+    "track_suffix_parts": [
+      [
+        "clock"
+      ]
+    ]
+  },
+  "group_id": "400573524543043893"
+}
+{
+  "time": 1743361857098,
+  "name": "moq-transfork-03:announce_created",
+  "data": {
+    "announce_status": "live",
+    "track_suffix_parts": []
+  },
+  "group_id": "400573524543043893"
+}
+{
+  "time": 1743361857627,
+  "name": "moq-transfork-03:stream_parsed",
+  "data": {
+    "stream_type": "subscribe"
+  },
+  "group_id": "400573524543043893"
+}
+{
+  "time": 1743361857627,
+  "name": "moq-transfork-03:subscription_started_parsed",
+  "data": {
+    "subscribe_id": 0,
+    "track_path_parts": [
+      "clock"
+    ],
+    "track_priority": 0,
+    "group_order": 1,
+    "group_min": 0,
+    "group_max": 0
+  },
+  "group_id": "400573524543043893"
+}
+{
+  "time": 1743361857627,
+  "name": "moq-transfork-03:info_created",
+  "data": {
+    "track_priority": 0,
+    "group_latest": 10,
+    "group_order": 1
+  },
+  "group_id": "400573524543043893"
+}
+{
+  "time": 1743361857627,
+  "name": "moq-transfork-03:stream_created",
+  "data": {
+    "stream_type": "group"
+  },
+  "group_id": "400573524543043893"
+}
+{
+  "time": 1743361857628,
+  "name": "moq-transfork-03:group_created",
+  "data": {
+    "subscribe_id": 0,
+    "group_sequence": 10
+  },
+  "group_id": "400573524543043893"
+}
+{
+  "time": 1743361857628,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 17
+    }
+  },
+  "group_id": "400573524543043893"
+}
+{
+  "time": 1743361857628,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "400573524543043893"
+}
+{
+  "time": 1743361858008,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "400573524543043893"
+}
+{
+  "time": 1743361859006,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "400573524543043893"
+}
+{
+  "time": 1743361860006,
+  "name": "moq-transfork-03:stream_created",
+  "data": {
+    "stream_type": "group"
+  },
+  "group_id": "400573524543043893"
+}
+{
+  "time": 1743361860006,
+  "name": "moq-transfork-03:group_created",
+  "data": {
+    "subscribe_id": 0,
+    "group_sequence": 11
+  },
+  "group_id": "400573524543043893"
+}
+{
+  "time": 1743361860006,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 17
+    }
+  },
+  "group_id": "400573524543043893"
+}
+{
+  "time": 1743361860006,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "400573524543043893"
+}
+{
+  "time": 1743361861021,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "400573524543043893"
+}
+{
+  "time": 1743361862008,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "400573524543043893"
+}
+{
+  "time": 1743361863009,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "400573524543043893"
+}
+{
+  "time": 1743361864014,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "400573524543043893"
+}
+{
+  "time": 1743361865002,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "400573524543043893"
+}
+{
+  "time": 1743361866003,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "400573524543043893"
+}

@@ -1,4 +1,4 @@
-import { ChangeEvent } from "react";
+import { ChangeEvent, MouseEvent } from "react";
 
 import FileList from "./FileList";
 import InlineCode from "@/components/InlineCode";
@@ -7,6 +7,7 @@ import { LogFile } from "@/model/LogFile";
 import FileInput from "./FileInput";
 import Note from "@/components/Note";
 import { ActionType, FileAction, useFiles, useFilesDispatch } from "@/contexts/FilesContext";
+import Button from "../Button";
 
 export default function FileImport() {
     const files = useFiles();
@@ -17,6 +18,8 @@ export default function FileImport() {
             <FileInput handleImport={handleImport} />
             <Note>Only <InlineCode>.sqlog</InlineCode> files are currently supported</Note>
             <Note>Files won&apos;t be uploaded to the server</Note>
+            <h3 className="block mt-5 mb-2 text-md font-medium text-gray-900 dark:text-white">Import demo files</h3>
+            <Button onClick={handleDemoImport}>Import demo files</Button>
             <FileList />
         </form>
     );
@@ -27,10 +30,25 @@ export default function FileImport() {
             return;
         }
 
+        handleFileImport(event.target.files);
+    }
+
+    function handleDemoImport(event: MouseEvent<HTMLButtonElement>) {
+        event.preventDefault();
+
+        fetch("/api/getLogs")
+            .then((res) => res.json())
+            .then((data) => {
+                const importedFiles = data.logs.map((file: { name: string, content: string }) => new File([file.content], file.name));
+                handleFileImport(importedFiles);
+            });
+    }
+
+    function handleFileImport(importedFiles: FileList) {
         const newFiles: LogFile[] = [];
 
-        for (let i = 0; i < event.target.files.length; i++) {
-            const file = event.target.files[i];
+        for (let i = 0; i < importedFiles.length; i++) {
+            const file = importedFiles[i];
 
             // TODO: Fix so files aren't being listed when invalid (they are listed anyway when invalid now)
             try {

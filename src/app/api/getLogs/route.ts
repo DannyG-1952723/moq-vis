@@ -11,8 +11,6 @@ export async function GET() {
             const filePath = path.join(logsDirectory, file);
             const content = fs.readFileSync(filePath, "utf-8");
 
-            console.log(content);
-
             return { name: file, content: content };
         })
 

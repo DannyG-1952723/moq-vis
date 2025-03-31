@@ -15,6 +15,8 @@ export default function FileImport() {
 
     const demoLogs = ["1_clock_pub.sqlog", "2_relay.sqlog", "3_clock_sub.sqlog"];
 
+    const githubPages = process.env.NEXT_PUBLIC_GITHUB_PAGES !== undefined;
+
     return (
         <form className="w-full">
             <FileInput handleImport={handleImport} />
@@ -41,7 +43,8 @@ export default function FileImport() {
         const fetchLogs = async () => {
             const fetchedLogs = await Promise.all(
                 demoLogs.map(async (file) => {
-                    const response = await fetch(`/demo_logs/${file}`);
+                    const githubPagesPrefix = githubPages ? "/moq-vis" : "";
+                    const response = await fetch(`${githubPagesPrefix}/demo_logs/${file}`);
                     const buffer = await response.arrayBuffer();
                     const content = new TextDecoder().decode(new Uint8Array(buffer));
                     return { name: file, content };

@@ -36,6 +36,7 @@ export default function SequenceDiagram() {
     const xScale = d3.scalePoint().domain(activeFiles.map(file => file.name)).range([0, innerWidth]);
     const yScale = d3.scaleLinear().domain([0, network.numEvents - 1]).range([axisMargin + BLOCK_SIZE / 2, innerHeight - axisMargin - BLOCK_SIZE / 2]);
 
+    // TODO: Display events that aren't part of any connections (for when the other part of the connection isn't imported)
     const diagram = (
         <svg width={width} height={height} className="bg-white border border-gray-200 rounded-lg shadow-inner dark:bg-gray-700 dark:border-gray-700">
             <defs>

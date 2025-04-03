@@ -62,7 +62,6 @@ class LogFileDetails {
     serialization_format: string;
     title?: string;
     description?: string;
-    event_schemas: string[];
     trace: LogFileTrace;
 
     // JSON.parse() returns any
@@ -75,7 +74,6 @@ class LogFileDetails {
         this.serialization_format = json["serialization_format"];
         this.title = json["title"];
         this.description = json["description"];
-        this.event_schemas = json["event_schemas"];
         this.trace = new LogFileTrace(json["trace"], fileName);
     }
 }
@@ -85,10 +83,12 @@ class LogFileTrace {
     description?: string;
     common_fields?: CommonFields;
     vantage_point?: VantagePoint;
+    event_schemas: string[];
 
     constructor(json: any, fileName: string) {
         this.title = json["title"];
         this.description = json["description"];
+        this.event_schemas = json["event_schemas"];
 
         if ("common_fields" in json) {
             this.common_fields = new CommonFields(json["common_fields"], fileName);
@@ -104,14 +104,12 @@ class CommonFields {
     path?: string;
     time_format?: TimeFormat;
     reference_time?: ReferenceTime;
-    protocol_types?: string[];
     group_id?: string;
     // TODO: Maybe replace 'any'
     custom_fields?: any;
 
     constructor(json: any, fileName: string) {
         this.path = json["path"];
-        this.protocol_types = json["protocol_types"];
         this.group_id = json["group_id"];
         this.custom_fields = json["custom_fields"];
 

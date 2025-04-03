@@ -12,7 +12,6 @@ export class LogFileEvent {
     data: ProtocolEventData;
     path?: string;
     time_format?: TimeFormat;
-    protocol_types?: string[];
     group_id?: string;
     system_information?: SystemInformation;
     // TODO: Maybe replace 'any'
@@ -28,7 +27,6 @@ export class LogFileEvent {
         this.name = json["name"];
         this.data = this.parseProtocolEventData(this.getShortName(), json["data"], fileName);
         this.path = json["path"];
-        this.protocol_types = json["protocol_types"];
         this.group_id = json["group_id"];
         this.custom_fields = json["custom_fields"];
 

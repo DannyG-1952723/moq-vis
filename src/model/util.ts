@@ -1,4 +1,5 @@
-import { LogFileEvent, MoqEventData, Stream } from "./Events";
+import { LogFileEvent } from "./Events";
+import { MoqEventData, Stream } from "./moq";
 
 export const BLOCK_SIZE: number = 30;
 

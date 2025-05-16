@@ -17,9 +17,9 @@ export class QuicEventData implements ProtocolEventData {
         }
     }
 
-    equals(other: ProtocolEventData): boolean {
+    corresponds(other: ProtocolEventData): boolean {
         if (other instanceof QuicEventData) {
-            return this.payload.equals(other.payload);
+            return this.payload.corresponds(other.payload);
         }
 
         return false;
@@ -27,7 +27,7 @@ export class QuicEventData implements ProtocolEventData {
 }
 
 interface QuicEvent {
-    equals(other: QuicEvent): boolean;
+    corresponds(other: QuicEvent): boolean;
 }
 
 export class StreamStateUpdated implements QuicEvent {
@@ -58,10 +58,7 @@ export class StreamStateUpdated implements QuicEvent {
         }
     }
 
-    equals(other: QuicEvent): boolean {
-        // if (other instanceof StreamStateUpdated) {
-        //     return this.stream_id === other.stream_id && this.stream_type === other.stream_type && this.old === other.old && this.new === other.new && this.stream_side === other.stream_side;
-        // }
+    corresponds(other: QuicEvent): boolean {
         if (other instanceof StreamStateUpdated) {
             return this.stream_id === other.stream_id && this.stream_type === other.stream_type && this.old === other.old && this.new === other.new && this.stream_side !== other.stream_side;
         }

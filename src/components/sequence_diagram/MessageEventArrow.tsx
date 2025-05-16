@@ -41,6 +41,7 @@ export default function MessageEventArrow({ createdEvent, parsedEvent, x1, y1, x
                 <text ref={textRef} transform={`rotate(${textAngle}, ${textMiddleX}, ${textMiddleY})`} x={textMiddleX} y={textMiddleY} textAnchor="middle" dominantBaseline="central" fill="white">{shortName}</text>
             </g>
 
+            {/* TODO: Merge the content of both events in the modal code block */}
             {showModal && createPortal(
                 <Modal title={"Message summary"} code={JSON.stringify(messageEvent, null, 4)} handleClose={() => setShowModal(false)} />, document.body
             )}

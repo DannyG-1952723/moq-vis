@@ -1,6 +1,8 @@
 import * as d3 from "d3";
 import { LogFile } from "./LogFile";
 import { LogFileEvent } from "./Events";
+import { StreamStateUpdated } from "./quic";
+import { MoqEventData } from "./moq";
 
 function eventsToConnectionEvents(eventList: LogFileEvent[], fileName: string): ConnectionEvent[] {
     return eventList.map(event => new ConnectionEvent(event, 0, fileName));
@@ -140,14 +142,45 @@ export class ConnectionEvent {
     }
 
     isMessageEvent(): boolean {
+        if (this.event.name.startsWith("moq")) {
+            return this.isMoqMessageEvent();
+        }
+        else if (this.event.name.startsWith("quic")) {
+            return this.isQuicMessageEvent();
+        }
+        // This else should never be reached
+        else {
+            throw Error("Unreachable");
+        }
+    }
+
+    isMoqMessageEvent(): boolean {
         if (this.event.name.endsWith("created") || this.event.name.endsWith("parsed")) {
             return true;
         }
 
-        return (this.event.name.endsWith("session_started") || this.event.name.endsWith("subscription_started"))
+        return (this.event.name.endsWith("session_started") || this.event.name.endsWith("subscription_started"));
+    }
+
+    // TODO: Implement
+    isQuicMessageEvent(): boolean {
+        return true;
     }
 
     isCorrespondingEvent(other: ConnectionEvent): boolean {
+        if (this.event.name.startsWith("moq")) {
+            return this.isCorrespondingMoqEvent(other);
+        }
+        else if (this.event.name.startsWith("quic")) {
+            return this.isCorrespondingQuicEvent(other);
+        }
+        // This else should never be reached
+        else {
+            throw Error("Unreachable");
+        }
+    }
+
+    isCorrespondingMoqEvent(other: ConnectionEvent): boolean {
         const validCombo1 = this.event.name.endsWith("created") && other.event.name.endsWith("parsed");
         const validCombo2 = this.event.name.endsWith("parsed") && other.event.name.endsWith("created");
 
@@ -159,13 +192,49 @@ export class ConnectionEvent {
         const shortName2 = other.event.getShortNameWithoutAction();
 
         if (shortName1 === shortName2) {
-            return this.event.dataEquals(other.event);
+            return this.event.hasCorrespondingData(other.event);
+        }
+
+        return false;
+    }
+
+    isCorrespondingQuicEvent(other: ConnectionEvent): boolean {
+        const shortName1 = this.event.getShortNameWithoutAction();
+        const shortName2 = other.event.getShortNameWithoutAction();
+
+        if (shortName1 === shortName2) {
+            return this.event.hasCorrespondingData(other.event);
         }
 
         return false;
     }
 
     isCreatedEvent(): boolean {
+        if (this.event.name.startsWith("moq")) {
+            return this.isMoqCreatedEvent();
+        }
+        else if (this.event.name.startsWith("quic")) {
+            return this.isQuicCreatedEvent();
+        }
+        // This else should never be reached
+        else {
+            throw Error("Unreachable");
+        }
+    }
+
+    isMoqCreatedEvent(): boolean {
         return this.event.name.endsWith("created");
+    }
+
+    isQuicCreatedEvent(): boolean {
+        let data = this.event.data as MoqEventData;
+        
+        if (this.event.name.endsWith("stream_state_updated")) {
+            return (data.payload as StreamStateUpdated).stream_side === "sending";
+        }
+        // TODO: Implement for other events
+        else {
+            return true;
+        }
     }
 }

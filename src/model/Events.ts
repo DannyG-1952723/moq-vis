@@ -54,8 +54,8 @@ export class LogFileEvent {
         }
     }
 
-    dataEquals(other: LogFileEvent): boolean {
-        return this.data.equals(other.data);
+    hasCorrespondingData(other: LogFileEvent): boolean {
+        return this.data.corresponds(other.data);
     }
 
     getShortName(): string {
@@ -76,7 +76,7 @@ export class LogFileEvent {
 }
 
 export interface ProtocolEventData {
-    equals(other: ProtocolEventData): boolean;
+    corresponds(other: ProtocolEventData): boolean;
 }
 
 export class RawInfo {
@@ -91,7 +91,7 @@ export class RawInfo {
     }
 
     // Assumes fields are equal when one or both of them are missing
-    equals(other: RawInfo): boolean {
+    corresponds(other: RawInfo): boolean {
         let lengthEquals = true;
         let payloadLengthEquals = true;
         let dataEquals = true;

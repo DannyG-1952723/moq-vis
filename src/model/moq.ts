@@ -57,9 +57,9 @@ export class MoqEventData implements ProtocolEventData {
         }
     }
 
-    equals(other: ProtocolEventData): boolean {
+    corresponds(other: ProtocolEventData): boolean {
         if (other instanceof MoqEventData) {
-            return this.payload.equals(other.payload);
+            return this.payload.corresponds(other.payload);
         }
         
         return false;
@@ -67,7 +67,7 @@ export class MoqEventData implements ProtocolEventData {
 }
 
 interface MoqEvent {
-    equals(other: MoqEvent): boolean;
+    corresponds(other: MoqEvent): boolean;
 }
 
 export class Stream implements MoqEvent {
@@ -81,7 +81,7 @@ export class Stream implements MoqEvent {
         this.stream_type = json["stream_type"];
     }
 
-    equals(other: MoqEvent): boolean {
+    corresponds(other: MoqEvent): boolean {
         if (other instanceof Stream) {
             return this.stream_type === other.stream_type;
         }
@@ -107,7 +107,7 @@ class SessionClient implements MoqEvent {
         this.tracing_id = json["tracing_id"];
     }
 
-    equals(other: MoqEvent): boolean {
+    corresponds(other: MoqEvent): boolean {
         if (other instanceof SessionClient) {
             return equalArrays(this.supported_versions, other.supported_versions) && equalArrays(this.extension_ids, other.extension_ids) && this.tracing_id === other.tracing_id;
         }
@@ -129,7 +129,7 @@ class SessionServer implements MoqEvent {
         this.extension_ids = json["extension_ids"];
     }
 
-    equals(other: MoqEvent): boolean {
+    corresponds(other: MoqEvent): boolean {
         if (other instanceof SessionServer) {
             return this.selected_version === other.selected_version && equalArrays(this.extension_ids, other.extension_ids);
         }
@@ -149,7 +149,7 @@ class SessionUpdate implements MoqEvent {
         this.session_bitrate = json["session_bitrate"];
     }
 
-    equals(other: MoqEvent): boolean {
+    corresponds(other: MoqEvent): boolean {
         if (other instanceof SessionUpdate) {
             return this.session_bitrate === other.session_bitrate;
         }
@@ -169,7 +169,7 @@ class AnnouncePlease implements MoqEvent {
         this.track_prefix_parts = json["track_prefix_parts"];
     }
 
-    equals(other: MoqEvent): boolean {
+    corresponds(other: MoqEvent): boolean {
         if (other instanceof AnnouncePlease) {
             return equalArrays(this.track_prefix_parts, other.track_prefix_parts);
         }
@@ -191,7 +191,7 @@ class Announce implements MoqEvent {
         this.track_suffix_parts = json["track_suffix_parts"];
     }
 
-    equals(other: MoqEvent): boolean {
+    corresponds(other: MoqEvent): boolean {
         if (other instanceof Announce) {
             return this.announce_status === other.announce_status && equalNestedArrays(this.track_suffix_parts, other.track_suffix_parts);
         }
@@ -223,7 +223,7 @@ class Subscribe implements MoqEvent {
         this.group_max = json["group_max"];
     }
 
-    equals(other: MoqEvent): boolean {
+    corresponds(other: MoqEvent): boolean {
         if (other instanceof Subscribe) {
             return this.subscribe_id === other.subscribe_id && equalArrays(this.track_path_parts, other.track_path_parts) && this.track_priority === other.track_priority && this.group_order == other.group_order && this.group_min == other.group_min && this.group_max == other.group_max;
         }
@@ -249,7 +249,7 @@ class SubscribeUpdate implements MoqEvent {
         this.group_max = json["group_max"];
     }
 
-    equals(other: MoqEvent): boolean {
+    corresponds(other: MoqEvent): boolean {
         if (other instanceof SubscribeUpdate) {
             return this.track_priority === other.track_priority && this.group_order == other.group_order && this.group_min == other.group_min && this.group_max == other.group_max;
         }
@@ -273,7 +273,7 @@ class SubscribeGap implements MoqEvent {
         this.group_error_code = json["group_error_code"];
     }
 
-    equals(other: MoqEvent): boolean {
+    corresponds(other: MoqEvent): boolean {
         if (other instanceof SubscribeGap) {
             return this.group_start === other.group_start && this.group_count == other.group_count && this.group_error_code == other.group_error_code;
         }
@@ -297,7 +297,7 @@ class Info implements MoqEvent {
         this.group_order = json["group_order"];
     }
 
-    equals(other: MoqEvent): boolean {
+    corresponds(other: MoqEvent): boolean {
         if (other instanceof Info) {
             return this.track_priority === other.track_priority && this.group_latest == other.group_latest && this.group_order == other.group_order;
         }
@@ -317,7 +317,7 @@ class InfoPlease implements MoqEvent {
         this.track_path_parts = json["track_path_parts"];
     }
 
-    equals(other: MoqEvent): boolean {
+    corresponds(other: MoqEvent): boolean {
         if (other instanceof InfoPlease) {
             return equalArrays(this.track_path_parts, other.track_path_parts);
         }
@@ -343,7 +343,7 @@ class Fetch implements MoqEvent {
         this.frame_sequence = json["frame_sequence"];
     }
 
-    equals(other: MoqEvent): boolean {
+    corresponds(other: MoqEvent): boolean {
         if (other instanceof Fetch) {
             return equalArrays(this.track_path_parts, other.track_path_parts) && this.track_priority === other.track_priority && this.group_sequence === other.group_sequence && this.frame_sequence === other.frame_sequence;
         }
@@ -363,7 +363,7 @@ class FetchUpdate implements MoqEvent {
         this.track_priority = json["track_priority"];
     }
 
-    equals(other: MoqEvent): boolean {
+    corresponds(other: MoqEvent): boolean {
         if (other instanceof FetchUpdate) {
             return this.track_priority === other.track_priority;
         }
@@ -385,7 +385,7 @@ class Group implements MoqEvent {
         this.group_sequence = json["group_sequence"];
     }
 
-    equals(other: MoqEvent): boolean {
+    corresponds(other: MoqEvent): boolean {
         if (other instanceof Group) {
             return this.subscribe_id === other.subscribe_id && this.group_sequence === other.group_sequence;
         }
@@ -405,9 +405,9 @@ class Frame implements MoqEvent {
         this.payload = new RawInfo(json["payload"]);
     }
 
-    equals(other: MoqEvent): boolean {
+    corresponds(other: MoqEvent): boolean {
         if (other instanceof Frame) {
-            return this.payload.equals(other.payload);
+            return this.payload.corresponds(other.payload);
         }
 
         return false;

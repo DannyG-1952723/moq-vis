@@ -164,6 +164,10 @@ export class ConnectionEvent {
 
     // TODO: Implement
     isQuicMessageEvent(): boolean {
+        // if (this.event.name.endsWith("connection_started")) {
+        //     return false;
+        // }
+        
         return true;
     }
 

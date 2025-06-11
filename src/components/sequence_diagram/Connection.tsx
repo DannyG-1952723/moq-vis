@@ -3,7 +3,7 @@ import { JSX } from "react";
 import MessageEvent from "./MessageEvent";
 import HalfMessageEvent from "./HalfMessageEvent";
 import EventBlock from "./EventBlock";
-import { Colors } from "@/model/util";
+import { OTHER_COLORS } from "@/model/util";
 
 interface ConnectionProps {
     conn: Conn;
@@ -63,8 +63,8 @@ export default function Connection({ conn, xScale, yScale, startTime }: Connecti
     }
 
     function createEvent(event: ConnectionEvent): JSX.Element {
-        // TODO: Change colors and give actual value of 'isLeft'
-        return <EventBlock xPos={xScale(event.fileName)!} yPos={yScale(event.eventNum)} colors={new Colors("gray", "lightgray")} event={event.event} startTime={startTime} isLeft={true} extended={true} noAction={false} />
+        // TODO: Give actual value of 'isLeft'
+        return <EventBlock xPos={xScale(event.fileName)!} yPos={yScale(event.eventNum)} colors={OTHER_COLORS} event={event.event} startTime={startTime} isLeft={true} extended={true} noAction={false} />
     }
 
     function createMessageEvent(event1: ConnectionEvent, event2: ConnectionEvent): JSX.Element {

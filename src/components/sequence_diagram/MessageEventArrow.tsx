@@ -43,7 +43,7 @@ export default function MessageEventArrow({ createdEvent, parsedEvent, x1, y1, x
 
             {/* TODO: Merge the content of both events in the modal code block */}
             {showModal && createPortal(
-                <Modal title={"Message summary"} code={JSON.stringify(messageEvent, null, 4)} handleClose={() => setShowModal(false)} />, document.body
+                <Modal title={"Message summary"} code={JSON.stringify(messageEvent.summary(), null, 4)} handleClose={() => setShowModal(false)} />, document.body
             )}
         </>
     );

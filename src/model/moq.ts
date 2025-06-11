@@ -64,6 +64,11 @@ export class MoqEventData implements ProtocolEventData {
         
         return false;
     }
+
+    // TODO: Update function when other MoQ events are added that might have different data
+    getSummary(other: ProtocolEventData) {
+        return this.payload;
+    }
 }
 
 interface MoqEvent {

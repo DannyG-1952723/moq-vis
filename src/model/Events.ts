@@ -64,6 +64,10 @@ export class LogFileEvent {
     
     getShortNameWithoutAction(): string {
         const noNamespace = this.getShortName();
+
+        if (noNamespace.endsWith("packet_sent") || noNamespace.endsWith("packet_received")) {
+            return "packet";
+        }
     
         const index = Math.max(noNamespace.indexOf("_created"), noNamespace.indexOf("_parsed"));
     
@@ -73,10 +77,23 @@ export class LogFileEvent {
     
         return noNamespace;
     }
+
+    // Assumes 'this' is the createdEvent
+    getSummary(parsedEvent: LogFileEvent): any {
+        return {
+            time_sent: this.time,
+            time_received: parsedEvent.time,
+            name: `${this.name} / ${parsedEvent.name}`,
+            data: this.data.getSummary(parsedEvent.data),
+            // Both events should have the same group ID
+            group_id: this.group_id
+        }
+    }
 }
 
 export interface ProtocolEventData {
     corresponds(other: ProtocolEventData): boolean;
+    getSummary(other: ProtocolEventData): any;
 }
 
 export class RawInfo {
@@ -110,6 +127,14 @@ export class RawInfo {
 
         return lengthEquals && payloadLengthEquals && dataEquals;
     }
+
+    equals(other: RawInfo | undefined): boolean {
+        if (other === undefined) {
+            return false;
+        }
+
+        return this.length === other.length && this.payload_length === other.payload_length && this.data === other.data;
+    }
 }
 
 type HexString = string;
@@ -128,22 +153,16 @@ class SystemInformation {
 }
 
 export class MessageEvent {
-    time_sent: number;
-    time_received: number;
-    name: string;
-    // TODO: Maybe change
-    data: any;
-    group_id: string | undefined;
+    createdEvent: LogFileEvent;
+    parsedEvent: LogFileEvent;
 
     constructor(createdEvent: LogFileEvent, parsedEvent: LogFileEvent) {
-        this.time_sent = createdEvent.time;
-        this.time_received = parsedEvent.time;
+        this.createdEvent = createdEvent;
+        this.parsedEvent = parsedEvent;
+    }
 
-        this.name = `${createdEvent.name} / ${parsedEvent.name}`;
-
-        // Both events should have the same data
-        this.data = createdEvent.data;
-        this.group_id = createdEvent.group_id;
+    summary(): any {
+        return this.createdEvent.getSummary(this.parsedEvent);
     }
 }
 
@@ -161,7 +180,7 @@ export function equalArrays(array1: string[] | number[], array2: string[] | numb
     return true;
 }
 
-export function equalNestedArrays(array1: string[][], array2: string[][]) {
+export function equalNestedArrays(array1: string[][] | number[][], array2: string[][] | number[][]) {
     if (array1.length !== array2.length) {
         return false;
     }

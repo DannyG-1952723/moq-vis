@@ -167,7 +167,7 @@ export class ConnectionEvent {
         // if (this.event.name.endsWith("connection_started")) {
         //     return false;
         // }
-        
+
         return true;
     }
 
@@ -203,14 +203,7 @@ export class ConnectionEvent {
     }
 
     isCorrespondingQuicEvent(other: ConnectionEvent): boolean {
-        const shortName1 = this.event.getShortNameWithoutAction();
-        const shortName2 = other.event.getShortNameWithoutAction();
-
-        if (shortName1 === shortName2) {
-            return this.event.hasCorrespondingData(other.event);
-        }
-
-        return false;
+        return this.event.hasCorrespondingData(other.event);
     }
 
     isCreatedEvent(): boolean {
@@ -235,6 +228,12 @@ export class ConnectionEvent {
         
         if (this.event.name.endsWith("stream_state_updated")) {
             return (data.payload as StreamStateUpdated).stream_side === "sending";
+        }
+        if (this.event.name.endsWith("packet_sent")) {
+            return true;
+        }
+        if (this.event.name.endsWith("packet_received")) {
+            return false;
         }
         // TODO: Implement for other events
         else {

@@ -9,6 +9,7 @@ interface ModalProps {
     handleClose: MouseEventHandler;
 }
 
+// TODO: Make vertically scrollable (horizontally already works)
 export default function Modal({ title, code, handleClose }: ModalProps) {
     return (
         <div onClick={handleOverlayClick} tabIndex={-1} className="fixed inset-0 z-50 flex justify-center items-center bg-black/50">

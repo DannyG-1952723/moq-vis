@@ -6,6 +6,7 @@ import { DateTime } from "luxon";
 
 import { InvalidFileError } from "@/errors/InvalidFileError";
 import { LogFileEvent } from "./Events";
+import { InvalidEventError } from "@/errors/InvalidEventError";
 
 export class LogFile {
     name: string;
@@ -49,7 +50,12 @@ export class LogFile {
                 }
             }
             catch(err) {
-                throw new InvalidFileError(file.name);
+                if (err instanceof InvalidEventError) {
+                    console.error(err);
+                }
+                else {
+                    throw err;
+                }
             }
         }
 

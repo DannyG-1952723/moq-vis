@@ -25,7 +25,7 @@ const SUBSCRIBE_COLORS = new Colors("#955196", "#703d70");
 const INFO_COLORS = new Colors("#ff6e54", "#fe2700");
 const FETCH_COLORS = new Colors("#dd5182", "#bd255a");
 const GROUP_COLORS = new Colors("#ffa600", "#bf7d00");
-const OTHER_COLORS = new Colors("#2fc479", "#269d61");
+export const OTHER_COLORS = new Colors("#2fc479", "#269d61");
 
 export function getColors(event: LogFileEvent): Colors {
     const name = event.name;

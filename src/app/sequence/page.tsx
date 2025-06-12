@@ -20,7 +20,7 @@ export default function Page() {
         <div className="font-[family-name:var(--font-geist-sans)]">
             <main className="flex flex-col row-start-0 sm:items-start w-full">   
                 <FileList />
-                <ProtocolToggle showQuic={showQuicEvents} showMoq={showMoqEvents} handleQuicToggle={onQuicToggle} handleMoqToggle={onMoqToggle} />
+                <ProtocolToggle show={activeFiles.length > 0} showQuic={showQuicEvents} showMoq={showMoqEvents} handleQuicToggle={onQuicToggle} handleMoqToggle={onMoqToggle} />
                 <SequenceDiagram files={files} activeFiles={activeFiles} network={network} />
             </main>
         </div>

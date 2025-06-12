@@ -1,17 +1,22 @@
 import ToggleButton from "./ToggleButton";
 
 interface ProtocolToggleProps {
+    show: boolean;
     showQuic: boolean;
     showMoq: boolean
     handleQuicToggle: (value: boolean) => void;
     handleMoqToggle: (value: boolean) => void;
 }
 
-export default function ProtocolToggle({ showQuic, showMoq, handleQuicToggle, handleMoqToggle }: ProtocolToggleProps) {
+export default function ProtocolToggle({ show, showQuic, showMoq, handleQuicToggle, handleMoqToggle }: ProtocolToggleProps) {
+    if (!show) {
+        return <></>;
+    }
+
     return (
-        <>
-            <ToggleButton onChange={() => handleQuicToggle(!showQuic)} checked={showQuic} />
-            <ToggleButton onChange={() => handleMoqToggle(!showMoq)} checked={showMoq} />
-        </>
+        <div className="mt-5 flex flex-col space-y-1.5">
+            <ToggleButton label="Show QUIC events" onChange={() => handleQuicToggle(!showQuic)} checked={showQuic} />
+            <ToggleButton label="Show Media over QUIC events" onChange={() => handleMoqToggle(!showMoq)} checked={showMoq} />
+        </div>
     );
 }

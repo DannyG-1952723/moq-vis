@@ -4,12 +4,21 @@ import { LogFileEvent } from "./Events";
 import { StreamStateUpdated } from "./quic";
 import { MoqEventData } from "./moq";
 
-function eventsToConnectionEvents(eventList: LogFileEvent[], fileName: string): ConnectionEvent[] {
-    return eventList.map(event => new ConnectionEvent(event, 0, fileName));
+function eventsToConnectionEvents(eventList: LogFileEvent[], fileName: string, showQuicEvents: boolean, showMoqEvents: boolean): ConnectionEvent[] {
+    let list = eventList;
+    
+    if (!showQuicEvents) {
+        list = eventList.filter(event => !event.name.startsWith("quic"));
+    }
+    if (!showMoqEvents) {
+        list = eventList.filter(event => !event.name.startsWith("moq"));
+    }
+
+    return list.map(event => new ConnectionEvent(event, 0, fileName));
 }
 
-function getEventsFromFiles(events: ConnectionEvent[], logFile: LogFile): ConnectionEvent[] {
-    return events.concat(eventsToConnectionEvents(logFile.events, logFile.name));
+function getEventsFromFiles(events: ConnectionEvent[], logFile: LogFile, showQuic: boolean, showMoq: boolean): ConnectionEvent[] {
+    return events.concat(eventsToConnectionEvents(logFile.events, logFile.name, showQuic, showMoq));
 }
 
 export class Network {
@@ -18,8 +27,8 @@ export class Network {
     numEvents: number;
     startTime: number;
 
-    constructor(logFiles: LogFile[]) {
-        const allEvents = d3.reduce(logFiles, getEventsFromFiles, []).sort((event1, event2) => event1.event.time - event2.event.time);
+    constructor(logFiles: LogFile[], showQuicEvents: boolean, showMoqEvents: boolean) {
+        const allEvents = d3.reduce(logFiles, (events: ConnectionEvent[], logFile: LogFile) => getEventsFromFiles(events, logFile, showQuicEvents, showMoqEvents), []).sort((event1, event2) => event1.event.time - event2.event.time);
 
         if (allEvents.length > 0) {
             this.startTime = allEvents[0].event.time;

@@ -5,11 +5,15 @@ import { Network } from "@/model/Network";
 import Connection from "./Connection";
 import Axis from "./Axis";
 import { BLOCK_SIZE } from "@/model/util";
+import { LogFile } from "@/model/LogFile";
 
-export default function SequenceDiagram() {
-    const files = useFiles();
-    const activeFiles = files.filter((file) => file.active);
+interface SequenceDiagramProps {
+    files: LogFile[];
+    activeFiles: LogFile[];
+    network: Network;
+}
 
+export default function SequenceDiagram({ files, activeFiles, network }: SequenceDiagramProps) {
     const title = <h3 className="block mt-5 mb-2 text-md font-medium text-gray-900 dark:text-white">Sequence diagram</h3>;
 
     if (files.length === 0 || activeFiles.length === 0) {
@@ -21,8 +25,6 @@ export default function SequenceDiagram() {
             </>
         );
     }
-
-    const network = new Network(activeFiles);
     
     const margin = {top: 50, right: 145, bottom: 50, left: 115}
     const axisMargin = 25;

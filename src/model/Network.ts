@@ -8,10 +8,10 @@ function eventsToConnectionEvents(eventList: LogFileEvent[], fileName: string, s
     let list = eventList;
     
     if (!showQuicEvents) {
-        list = eventList.filter(event => !event.name.startsWith("quic"));
+        list = list.filter(event => !event.name.startsWith("quic"));
     }
     if (!showMoqEvents) {
-        list = eventList.filter(event => !event.name.startsWith("moq"));
+        list = list.filter(event => !event.name.startsWith("moq"));
     }
 
     return list.map(event => new ConnectionEvent(event, 0, fileName));

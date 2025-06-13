@@ -233,7 +233,7 @@ export class ConnectionEvent {
     }
 
     isQuicCreatedEvent(): boolean {
-        let data = this.event.data as MoqEventData;
+        const data = this.event.data as MoqEventData;
         
         if (this.event.name.endsWith("stream_state_updated")) {
             return (data.payload as StreamStateUpdated).stream_side === "sending";

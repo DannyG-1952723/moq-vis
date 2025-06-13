@@ -3,6 +3,7 @@ import { LogFile } from "./LogFile";
 import { LogFileEvent } from "./Events";
 import { StreamStateUpdated } from "./quic";
 import { MoqEventData } from "./moq";
+import { groupBy } from "./util";
 
 function eventsToConnectionEvents(eventList: LogFileEvent[], fileName: string, showQuicEvents: boolean, showMoqEvents: boolean): ConnectionEvent[] {
     let list = eventList;
@@ -43,7 +44,7 @@ export class Network {
             allEvents[i].eventNum = i;
         }
 
-        const groupedEvents = Object.groupBy(allEvents, event => event.fileName);
+        const groupedEvents = groupBy(allEvents, event => event.fileName);
 
         const connectionNodes = this.createConnectionNodes(logFiles, groupedEvents);
         

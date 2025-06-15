@@ -30,13 +30,13 @@ export default function SequenceDiagram({ files, activeFiles, network }: Sequenc
     const axisMargin = 25;
 
     const width = 1280;
-    const height = (network.numEvents - 1) * 50 + BLOCK_SIZE + margin.top + margin.bottom + 2 * axisMargin;
+    const height = (network.maxEventNums - 1) * 50 + BLOCK_SIZE + margin.top + margin.bottom + 2 * axisMargin;
 
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
     const xScale = d3.scalePoint().domain(activeFiles.map(file => file.name)).range([0, innerWidth]);
-    const yScale = d3.scaleLinear().domain([0, network.numEvents - 1]).range([axisMargin + BLOCK_SIZE / 2, innerHeight - axisMargin - BLOCK_SIZE / 2]);
+    const yScale = d3.scaleLinear().domain([0, network.maxEventNums - 1]).range([axisMargin + BLOCK_SIZE / 2, innerHeight - axisMargin - BLOCK_SIZE / 2]);
 
     // TODO: Display events that aren't part of any connections (for when the other part of the connection isn't imported)
     const diagram = (

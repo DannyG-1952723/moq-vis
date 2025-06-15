@@ -1,5 +1,6 @@
 import { LogFileEvent } from "./Events";
 import { MoqEventData, Stream } from "./moq";
+import { ConnectionEvent } from "./Network";
 
 export const BLOCK_SIZE: number = 30;
 
@@ -155,4 +156,40 @@ export function groupBy<T, K extends PropertyKey>(
         (result[key] ||= []).push(item);
         return result;
     }, {} as Record<K, T[]>);
+}
+
+export function makeTimestampIter(events: ConnectionEvent[]): Iterator<[number, number]> {
+    let nextIndex = 0;
+    
+    const timestampIter: Iterator<[number, number]> = {
+        next(): IteratorResult<[number, number]> {
+            if (nextIndex < events.length) {
+                const result: IteratorResult<[number, number]> = { value: [events[nextIndex].event.time, nextIndex], done: false };
+                nextIndex++;
+
+                return result;
+            }
+
+            return { value: [NaN, NaN], done: true };
+        }
+    };
+
+    return timestampIter;
+}
+
+export function getMinTimestampIndex(timestamps: number[], prevIndices: number[]): number {
+    let min = Infinity;
+    let minIndex = -1;
+
+    for (let i = 0; i < timestamps.length; i++) {
+        if (timestamps[i] < min) {
+            min = timestamps[i];
+            minIndex = i;
+        }
+        else if (timestamps[i] === min && prevIndices.includes(minIndex)) {
+            minIndex = i;
+        }
+    }
+
+    return minIndex;
 }

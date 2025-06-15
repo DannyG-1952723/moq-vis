@@ -3,7 +3,7 @@ import { LogFile } from "./LogFile";
 import { LogFileEvent } from "./Events";
 import { StreamStateUpdated } from "./quic";
 import { MoqEventData } from "./moq";
-import { groupBy } from "./util";
+import { getMinTimestampIndex, groupBy, makeTimestampIter } from "./util";
 
 function eventsToConnectionEvents(eventList: LogFileEvent[], fileName: string, showQuicEvents: boolean, showMoqEvents: boolean): ConnectionEvent[] {
     let list = eventList;
@@ -25,7 +25,7 @@ function getEventsFromFiles(events: ConnectionEvent[], logFile: LogFile, showQui
 export class Network {
     nodes: string[];
     connections: Connection[];
-    numEvents: number;
+    maxEventNums: number;
     startTime: number;
 
     constructor(logFiles: LogFile[], showQuicEvents: boolean, showMoqEvents: boolean) {
@@ -38,13 +38,11 @@ export class Network {
             this.startTime = 0;
         }
 
-        this.numEvents = allEvents.length;
-
-        for (let i = 0; i < allEvents.length; i++) {
-            allEvents[i].eventNum = i;
-        }
-
+        const fileNames = logFiles.map(file => file.name);
         const groupedEvents = groupBy(allEvents, event => event.fileName);
+        const usedFileNames = fileNames.filter(fileName => groupedEvents[fileName] != null);
+        
+        this.maxEventNums = this.calculateEventNums(groupedEvents, usedFileNames);
 
         const connectionNodes = this.createConnectionNodes(logFiles, groupedEvents);
         
@@ -104,6 +102,55 @@ export class Network {
         }
 
         return connections;
+    }
+
+    calculateEventNums(groupedEvents: Record<string, ConnectionEvent[]>, fileNames: string[]): number {
+        const timestampIters = fileNames.map(fileName => makeTimestampIter(groupedEvents[fileName]));
+
+        let timestamps = timestampIters.map(iter => iter.next());
+        let timestampIndices = timestamps.map(timestamp => timestamp.value[1]);
+        let timestampValues = timestamps.map(timestamp => timestamp.value[0]);
+
+        let done = timestamps.every(value => value.done);
+
+        let eventNum = -1;
+        let eventNumIndices: number[] = [];
+
+        let prevMin = Infinity;
+
+        while (!done) {
+            const minIndex = getMinTimestampIndex(timestampValues, eventNumIndices);
+            const min = timestampValues[minIndex];
+
+            if (min !== prevMin || eventNumIndices.includes(minIndex)) {
+                eventNum++;
+                eventNumIndices = [];
+            }
+
+            eventNumIndices.push(minIndex);
+
+            prevMin = min;
+
+            const fileName = fileNames[minIndex];
+            const timestampIndex = timestampIndices[minIndex];
+
+            groupedEvents[fileName][timestampIndex].eventNum = eventNum;
+
+            timestamps[minIndex] = timestampIters[minIndex].next();
+            timestampIndices = timestamps.map(timestamp => timestamp.value[1]);
+            timestampValues = timestamps.map(timestamp => timestamp.value[0]);
+
+            done = timestamps.every(value => value.done);
+        }
+
+        const maxEventNums = fileNames.map(fileName => {
+            const length = groupedEvents[fileName].length;
+            return groupedEvents[fileName][length - 1].eventNum;
+        });
+
+        const maxEventNum = d3.max(maxEventNums);
+
+        return (maxEventNum === undefined) ? 0 : maxEventNum + 1;
     }
 }
 

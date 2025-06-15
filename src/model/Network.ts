@@ -107,7 +107,7 @@ export class Network {
     calculateEventNums(groupedEvents: Record<string, ConnectionEvent[]>, fileNames: string[]): number {
         const timestampIters = fileNames.map(fileName => makeTimestampIter(groupedEvents[fileName]));
 
-        let timestamps = timestampIters.map(iter => iter.next());
+        const timestamps = timestampIters.map(iter => iter.next());
         let timestampIndices = timestamps.map(timestamp => timestamp.value[1]);
         let timestampValues = timestamps.map(timestamp => timestamp.value[0]);
 

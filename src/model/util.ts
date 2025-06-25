@@ -12,21 +12,25 @@ export const HOVER_ARROW_MARKER = "url(#hover-arrow)";
 export class Colors {
     normal: string;
     hover: string;
+    transparentNormal: string;
+    transparentHover: string;
 
-    constructor(normal: string, hover: string) {
+    constructor(normal: string, hover: string, opacity: string) {
         this.normal = normal;
         this.hover = hover;
+        this.transparentNormal = normal + opacity;
+        this.transparentHover = hover + opacity;
     }
 }
 
 // Got darker versions of colors using https://mdigi.tools/darken-color/
-const SESSION_COLORS = new Colors("#003f5c", "#002f45");
-const ANNOUNCE_COLORS = new Colors("#444e86", "#333a64");
-const SUBSCRIBE_COLORS = new Colors("#955196", "#703d70");
-const INFO_COLORS = new Colors("#ff6e54", "#fe2700");
-const FETCH_COLORS = new Colors("#dd5182", "#bd255a");
-const GROUP_COLORS = new Colors("#ffa600", "#bf7d00");
-export const OTHER_COLORS = new Colors("#2fc479", "#269d61");
+const SESSION_COLORS = new Colors("#003f5c", "#002f45", "40");
+const ANNOUNCE_COLORS = new Colors("#444e86", "#333a64", "40");
+const SUBSCRIBE_COLORS = new Colors("#955196", "#703d70", "40");
+const INFO_COLORS = new Colors("#ff6e54", "#fe2700", "40");
+const FETCH_COLORS = new Colors("#dd5182", "#bd255a", "40");
+const GROUP_COLORS = new Colors("#ffa600", "#bf7d00", "40");
+export const OTHER_COLORS = new Colors("#2fc479", "#269d61", "40");
 
 export function getColors(event: LogFileEvent): Colors {
     const name = event.name;

@@ -27,6 +27,7 @@ export class Network {
     connections: Connection[];
     maxEventNums: number;
     startTime: number;
+    containsQuicEvents: boolean;
 
     constructor(logFiles: LogFile[], showQuicEvents: boolean, showMoqEvents: boolean) {
         const allEvents = d3.reduce(logFiles, (events: ConnectionEvent[], logFile: LogFile) => getEventsFromFiles(events, logFile, showQuicEvents, showMoqEvents), []).sort((event1, event2) => event1.event.time - event2.event.time);
@@ -48,6 +49,8 @@ export class Network {
         
         this.nodes = logFiles.map(logFile => logFile.name);
         this.connections = this.createConnections(connectionNodes);
+
+        this.containsQuicEvents = showQuicEvents ? this.containsQuicEvent(allEvents) : false;
     }
 
     createConnectionNodes(logFiles: LogFile[], groupedEvents: Partial<Record<string, ConnectionEvent[]>>): Record<string, ConnectionNode> {
@@ -151,6 +154,16 @@ export class Network {
         const maxEventNum = d3.max(maxEventNums);
 
         return (maxEventNum === undefined) ? 0 : maxEventNum + 1;
+    }
+
+    containsQuicEvent(allEvents: ConnectionEvent[]): boolean {
+        for (const event of allEvents) {
+            if (event.event.name.startsWith("quic")) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
 

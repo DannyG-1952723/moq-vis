@@ -1,4 +1,3 @@
-import { useFiles } from "@/contexts/FilesContext";
 import * as d3 from "d3";
 import Note from "../Note";
 import { Network } from "@/model/Network";
@@ -51,7 +50,7 @@ export default function SequenceDiagram({ files, activeFiles, network }: Sequenc
             </defs>
             <g transform={`translate(${margin.left}, ${margin.top})`}>
                 {network.nodes.map(node => <Axis key={node} xPos={xScale(node)! + BLOCK_SIZE / 2} yPos={0} height={innerHeight} fileName={node} />)}
-                {network.connections.map(conn => <Connection key={conn.startingConn.connId} conn={conn} xScale={xScale} yScale={yScale} startTime={network.startTime} />)}
+                {network.connections.map(conn => <Connection key={conn.startingConn.connId} conn={conn} xScale={xScale} yScale={yScale} startTime={network.startTime} containsQuicEvents={network.containsQuicEvents} />)}
             </g>
         </svg>
     );

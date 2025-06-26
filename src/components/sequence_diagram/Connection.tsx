@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { Connection as Conn, ConnectionEvent } from "@/model/Network";
-import { JSX, useEffect, useState } from "react";
+import { JSX } from "react";
 import MessageEvent from "./MessageEvent";
 import HalfMessageEvent from "./HalfMessageEvent";
 import EventBlock from "./EventBlock";
@@ -12,46 +12,14 @@ interface ConnectionProps {
     yScale: d3.ScaleLinear<number, number, never>;
     startTime: number;
     containsQuicEvents: boolean;
+    startingId: number;
+    handleHover: (id: string | null) => void;
 }
 
-export default function Connection({ conn, xScale, yScale, startTime, containsQuicEvents }: ConnectionProps) {
-    // TODO: Use setHoveredId in the hover function of a MessageEvent with a block
-    const [hoveredId, setHoveredId] = useState<number | null>(null);
-
-    const events = createEvents();
-
-    useEffect(() => {
-        const messageEvents = d3.selectAll<SVGGElement, string>(".message_event");
-        const quicEvents = d3.selectAll<SVGGElement, unknown>(".quic").nodes();
-        const moqEvents = d3.selectAll<SVGGElement, unknown>(".moq").nodes();
-
-        let nonHoveredMoqEvents: SVGGElement[] = [];
-        let hoveredMoqEvent: SVGGElement[] = [];
-
-        if (hoveredId === null) {
-            nonHoveredMoqEvents = moqEvents;
-        }
-        else {
-            nonHoveredMoqEvents = moqEvents.filter(event => event.id !== `${hoveredId}`);
-            hoveredMoqEvent = [moqEvents.find(event => event.id === `${hoveredId}`)!];
-        }
-
-        const order = [
-            ...nonHoveredMoqEvents.map(event => event.id),
-            ...hoveredMoqEvent.map(event => event.id),
-            ...quicEvents.map(event => event.id)
-        ];
-
-        console.log(order);
-
-        messageEvents.data(order, d => d);
-        messageEvents.sort((a, b) => order.indexOf(a) - order.indexOf(b));
-
-    }, [events, hoveredId]);
-
+export default function Connection({ conn, xScale, yScale, startTime, containsQuicEvents, startingId, handleHover }: ConnectionProps) {
     return (
         <>
-            {events}
+            {createEvents()}
         </>
     );
 
@@ -71,7 +39,7 @@ export default function Connection({ conn, xScale, yScale, startTime, containsQu
                     events.push(createHalfMessageEvent(event, conn.acceptingConn.fileName));
                 }
                 else {
-                    events.push(createMessageEvent(event, acceptingConnEvents[index], i));
+                    events.push(createMessageEvent(event, acceptingConnEvents[index], `${startingId + i}`));
                     acceptingConnEvents.splice(index, 1);
                 }
             }
@@ -103,12 +71,12 @@ export default function Connection({ conn, xScale, yScale, startTime, containsQu
         return <EventBlock xPos={xScale(event.fileName)!} yPos={yScale(event.eventNum)} colors={OTHER_COLORS} event={event.event} startTime={startTime} isLeft={true} extended={true} noAction={false} />
     }
 
-    function createMessageEvent(event1: ConnectionEvent, event2: ConnectionEvent, id: number): JSX.Element {
+    function createMessageEvent(event1: ConnectionEvent, event2: ConnectionEvent, id: string): JSX.Element {
         if (event1.isCreatedEvent()) {
-            return <MessageEvent createdEvent={event1} parsedEvent={event2} xScale={xScale} yScale={yScale} startTime={startTime} isBlock={containsQuicEvents} id={id} />;
+            return <MessageEvent createdEvent={event1} parsedEvent={event2} xScale={xScale} yScale={yScale} startTime={startTime} isBlock={containsQuicEvents} id={id} handleHover={handleHover} />;
         }
 
-        return <MessageEvent createdEvent={event2} parsedEvent={event1} xScale={xScale} yScale={yScale} startTime={startTime} isBlock={containsQuicEvents} id={id} />;
+        return <MessageEvent createdEvent={event2} parsedEvent={event1} xScale={xScale} yScale={yScale} startTime={startTime} isBlock={containsQuicEvents} id={id} handleHover={handleHover} />;
     }
 
     function createHalfMessageEvent(event: ConnectionEvent, otherFileName: string): JSX.Element {

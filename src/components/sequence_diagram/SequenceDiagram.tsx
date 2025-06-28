@@ -32,9 +32,9 @@ export default function SequenceDiagram({ files, activeFiles, network }: Sequenc
             hoveredMoqEvent = [moqEvents.find(event => event.id === hoveredId)!];
         }
 
-        // TODO: Sort the nonHoveredMoqEvents on their IDs, events that were hovered are always at the end of the nonHoveredMoqEvents, this can block other events from being accessible
         const order = [
-            ...nonHoveredMoqEvents.map(event => parseInt(event.id)),
+            // Needs to be sorted so they don't block other events
+            ...nonHoveredMoqEvents.map(event => parseInt(event.id)).sort(),
             ...hoveredMoqEvent.map(event => parseInt(event.id)),
             ...quicEvents.map(event => parseInt(event.id))
         ];

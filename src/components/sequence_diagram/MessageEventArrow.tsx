@@ -1,4 +1,4 @@
-import { ConnectionEvent } from "@/model/Network";
+import { MessageEvent as MsgEvent } from "@/model/Network";
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import Modal from "@/components/Modal";
@@ -7,8 +7,7 @@ import { ArrowProperties, Colors, HOVER_ARROW_CLASS_NAME, HOVER_ARROW_MARKER, NO
 import { useTextBackground } from "@/hooks/useTextBackground";
 
 interface MessageEventArrowProps {
-    createdEvent: ConnectionEvent;
-    parsedEvent: ConnectionEvent;
+    messageEvent: MsgEvent;
     x1: number;
     y1: number;
     x2: number;
@@ -16,7 +15,7 @@ interface MessageEventArrowProps {
     colors: Colors;
 }
 
-export default function MessageEventArrow({ createdEvent, parsedEvent, x1, y1, x2, y2, colors }: MessageEventArrowProps) {
+export default function MessageEventArrow({ messageEvent, x1, y1, x2, y2, colors }: MessageEventArrowProps) {
     const [color, setColor] = useState(colors.normal);
     const [arrowClassName, setArrowClassName] = useState(NORMAL_ARROW_CLASS_NAME);
     const [arrowMarker, setArrowMarker] = useState(NORMAL_ARROW_MARKER);
@@ -27,11 +26,11 @@ export default function MessageEventArrow({ createdEvent, parsedEvent, x1, y1, x
     const [textMiddleX, textMiddleY] = arrow.getMiddleCoords();
     const textAngle = radiansToDegrees(Math.atan(arrow.m));
 
-    const [textRef, textBgRef] = useTextBackground([createdEvent, parsedEvent], textAngle, textMiddleX, textMiddleY);
+    const [textRef, textBgRef] = useTextBackground([messageEvent.createdEvent, messageEvent.parsedEvent], textAngle, textMiddleX, textMiddleY);
 
-    const shortName = createdEvent.event.getShortNameWithoutAction();
+    const shortName = messageEvent.createdEvent.event.getShortNameWithoutAction();
 
-    const messageEvent = new MessageEvent(createdEvent.event, parsedEvent.event);
+    const msgEvent = new MessageEvent(messageEvent.createdEvent.event, messageEvent.parsedEvent.event);
 
     return (
         <>
@@ -43,7 +42,7 @@ export default function MessageEventArrow({ createdEvent, parsedEvent, x1, y1, x
 
             {/* TODO: Merge the content of both events in the modal code block */}
             {showModal && createPortal(
-                <Modal title={"Message summary"} code={JSON.stringify(messageEvent.summary(), null, 4)} handleClose={() => setShowModal(false)} />, document.body
+                <Modal title={"Message summary"} code={JSON.stringify(msgEvent.summary(), null, 4)} handleClose={() => setShowModal(false)} />, document.body
             )}
         </>
     );

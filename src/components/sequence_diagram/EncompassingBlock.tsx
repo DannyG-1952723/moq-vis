@@ -1,4 +1,4 @@
-import { ConnectionEvent } from "@/model/Network";
+import { MessageEvent as MsgEvent } from "@/model/Network";
 import { BLOCK_SIZE, Colors } from "@/model/util";
 import { useState } from "react";
 import { createPortal } from "react-dom";
@@ -10,10 +10,10 @@ const ARROW_WIDTH = 20;
 const ARROW_WIDTH_HOVER = 22;
 const BORDER_WIDTH = 4;
 const BORDER_WIDTH_HOVER = 6;
+const NESTING_OFFSET = 10;
 
 interface EncompassingBlockProps {
-    createdEvent: ConnectionEvent;
-    parsedEvent: ConnectionEvent;
+    messageEvent: MsgEvent;
     x1: number;
     y1: number;
     x2: number;
@@ -23,16 +23,17 @@ interface EncompassingBlockProps {
     handleHover: (id: string | null) => void;
 }
 
-export default function EncompassingBlock({ createdEvent, parsedEvent, x1, y1, x2, y2, colors, id, handleHover }: EncompassingBlockProps) {
+export default function EncompassingBlock({ messageEvent, x1, y1, x2, y2, colors, id, handleHover }: EncompassingBlockProps) {
     const [fillColor, setFillColor] = useState(colors.transparentNormal);
     const [borderColor, setBorderColor] = useState(colors.normal);
     const [borderWidth, setBorderWidth] = useState(BORDER_WIDTH);
     const [arrowWidth, setArrowWidth] = useState(ARROW_WIDTH);
     const [showModal, setShowModal] = useState(false);
 
-    const topLeftX = (x1 < x2 ? x1 : x2) + BLOCK_SIZE + SPACING + borderWidth / 2;
+    // MoQ message events will have nesting set
+    const topLeftX = (x1 < x2 ? x1 : x2) + BLOCK_SIZE + SPACING + borderWidth / 2 + messageEvent.nesting! * NESTING_OFFSET;
     const topLeftY = (y1 < y2 ? y1 - BLOCK_SIZE / 2 : y2) + borderWidth / 2;
-    const bottomRightX = ((x1 < x2 ? x2 : x1) - SPACING) - borderWidth / 2;
+    const bottomRightX = ((x1 < x2 ? x2 : x1) - SPACING) - borderWidth / 2 - messageEvent.nesting! * NESTING_OFFSET;
     const bottomRightY = (y1 < y2 ? y2 + BLOCK_SIZE / 2 : y1) - borderWidth / 2;
 
     const textMiddleX = topLeftX + (bottomRightX - topLeftX) / 2;
@@ -47,9 +48,9 @@ export default function EncompassingBlock({ createdEvent, parsedEvent, x1, y1, x
     const bottomArrowTopY = bottomRightY - arrowWidth / 2;
     const bottomArrowBottomY = bottomArrowTopY + arrowWidth;
 
-    const shortName = createdEvent.event.getShortNameWithoutAction();
+    const shortName = messageEvent.createdEvent.event.getShortNameWithoutAction();
 
-    const messageEvent = new MessageEvent(createdEvent.event, parsedEvent.event);
+    const msgEvent = new MessageEvent(messageEvent.createdEvent.event, messageEvent.parsedEvent.event);
 
     return (
         <>
@@ -62,7 +63,7 @@ export default function EncompassingBlock({ createdEvent, parsedEvent, x1, y1, x
 
             {/* TODO: Merge the content of both events in the modal code block */}
             {showModal && createPortal(
-                <Modal title={"Message summary"} code={JSON.stringify(messageEvent.summary(), null, 4)} handleClose={() => setShowModal(false)} />, document.body
+                <Modal title={"Message summary"} code={JSON.stringify(msgEvent.summary(), null, 4)} handleClose={() => setShowModal(false)} />, document.body
             )}
         </>
     );

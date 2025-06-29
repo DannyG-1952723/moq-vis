@@ -170,6 +170,8 @@ export class Network {
 export class Connection {
     startingConn: ConnectionNode;
     acceptingConn: ConnectionNode;
+    messageEvents!: MessageEvent[];
+    halfMessageEvents!: HalfMessageEvent[];
 
     constructor(connNode1: ConnectionNode, connNode2: ConnectionNode) {
         // Both nodes have at least 1 event
@@ -180,6 +182,138 @@ export class Connection {
         else {
             this.startingConn = connNode2;
             this.acceptingConn = connNode1;
+        }
+
+        this.createEvents();
+        this.calculateBlockNestings();
+    }
+
+    createEvents() {
+        this.messageEvents = [];
+        this.halfMessageEvents = [];
+
+        const eventsToDelete = [];
+
+        // Copies the array
+        const startingConnEvents = [...this.startingConn.connEvents];
+        const acceptingConnEvents = [...this.acceptingConn.connEvents];
+
+        for (let i = 0; i < this.startingConn.connEvents.length; i++) {
+            const event = this.startingConn.connEvents[i];
+
+            if (event.isMessageEvent()) {
+                const index = this.findCorrespondingEvent(event, acceptingConnEvents);
+
+                if (index === -1) {
+                    this.halfMessageEvents.push(new HalfMessageEvent(event));
+                }
+                else {
+                    this.messageEvents.push(new MessageEvent(event, acceptingConnEvents[index]));
+                    acceptingConnEvents.splice(index, 1);
+                }
+
+                eventsToDelete.push(i);
+            }
+        }
+
+        // There shouldn't be any complete message events left
+        let i = 0;
+        while (i < acceptingConnEvents.length) {
+            // Other half is missing
+            if (acceptingConnEvents[i].isMessageEvent()) {
+                this.halfMessageEvents.push(new HalfMessageEvent(acceptingConnEvents[i]));
+                acceptingConnEvents.splice(i, 1);
+            }
+            // Regular event
+            else {
+                i += 1;
+            }
+        }
+
+        for (let i = eventsToDelete.length - 1; i >= 0; i--) {
+            startingConnEvents.splice(eventsToDelete[i], 1);
+        }
+
+        // Remaining events are regular events
+        this.startingConn.connEvents = startingConnEvents;
+        this.acceptingConn.connEvents = acceptingConnEvents;
+    }
+
+    findCorrespondingEvent(event: ConnectionEvent, events: ConnectionEvent[]): number {
+        for (let i = 0; i < events.length; i++) {
+            if (event.isCorrespondingEvent(events[i])) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    calculateBlockNestings() {
+        let availableNestings = [true];
+
+        const createdSorted = this.messageEvents.toSorted((a, b) => a.createdEvent.event.time - b.createdEvent.event.time);
+        const parsedSorted = this.messageEvents.toSorted((a, b) => a.parsedEvent.event.time - b.parsedEvent.event.time);
+
+        let i = 0;
+        let j = 0;
+
+        // Logical AND works here since the created events will be exhausted first, which means nestings won't have to be made available anymore
+        while (i < this.messageEvents.length && j < this.messageEvents.length) {
+            let createdEvent = createdSorted[i];
+            let parsedEvent = parsedSorted[j];
+
+            const created = createdEvent.createdEvent;
+            const parsed = parsedEvent.parsedEvent;
+            
+            // Only needs to be done with MoQ events
+            if (created.event.name.startsWith("quic")) {
+                i += 1;
+                continue;
+            }
+            if (created.event.name.startsWith("quic")) {
+                j += 1;
+                continue;
+            }
+
+            // Created event happens first
+            if (created.eventNum < parsed.eventNum) {
+                const firstAvailable = availableNestings.findIndex(value => value);
+
+                // No nestings available, create a new one
+                if (firstAvailable === -1) {
+                    availableNestings.push(false);
+                    createdEvent.nesting = availableNestings.length - 1;
+                }
+                else {
+                    availableNestings[firstAvailable] = false;
+                    createdEvent.nesting = firstAvailable;
+                }
+
+                i += 1;
+            }
+            // On the same line, so no other events inbetween
+            else if (created.eventNum === parsed.eventNum) {
+                const firstAvailable = availableNestings.findIndex(value => value);
+
+                // No nestings available, create a new one
+                if (firstAvailable === -1) {
+                    availableNestings.push(true);
+                    createdEvent.nesting = availableNestings.length - 1;
+                }
+                else {
+                    createdEvent.nesting = firstAvailable;
+                }
+
+                i += 1;
+                j += 1;
+            }
+            // Parsed event happens first
+            else {
+                // Created event has already happened, so nesting has a value
+                availableNestings[parsedEvent.nesting!] = true;
+                j += 1;
+            }
         }
     }
 }
@@ -309,5 +443,32 @@ export class ConnectionEvent {
         else {
             return true;
         }
+    }
+}
+
+export class MessageEvent {
+    createdEvent: ConnectionEvent;
+    parsedEvent: ConnectionEvent;
+    nesting?: number;
+
+    constructor(event1: ConnectionEvent, event2: ConnectionEvent) {
+        if (event1.isCreatedEvent()) {
+            this.createdEvent = event1;
+            this.parsedEvent = event2;
+        }
+        else {
+            this.createdEvent = event2;
+            this.parsedEvent = event1;
+        }
+    }
+}
+
+export class HalfMessageEvent {
+    event: ConnectionEvent;
+    isCreatedEvent: boolean;
+
+    constructor(event: ConnectionEvent) {
+        this.event = event;
+        this.isCreatedEvent = event.isCreatedEvent();
     }
 }

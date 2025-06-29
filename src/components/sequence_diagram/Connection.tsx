@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { Connection as Conn, ConnectionEvent } from "@/model/Network";
+import { Connection as Conn, ConnectionEvent, MessageEvent as MsgEvent } from "@/model/Network";
 import { JSX } from "react";
 import MessageEvent from "./MessageEvent";
 import HalfMessageEvent from "./HalfMessageEvent";
@@ -26,44 +26,28 @@ export default function Connection({ conn, xScale, yScale, startTime, containsQu
     function createEvents(): JSX.Element[] {
         const events: JSX.Element[] = [];
 
-        // Copies the array
-        const acceptingConnEvents = [...conn.acceptingConn.connEvents];
+        const fileName1 = conn.startingConn.fileName;
+        const fileName2 = conn.acceptingConn.fileName;
 
-        for (let i = 0; i < conn.startingConn.connEvents.length; i++) {
-            const event = conn.startingConn.connEvents[i];
-
-            if (event.isMessageEvent()) {
-                const index = findCorrespondingEvent(event, acceptingConnEvents);
-
-                if (index === -1) {
-                    events.push(createHalfMessageEvent(event, conn.acceptingConn.fileName));
-                }
-                else {
-                    events.push(createMessageEvent(event, acceptingConnEvents[index], `${startingId + i}`));
-                    acceptingConnEvents.splice(index, 1);
-                }
-            }
-            else {
-                events.push(createEvent(event));
-            }
+        for (let i = 0; i < conn.messageEvents.length; i++) {
+            const event = conn.messageEvents[i];
+            events.push(createMessageEvent(event, `${startingId + i}`));
         }
 
-        // There shouldn't be any message events left (except maybe at the end when abruptly ending connections)
-        for (let i = 0; i < acceptingConnEvents.length; i++) {
-            events.push(createHalfMessageEvent(acceptingConnEvents[i], conn.startingConn.fileName));
+        for (const event of conn.halfMessageEvents) {
+            const otherFileName = event.event.fileName === fileName1 ? fileName2 : fileName1;
+            events.push(createHalfMessageEvent(event.event, otherFileName));
+        }
+
+        for (const event of conn.startingConn.connEvents) {
+            events.push(createEvent(event));
+        }
+
+        for (const event of conn.acceptingConn.connEvents) {
+            events.push(createEvent(event));
         }
 
         return events;
-    }
-
-    function findCorrespondingEvent(event: ConnectionEvent, events: ConnectionEvent[]): number {
-        for (let i = 0; i < events.length; i++) {
-            if (event.isCorrespondingEvent(events[i])) {
-                return i;
-            }
-        }
-
-        return -1;
     }
 
     function createEvent(event: ConnectionEvent): JSX.Element {
@@ -71,12 +55,8 @@ export default function Connection({ conn, xScale, yScale, startTime, containsQu
         return <EventBlock xPos={xScale(event.fileName)!} yPos={yScale(event.eventNum)} colors={OTHER_COLORS} event={event.event} startTime={startTime} isLeft={true} extended={true} noAction={false} />
     }
 
-    function createMessageEvent(event1: ConnectionEvent, event2: ConnectionEvent, id: string): JSX.Element {
-        if (event1.isCreatedEvent()) {
-            return <MessageEvent createdEvent={event1} parsedEvent={event2} xScale={xScale} yScale={yScale} startTime={startTime} isBlock={containsQuicEvents} id={id} handleHover={handleHover} />;
-        }
-
-        return <MessageEvent createdEvent={event2} parsedEvent={event1} xScale={xScale} yScale={yScale} startTime={startTime} isBlock={containsQuicEvents} id={id} handleHover={handleHover} />;
+    function createMessageEvent(messageEvent: MsgEvent, id: string): JSX.Element {
+        return <MessageEvent messageEvent={messageEvent} xScale={xScale} yScale={yScale} startTime={startTime} isBlock={containsQuicEvents} id={id} handleHover={handleHover} />;
     }
 
     function createHalfMessageEvent(event: ConnectionEvent, otherFileName: string): JSX.Element {

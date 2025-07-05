@@ -1,9 +1,8 @@
 import * as d3 from "d3";
-import Note from "../Note";
 import { Network } from "@/model/Network";
 import Connection from "./Connection";
 import Axis from "./Axis";
-import { BLOCK_SIZE } from "@/model/util";
+import { BLOCK_SIZE, WIDTH } from "@/model/util";
 import { LogFile } from "@/model/LogFile";
 import { useEffect, useState } from "react";
 
@@ -59,22 +58,15 @@ export default function SequenceDiagram({ files, activeFiles, network }: Sequenc
     const title = <h3 className="block mt-5 mb-2 text-md font-medium text-gray-900 dark:text-white">Sequence diagram</h3>;
 
     if (files.length === 0 || activeFiles.length === 0) {
-        return (
-            <>
-                {title}
-                {files.length === 0 && <Note>There are no imported files</Note>}
-                {files.length !== 0 && activeFiles.length === 0 && <Note>There are no active files</Note>}
-            </>
-        );
+        return <></>;
     }
     
     const margin = {top: 50, right: 145, bottom: 50, left: 115}
     const axisMargin = 25;
 
-    const width = 1280;
     const height = (network.maxEventNums - 1) * 50 + BLOCK_SIZE + margin.top + margin.bottom + 2 * axisMargin;
 
-    const innerWidth = width - margin.left - margin.right;
+    const innerWidth = WIDTH - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
     const xScale = d3.scalePoint().domain(activeFiles.map(file => file.name)).range([0, innerWidth]);
@@ -91,7 +83,7 @@ export default function SequenceDiagram({ files, activeFiles, network }: Sequenc
 
     // TODO: Display events that aren't part of any connections (for when the other part of the connection isn't imported)
     const diagram = (
-        <svg width={width} height={height} className="bg-white border border-gray-200 rounded-lg shadow-inner dark:bg-gray-700 dark:border-gray-700">
+        <svg width={WIDTH} height={height} className="bg-white border border-gray-200 rounded-lg shadow-inner dark:bg-gray-700 dark:border-gray-700">
             <defs>
                 <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse" className="fill-gray-600">
                     <path d="M 0 0 L 10 5 L 0 10 z" />

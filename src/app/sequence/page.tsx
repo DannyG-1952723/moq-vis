@@ -1,6 +1,7 @@
 "use client";
 
 import FileList from "@/components/files/FileList";
+import NetworkGraph from "@/components/network_graph/NetworkGraph";
 import ProtocolToggle from "@/components/ProtocolToggle";
 import SequenceDiagram from "@/components/sequence_diagram/SequenceDiagram";
 import { useFiles } from "@/contexts/FilesContext";
@@ -21,6 +22,7 @@ export default function Page() {
             <main className="flex flex-col row-start-0 sm:items-start w-full">   
                 <FileList />
                 <ProtocolToggle show={activeFiles.length > 0} showQuic={showQuicEvents} showMoq={showMoqEvents} handleQuicToggle={onQuicToggle} handleMoqToggle={onMoqToggle} />
+                <NetworkGraph files={files} activeFiles={activeFiles} network={network} />
                 <SequenceDiagram files={files} activeFiles={activeFiles} network={network} />
             </main>
         </div>

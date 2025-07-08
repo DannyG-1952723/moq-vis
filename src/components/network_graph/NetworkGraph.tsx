@@ -7,6 +7,9 @@ import { Network } from "@/model/Network";
 import { HEIGHT, WIDTH } from "@/model/util";
 import { useEffect } from "react";
 import Node from "./Node";
+import Edge from "./Edge";
+
+const LINE_OFFSET: number = 40;
 
 interface NetworkGraphProps {
     files: LogFile[];
@@ -18,61 +21,51 @@ export default function NetworkGraph({ files, activeFiles, network }: NetworkGra
     useEffect(() => {
         const graph = d3.select<SVGSVGElement, unknown>("#network_graph");
 
-        // Clear the graph
-        graph.selectAll("*").remove();
+        const dragLayer = graph.select<SVGGElement>(".drag");
+        const zoomLayer = graph.select<SVGGElement>(".zoom");
 
-        const g = graph.append<SVGGElement>("g").attr("cursor", "grab");
-
-        const links: LinkDatum[] = data.links.map(l => ({
-            source: data.nodes[l.source],
-            target: data.nodes[l.target]
+        const links: LinkDatum[] = data.edges.map(e => ({
+            source: data.nodes[e.source],
+            target: data.nodes[e.target]
         }));
 
-        const link = g.selectAll<SVGLineElement, LinkDatum>("line")
-            .data(links)
-            .join("line")
-            .attr("x1", d => d.source.x)
-            .attr("y1", d => d.source.y)
-            .attr("x2", d => d.target.x)
-            .attr("y2", d => d.target.y)
-            .attr("stroke", "black");
+        const link = graph.selectAll<SVGLineElement, LinkDatum>(".edge").data(links);
 
-        const dragBehavior = d3.drag<SVGCircleElement, NodeDatum>()
+        const dragBehavior = d3.drag<SVGGElement, NodeDatum>()
             .on("start", function (_) {
                 d3.select(this).raise();
-                g.attr("cursor", "grabbing");
+                dragLayer.attr("cursor", "grabbing");
             })
             .on("drag", function (event, d) {
                 d.x += event.dx;
                 d.y += event.dy;
 
-                const node = d3.select<SVGCircleElement, NodeDatum>(this);
-                node.attr("cx", d.x).attr("cy", d.y);
+                const node = d3.select<SVGGElement, NodeDatum>(this);
+                node.attr("transform", `translate(${d.x}, ${d.y})`);
 
-                link
-                    .attr("x1", l => l.source.x)
-                    .attr("y1", l => l.source.y)
-                    .attr("x2", l => l.target.x)
-                    .attr("y2", l => l.target.y);
+                link.each(function (l) {
+                    const [x1, y1, x2, y2] = calculateLineEnds(l.source.x, l.source.y, l.target.x, l.target.y);
+
+                    d3.select(this)
+                        .attr("x1", x1)
+                        .attr("y1", y1)
+                        .attr("x2", x2)
+                        .attr("y2", y2);
+                });
             })
             .on("end", function () {
-                g.attr("cursor", "grab");
+                dragLayer.attr("cursor", "grab");
             });
 
-        g.selectAll<SVGCircleElement, NodeDatum>("circle")
+        dragLayer.selectAll<SVGGElement, NodeDatum>(".node")
             .data(data.nodes)
-            .join("circle")
-            .attr("cx", d => d.x)
-            .attr("cy", d => d.y)
-            .attr("r", 15)
-            .attr("fill", "blue")
             .call(dragBehavior);
 
         const zoomBehavior = d3.zoom<SVGSVGElement, unknown>()
             .extent([[0, 0], [WIDTH, HEIGHT]])
             .scaleExtent([0.1, 10])
             .on("zoom", function (event) {
-                g.attr("transform", event.transform);
+                zoomLayer.attr("transform", event.transform);
             });
 
         graph.call(zoomBehavior);
@@ -91,17 +84,30 @@ export default function NetworkGraph({ files, activeFiles, network }: NetworkGra
 
     const data = {
         nodes: [
-            { name: "A", x: 100, y: 100 },
-            { name: "B", x: 140, y: 300 },
-            { name: "C", x: 300, y: 300 },
-            { name: "D", x: 300, y: 180 }
+            { name: "1_clock_pub.sqlog", x: 100, y: 100 },
+            { name: "2_relay.sqlog", x: 100, y: 300 },
+            { name: "3_clock_sub.sqlog", x: 300, y: 300 },
+            // { name: "D", x: 300, y: 180 }
         ],
-        links: [
+        edges: [
             { source: 0, target: 1 },
             { source: 1, target: 2 },
-            { source: 2, target: 3 }
+            // { source: 0, target: 2 },
+            // { source: 2, target: 3 }
         ]
     };
+    
+    const nodes = data.nodes.map(node => <Node fileName={node.name} x={node.x} y={node.y} />);
+
+    const links: LinkDatum[] = data.edges.map(e => ({
+        source: data.nodes[e.source],
+        target: data.nodes[e.target]
+    }));
+
+    const edges = links.map(link => {
+        const [x1, y1, x2, y2] = calculateLineEnds(link.source.x, link.source.y, link.target.x, link.target.y);
+        return <Edge x1={x1} y1={y1} x2={x2} y2={y2} />
+    });
 
     const title = <h3 className="block mt-5 mb-2 text-md font-medium text-gray-900 dark:text-white">Network graph</h3>;
 
@@ -116,7 +122,14 @@ export default function NetworkGraph({ files, activeFiles, network }: NetworkGra
     }
 
     const diagram = (
-        <svg id="network_graph" width={WIDTH} height={HEIGHT} className="bg-white border border-gray-200 rounded-lg shadow-inner dark:bg-gray-700 dark:border-gray-700"></svg>
+        <svg id="network_graph" width={WIDTH} height={HEIGHT} className="bg-white border border-gray-200 rounded-lg shadow-inner dark:bg-gray-700 dark:border-gray-700">
+            <g className="zoom">
+                {edges}
+                <g className="drag" cursor="grab">
+                    {nodes}
+                </g>
+            </g>
+        </svg>
     );
 
     return (
@@ -125,4 +138,25 @@ export default function NetworkGraph({ files, activeFiles, network }: NetworkGra
             {diagram}
         </>
     );
+}
+
+function calculateLineEnds(x1: number, y1: number, x2: number, y2: number): [number, number, number, number] {
+    if (x1 === x2) {
+        const newY1 = (y1 < y2) ? y1 + LINE_OFFSET : y1 - LINE_OFFSET;
+        const newY2 = (y1 < y2) ? y2 - LINE_OFFSET : y2 + LINE_OFFSET;
+        return [x1, newY1, x2, newY2];
+    }
+
+    // y = m * x + q
+    const m = (y2 - y1) / (x2 - x1);
+    const q = y1 - m * x1;
+
+    const xOffset = LINE_OFFSET / Math.sqrt(1 + m * m);
+
+    const newX1 = x1 < x2 ? x1 + xOffset : x1 - xOffset;
+    const newX2 = x1 < x2 ? x2 - xOffset : x2 + xOffset;
+    const newY1 = m * newX1 + q;
+    const newY2 = m * newX2 + q;
+
+    return [newX1, newY1, newX2, newY2];
 }

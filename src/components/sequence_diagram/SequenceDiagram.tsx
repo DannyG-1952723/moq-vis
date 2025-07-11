@@ -93,7 +93,7 @@ export default function SequenceDiagram({ files, activeFiles, network }: Sequenc
                 </marker>
             </defs>
             <g transform={`translate(${margin.left}, ${margin.top})`}>
-                {network.nodes.map(node => <Axis key={node} xPos={xScale(node)! + BLOCK_SIZE / 2} yPos={0} height={innerHeight} fileName={node} />)}
+                {network.nodes.map(node => <Axis key={node.name} xPos={xScale(node.name)! + BLOCK_SIZE / 2} yPos={0} height={innerHeight} fileName={node.name} />)}
                 <g id="message_container">
                     {connections}
                 </g>

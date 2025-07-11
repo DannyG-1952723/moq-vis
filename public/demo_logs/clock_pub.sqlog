@@ -10,7 +10,8 @@
       "reference_time": {
         "clock_type": "system",
         "epoch": "1970-01-01T00:00:00Z"
-      }
+      },
+      "main_role": "publisher"
     },
     "vantage_point": {
       "name": "clock-pub",

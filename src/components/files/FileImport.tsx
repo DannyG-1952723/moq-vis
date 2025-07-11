@@ -13,7 +13,7 @@ export default function FileImport() {
     const files = useFiles();
     const dispatch = useFilesDispatch();
 
-    const demoLogs = ["1_clock_pub.sqlog", "2_relay.sqlog", "3_clock_sub.sqlog"];
+    const demoLogs = ["clock_pub.sqlog", "relay.sqlog", "clock_sub.sqlog"];
 
     const githubPages = process.env.NEXT_PUBLIC_GITHUB_PAGES !== undefined;
 

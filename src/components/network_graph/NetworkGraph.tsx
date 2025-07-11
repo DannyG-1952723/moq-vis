@@ -3,7 +3,7 @@
 import * as d3 from "d3";
 import Note from "../Note";
 import { LogFile } from "@/model/LogFile";
-import { Network } from "@/model/Network";
+import { LinkDatum, Network, NodeDatum } from "@/model/Network";
 import { HEIGHT, WIDTH } from "@/model/util";
 import { useEffect } from "react";
 import Node from "./Node";
@@ -24,9 +24,9 @@ export default function NetworkGraph({ files, activeFiles, network }: NetworkGra
         const dragLayer = graph.select<SVGGElement>(".drag");
         const zoomLayer = graph.select<SVGGElement>(".zoom");
 
-        const links: LinkDatum[] = data.edges.map(e => ({
-            source: data.nodes[e.source],
-            target: data.nodes[e.target]
+        const links: LinkDatum[] = graphEdges.map(edge => ({
+            source: graphNodes.find(node => node.name === edge.source)!,
+            target: graphNodes.find(node => node.name === edge.target)!
         }));
 
         const link = graph.selectAll<SVGLineElement, LinkDatum>(".edge").data(links);
@@ -58,7 +58,7 @@ export default function NetworkGraph({ files, activeFiles, network }: NetworkGra
             });
 
         dragLayer.selectAll<SVGGElement, NodeDatum>(".node")
-            .data(data.nodes)
+            .data(graphNodes)
             .call(dragBehavior);
 
         const zoomBehavior = d3.zoom<SVGSVGElement, unknown>()
@@ -71,37 +71,13 @@ export default function NetworkGraph({ files, activeFiles, network }: NetworkGra
         graph.call(zoomBehavior);
     }, [network]);
 
-    interface NodeDatum {
-        name: string;
-        x: number;
-        y: number;
-    }
-
-    interface LinkDatum {
-        source: NodeDatum;
-        target: NodeDatum;
-    }
-
-    const data = {
-        nodes: [
-            { name: "1_clock_pub.sqlog", x: 100, y: 100 },
-            { name: "2_relay.sqlog", x: 100, y: 300 },
-            { name: "3_clock_sub.sqlog", x: 300, y: 300 },
-            // { name: "D", x: 300, y: 180 }
-        ],
-        edges: [
-            { source: 0, target: 1 },
-            { source: 1, target: 2 },
-            // { source: 0, target: 2 },
-            // { source: 2, target: 3 }
-        ]
-    };
+    const [graphNodes, graphEdges] = network.getGraphData();
     
-    const nodes = data.nodes.map(node => <Node fileName={node.name} x={node.x} y={node.y} />);
+    const nodes = graphNodes.map(node => <Node fileName={node.name} x={node.x} y={node.y} />);
 
-    const links: LinkDatum[] = data.edges.map(e => ({
-        source: data.nodes[e.source],
-        target: data.nodes[e.target]
+    const links: LinkDatum[] = graphEdges.map(edge => ({
+        source: graphNodes.find(node => node.name === edge.source)!,
+        target: graphNodes.find(node => node.name === edge.target)!
     }));
 
     const edges = links.map(link => {
@@ -151,6 +127,7 @@ function calculateLineEnds(x1: number, y1: number, x2: number, y2: number): [num
     const m = (y2 - y1) / (x2 - x1);
     const q = y1 - m * x1;
 
+    // https://math.stackexchange.com/q/175896
     const xOffset = LINE_OFFSET / Math.sqrt(1 + m * m);
 
     const newX1 = x1 < x2 ? x1 + xOffset : x1 - xOffset;

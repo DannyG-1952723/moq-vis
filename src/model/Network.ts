@@ -3,7 +3,10 @@ import { LogFile } from "./LogFile";
 import { LogFileEvent } from "./Events";
 import { StreamStateUpdated } from "./quic";
 import { MoqEventData } from "./moq";
-import { getMinTimestampIndex, groupBy, makeTimestampIter } from "./util";
+import { getMinTimestampIndex, groupBy, HEIGHT, makeTimestampIter, WIDTH } from "./util";
+
+const NODE_SPACE_HORIZONTAL = 200;
+const NODE_SPACE_VERTICAL = 150;
 
 function eventsToConnectionEvents(eventList: LogFileEvent[], fileName: string, showQuicEvents: boolean, showMoqEvents: boolean): ConnectionEvent[] {
     let list = eventList;
@@ -23,7 +26,7 @@ function getEventsFromFiles(events: ConnectionEvent[], logFile: LogFile, showQui
 }
 
 export class Network {
-    nodes: string[];
+    nodes: LogFile[];
     connections: Connection[];
     maxEventNums: number;
     startTime: number;
@@ -47,7 +50,7 @@ export class Network {
 
         const connectionNodes = this.createConnectionNodes(logFiles, groupedEvents);
         
-        this.nodes = logFiles.map(logFile => logFile.name);
+        this.nodes = logFiles;
         this.connections = this.createConnections(connectionNodes);
 
         this.containsQuicEvents = showQuicEvents ? this.containsQuicEvent(allEvents) : false;
@@ -165,6 +168,121 @@ export class Network {
 
         return false;
     }
+
+    getGraphData(): [NodeDatum[], EdgeDatum[]] {
+        let startNodes: LogFile[] = [];
+
+        const nodes: NodeDatum[] = [];
+        const edges: EdgeDatum[] = [];
+
+        const pubs = this.nodes.filter(node => node.details.trace.common_fields?.main_role === "publisher");
+        const subs = this.nodes.filter(node => node.details.trace.common_fields?.main_role === "subscriber");
+        const pubsubs = this.nodes.filter(node => node.details.trace.common_fields?.main_role === "pubsub");
+        const relays = this.nodes.filter(node => node.details.trace.common_fields?.main_role === "relay");
+
+        if (pubs.length > 0) {
+            startNodes = pubs;
+        }
+        else if (subs.length > 0) {
+            startNodes = subs;
+        }
+        else if (pubsubs.length > 0) {
+            startNodes = pubsubs;
+        }
+        else {
+            startNodes = relays;
+        }
+
+        const depth = this.calculateGraphDepth(startNodes);
+        let currentDepth = -1;
+
+        const handledNodes: string[] = [];
+
+        while (startNodes.length > 0) {
+            currentDepth++;
+
+            let nextNodes: LogFile[] = [];
+
+            for (let i = 0; i < startNodes.length; ++i) {
+                const node = startNodes[i];
+
+                const connections = this.connections.filter(conn => conn.startingConn.fileName === node.name || conn.acceptingConn.fileName === node.name);
+                const connectedNodes = [...new Set(connections.map(conn => conn.startingConn.fileName === node.name ? conn.acceptingConn.fileName : conn.startingConn.fileName))];
+                const unhandledConnectedNodes = connectedNodes.filter(node => !handledNodes.includes(node));
+    
+                nextNodes.push(...this.nodes.filter(node => unhandledConnectedNodes.includes(node.name)));
+
+                nodes.push({name: node.name, x: this.calculatePosition(currentDepth, depth, WIDTH, NODE_SPACE_HORIZONTAL), y: this.calculatePosition(i, startNodes.length, HEIGHT, NODE_SPACE_VERTICAL)});
+                edges.push(...unhandledConnectedNodes.map(targetNode => { return {source: node.name, target: targetNode}; }));
+    
+                handledNodes.push(node.name);
+            }
+
+            // Remove duplicates (QUIC and MoQ are seen as different connections because of different IDs)
+            nextNodes = [...new Set(nextNodes)];
+            startNodes = nextNodes;
+        }
+
+        const unconnectedNodes = this.nodes.filter(node => !handledNodes.includes(node.name));
+
+        for (let i = 0; i < unconnectedNodes.length; ++i) {
+            nodes.push({name: unconnectedNodes[i].name, x: this.calculatePosition(depth, depth, WIDTH, NODE_SPACE_HORIZONTAL), y: this.calculatePosition(i, unconnectedNodes.length, HEIGHT, NODE_SPACE_VERTICAL)});
+        }
+
+        return [nodes, edges];
+    }
+
+    calculateGraphDepth(startNodes: LogFile[]): number {
+        let depth = 0;
+        const handledNodes: string[] = [];
+
+        while (startNodes.length > 0) {
+            depth++;
+
+            let nextNodes: LogFile[] = [];
+
+            for (let i = 0; i < startNodes.length; ++i) {
+                const node = startNodes[i];
+
+                const connections = this.connections.filter(conn => conn.startingConn.fileName === node.name || conn.acceptingConn.fileName === node.name);
+                const connectedNodes = [...new Set(connections.map(conn => conn.startingConn.fileName === node.name ? conn.acceptingConn.fileName : conn.startingConn.fileName))];
+    
+                nextNodes.push(...this.nodes.filter((node) => connectedNodes.includes(node.name) && !handledNodes.includes(node.name)));
+    
+                handledNodes.push(node.name);
+            }
+
+            // Remove duplicates
+            nextNodes = [...new Set(nextNodes)];
+            startNodes = nextNodes;
+        }
+
+        return depth;
+    }
+
+    calculatePosition(index: number, numNodes: number, dimensionLength: number, nodeSpace: number): number {
+        const startPos = numNodes % 2 === 0 ?
+            dimensionLength / 2 - nodeSpace / 2 - (numNodes / 2 - 1) * nodeSpace :
+            dimensionLength / 2 - ((numNodes - 1) / 2) * nodeSpace;
+
+        return startPos + index * nodeSpace;
+    }
+}
+
+export interface NodeDatum {
+    name: string;
+    x: number;
+    y: number;
+}
+
+export interface EdgeDatum {
+    source: string;
+    target: string;
+}
+
+export interface LinkDatum {
+    source: NodeDatum;
+    target: NodeDatum;
 }
 
 export class Connection {

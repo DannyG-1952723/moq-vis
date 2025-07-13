@@ -56,7 +56,7 @@ export default function Connection({ conn, xScale, yScale, startTime, containsQu
     }
 
     function createMessageEvent(messageEvent: MsgEvent, id: string): JSX.Element {
-        return <MessageEvent messageEvent={messageEvent} xScale={xScale} yScale={yScale} startTime={startTime} isBlock={containsQuicEvents} id={id} handleHover={handleHover} />;
+        return <MessageEvent key={id} messageEvent={messageEvent} xScale={xScale} yScale={yScale} startTime={startTime} isBlock={containsQuicEvents} id={id} handleHover={handleHover} />;
     }
 
     function createHalfMessageEvent(event: ConnectionEvent, otherFileName: string): JSX.Element {

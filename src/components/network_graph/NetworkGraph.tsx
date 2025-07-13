@@ -73,7 +73,7 @@ export default function NetworkGraph({ files, activeFiles, network }: NetworkGra
 
     const [graphNodes, graphEdges] = network.getGraphData();
     
-    const nodes = graphNodes.map(node => <Node fileName={node.name} x={node.x} y={node.y} />);
+    const nodes = graphNodes.map(node => <Node key={node.name} fileName={node.name} x={node.x} y={node.y} />);
 
     const links: LinkDatum[] = graphEdges.map(edge => ({
         source: graphNodes.find(node => node.name === edge.source)!,
@@ -82,7 +82,14 @@ export default function NetworkGraph({ files, activeFiles, network }: NetworkGra
 
     const edges = links.map(link => {
         const [x1, y1, x2, y2] = calculateLineEnds(link.source.x, link.source.y, link.target.x, link.target.y);
-        return <Edge x1={x1} y1={y1} x2={x2} y2={y2} />
+        return <Edge
+            key={`${link.source.name}_${link.target.name}`}
+            x1={x1} y1={y1} x2={x2} y2={y2}
+            connections={network.connections.filter(conn =>
+                (conn.startingConn.fileName === link.source.name && conn.acceptingConn.fileName === link.target.name) ||
+                (conn.startingConn.fileName === link.target.name && conn.acceptingConn.fileName === link.source.name)
+            )}
+        />;
     });
 
     const title = <h3 className="block mt-5 mb-2 text-md font-medium text-gray-900 dark:text-white">Network graph</h3>;

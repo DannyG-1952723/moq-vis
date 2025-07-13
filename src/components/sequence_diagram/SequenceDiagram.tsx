@@ -5,6 +5,8 @@ import Axis from "./Axis";
 import { BLOCK_SIZE, WIDTH } from "@/model/util";
 import { LogFile } from "@/model/LogFile";
 import { useEffect, useState } from "react";
+import Note from "../Note";
+import { useConnections } from "@/contexts/ConnectionsContext";
 
 interface SequenceDiagramProps {
     files: LogFile[];
@@ -14,6 +16,8 @@ interface SequenceDiagramProps {
 
 export default function SequenceDiagram({ files, activeFiles, network }: SequenceDiagramProps) {
     const [hoveredId, setHoveredId] = useState<string | null>(null);
+
+    const selectedConnections = useConnections();
 
     useEffect(() => {
         const messageEvents = d3.selectAll<SVGGElement, number>(".message_event");
@@ -55,10 +59,19 @@ export default function SequenceDiagram({ files, activeFiles, network }: Sequenc
         messageEvents.sort((a, b) => a - b);
     }, [hoveredId]);
 
-    const title = <h3 className="block mt-5 mb-2 text-md font-medium text-gray-900 dark:text-white">Sequence diagram</h3>;
-
     if (files.length === 0 || activeFiles.length === 0) {
         return <></>;
+    }
+
+    const title = <h3 className="block mt-5 mb-2 text-md font-medium text-gray-900 dark:text-white">Sequence diagram</h3>;
+
+    if (selectedConnections.length === 0) {
+        return (
+            <>
+                {title}
+                <Note>Click connections in the network graph to display in the sequence diagram</Note>
+            </>
+        );
     }
     
     const margin = {top: 50, right: 145, bottom: 50, left: 115}
@@ -75,7 +88,7 @@ export default function SequenceDiagram({ files, activeFiles, network }: Sequenc
     let startingId = 0;
     const connections = [];
 
-    for (const conn of network.connections) {
+    for (const conn of selectedConnections) {
         connections.push(<Connection key={conn.startingConn.connId} conn={conn} xScale={xScale} yScale={yScale} startTime={network.startTime} containsQuicEvents={network.containsQuicEvents} startingId={startingId} handleHover={handleHover} />);
 
         startingId += conn.acceptingConn.connEvents.length;

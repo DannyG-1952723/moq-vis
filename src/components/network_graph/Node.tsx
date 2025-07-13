@@ -11,7 +11,7 @@ interface NodeProps {
 
 export default function Node({ fileName, x, y }: NodeProps) {
     return (
-        <g className="node" transform={`translate(${x}, ${y})`} width="auto" height="auto">
+        <g key={fileName} id={fileName} className="node" transform={`translate(${x}, ${y})`} width="auto" height="auto">
             <Server x={POSITION} y={POSITION} width={ICON_SIZE} height={ICON_SIZE} />
             <text y={ICON_SIZE / 2 + 10} textAnchor="middle">{fileName}</text>
         </g>

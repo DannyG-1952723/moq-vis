@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { Network } from "@/model/Network";
+import { NetworkSelection } from "@/model/Network";
 import Connection from "./Connection";
 import Axis from "./Axis";
 import { BLOCK_SIZE, WIDTH } from "@/model/util";
@@ -7,14 +7,16 @@ import { LogFile } from "@/model/LogFile";
 import { useEffect, useState } from "react";
 import Note from "../Note";
 import { useConnections } from "@/contexts/ConnectionsContext";
+import ProtocolToggle from "../ProtocolToggle";
 
 interface SequenceDiagramProps {
     files: LogFile[];
     activeFiles: LogFile[];
-    network: Network;
 }
 
-export default function SequenceDiagram({ files, activeFiles, network }: SequenceDiagramProps) {
+export default function SequenceDiagram({ files, activeFiles }: SequenceDiagramProps) {
+    const [showQuicEvents, setShowQuicEvents] = useState(true);
+    const [showMoqEvents, setShowMoqEvents] = useState(true);
     const [hoveredId, setHoveredId] = useState<string | null>(null);
 
     const selectedConnections = useConnections();
@@ -77,12 +79,14 @@ export default function SequenceDiagram({ files, activeFiles, network }: Sequenc
     const margin = {top: 50, right: 145, bottom: 50, left: 115}
     const axisMargin = 25;
 
+    const network = new NetworkSelection(selectedConnections, showQuicEvents, showMoqEvents);
+
     const height = (network.maxEventNums - 1) * 50 + BLOCK_SIZE + margin.top + margin.bottom + 2 * axisMargin;
 
     const innerWidth = WIDTH - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
-    const xScale = d3.scalePoint().domain(activeFiles.map(file => file.name)).range([0, innerWidth]);
+    const xScale = d3.scalePoint().domain(network.nodes).range([0, innerWidth]);
     const yScale = d3.scaleLinear().domain([0, network.maxEventNums - 1]).range([axisMargin + BLOCK_SIZE / 2, innerHeight - axisMargin - BLOCK_SIZE / 2]);
 
     let startingId = 0;
@@ -106,7 +110,7 @@ export default function SequenceDiagram({ files, activeFiles, network }: Sequenc
                 </marker>
             </defs>
             <g transform={`translate(${margin.left}, ${margin.top})`}>
-                {network.nodes.map(node => <Axis key={node.name} xPos={xScale(node.name)! + BLOCK_SIZE / 2} yPos={0} height={innerHeight} fileName={node.name} />)}
+                {network.nodes.map(node => <Axis key={node} xPos={xScale(node)! + BLOCK_SIZE / 2} yPos={0} height={innerHeight} fileName={node} />)}
                 <g id="message_container">
                     {connections}
                 </g>
@@ -114,12 +118,23 @@ export default function SequenceDiagram({ files, activeFiles, network }: Sequenc
         </svg>
     );
 
+    const protocolToggle = <ProtocolToggle show={activeFiles.length > 0} showQuic={showQuicEvents} showMoq={showMoqEvents} handleQuicToggle={onQuicToggle} handleMoqToggle={onMoqToggle} />
+
     return (
         <>
             {title}
+            {protocolToggle}
             {diagram}
         </>
     );
+
+    function onQuicToggle(showQuic: boolean) {
+        setShowQuicEvents(showQuic);
+    }
+
+    function onMoqToggle(showMoq: boolean) {
+        setShowMoqEvents(showMoq);
+    }
 
     function handleHover(id: string | null) {
         setHoveredId(id);

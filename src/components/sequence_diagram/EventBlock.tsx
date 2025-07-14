@@ -20,7 +20,7 @@ export default function EventBlock({ xPos, yPos, colors, event, startTime, isLef
     const [color, setColor] = useState(colors.normal);
     const [showModal, setShowModal] = useState(false);
 
-    const [textRef, textBgRef] = useTextBackground([event]);
+    const [textRef, textBgRef] = useTextBackground([event, xPos, yPos]);
 
     const anchor = isLeft ? "end" : "start";
     const margin = isLeft ? -5 : BLOCK_SIZE + 5;

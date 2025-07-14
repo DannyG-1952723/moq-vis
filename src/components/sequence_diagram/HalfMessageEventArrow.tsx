@@ -19,7 +19,7 @@ interface HalfMessageEventArrowProps {
 
 const lengthPercentage = 0.75;
 const iconSize = 36;
-const iconColors = new Colors("#cc0000", "#a30000");
+const iconColors = new Colors("#cc0000", "#a30000", "40");
 
 export default function HalfMessageEventArrow({ event, x1, y1, x2, y2, colors, isCreatedEvent }: HalfMessageEventArrowProps) {
     const [color, setColor] = useState(colors.normal);
@@ -34,7 +34,7 @@ export default function HalfMessageEventArrow({ event, x1, y1, x2, y2, colors, i
     const [textMiddleX, textMiddleY] = arrow.getMiddleCoords();
     const textAngle = radiansToDegrees(Math.atan(arrow.m));
 
-    const [textRef, textBgRef] = useTextBackground([event], textAngle, textMiddleX, textMiddleY);
+    const [textRef, textBgRef] = useTextBackground([event, arrow], textAngle, textMiddleX, textMiddleY);
 
     const shortName = event.event.getShortName();
 

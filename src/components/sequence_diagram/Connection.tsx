@@ -60,6 +60,6 @@ export default function Connection({ conn, xScale, yScale, startTime, containsQu
     }
 
     function createHalfMessageEvent(event: ConnectionEvent, otherFileName: string): JSX.Element {
-        return <HalfMessageEvent event={event} otherFileName={otherFileName} xScale={xScale} yScale={yScale} startTime={startTime} />
+        return <HalfMessageEvent key={event.orderNum} event={event} otherFileName={otherFileName} xScale={xScale} yScale={yScale} startTime={startTime} />
     }
 }

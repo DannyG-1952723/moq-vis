@@ -59,7 +59,7 @@ export default function SequenceDiagram({ files, activeFiles }: SequenceDiagramP
         });
 
         messageEvents.sort((a, b) => a - b);
-    }, [hoveredId]);
+    }, [selectedConnections, hoveredId]);
 
     if (files.length === 0 || activeFiles.length === 0) {
         return <></>;

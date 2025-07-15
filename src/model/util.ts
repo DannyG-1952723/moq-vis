@@ -165,7 +165,11 @@ export function groupBy<T, K extends PropertyKey>(
     }, {} as Record<K, T[]>);
 }
 
-export function makeTimestampIter(events: ConnectionEvent[]): Iterator<[number, number]> {
+export function makeTimestampIter(events: ConnectionEvent[] | undefined): Iterator<[number, number]> {
+    if (events === undefined) {
+        events = [];
+    }
+
     let nextIndex = 0;
     
     const timestampIter: Iterator<[number, number]> = {

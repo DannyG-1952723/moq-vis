@@ -93,7 +93,7 @@ export default function SequenceDiagram({ files, activeFiles }: SequenceDiagramP
     const connections = [];
 
     for (const conn of selectedConnections) {
-        connections.push(<Connection key={conn.startingConn.connId} conn={conn} xScale={xScale} yScale={yScale} startTime={network.startTime} containsQuicEvents={network.containsQuicEvents} startingId={startingId} handleHover={handleHover} />);
+        connections.push(<Connection key={conn.startingConn.connId} conn={conn} xScale={xScale} yScale={yScale} startTime={network.startTime} showQuic={showQuicEvents} showMoq={showMoqEvents} containsQuicEvents={network.containsQuicEvents} startingId={startingId} handleHover={handleHover} />);
 
         startingId += conn.acceptingConn.connEvents.length;
     }

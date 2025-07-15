@@ -285,6 +285,10 @@ export class NetworkSelection {
         }
 
         const maxEventNums = this.nodes.map(fileName => {
+            if (groupedEvents[fileName] === undefined) {
+                return 0;
+            }
+
             const length = groupedEvents[fileName].length;
             return groupedEvents[fileName][length - 1].eventNum;
         });

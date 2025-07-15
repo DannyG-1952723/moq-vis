@@ -43,6 +43,7 @@ export class ConnectionAction {
 export enum ActionType {
     Add,
     Delete,
+    Clear
 }
 
 function connectionsReducer(connections: Connection[], action: ConnectionAction) {
@@ -51,6 +52,9 @@ function connectionsReducer(connections: Connection[], action: ConnectionAction)
             return [...connections, ...action.connections];
         case ActionType.Delete:
             return connections.filter(conn => !action.connections.includes(conn));
+        case ActionType.Clear:
+            connections = [];
+            return connections;
         default:
             return connections;
     }

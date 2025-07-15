@@ -8,6 +8,7 @@ import { HEIGHT, WIDTH } from "@/model/util";
 import { useEffect } from "react";
 import Node from "./Node";
 import Edge from "./Edge";
+import { ActionType, ConnectionAction, useConnectionsDispatch } from "@/contexts/ConnectionsContext";
 
 const LINE_OFFSET: number = 40;
 
@@ -18,7 +19,11 @@ interface NetworkGraphProps {
 }
 
 export default function NetworkGraph({ files, activeFiles, network }: NetworkGraphProps) {
+    const dispatch = useConnectionsDispatch();
+
     useEffect(() => {
+        dispatch!(new ConnectionAction(ActionType.Clear, []));
+
         const graph = d3.select<SVGSVGElement, unknown>("#network_graph");
 
         const dragLayer = graph.select<SVGGElement>(".drag");
@@ -89,6 +94,7 @@ export default function NetworkGraph({ files, activeFiles, network }: NetworkGra
                 (conn.startingConn.fileName === link.source.name && conn.acceptingConn.fileName === link.target.name) ||
                 (conn.startingConn.fileName === link.target.name && conn.acceptingConn.fileName === link.source.name)
             )}
+            network={network}
         />;
     });
 

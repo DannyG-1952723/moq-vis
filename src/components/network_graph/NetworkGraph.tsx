@@ -3,9 +3,9 @@
 import * as d3 from "d3";
 import Note from "../Note";
 import { LogFile } from "@/model/LogFile";
-import { LinkDatum, Network, NodeDatum } from "@/model/Network";
+import { EdgeDatum, Network, NodeDatum } from "@/model/Network";
 import { HEIGHT, WIDTH } from "@/model/util";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import Node from "./Node";
 import Edge from "./Edge";
 import { ActionType, ConnectionAction, useConnectionsDispatch } from "@/contexts/ConnectionsContext";
@@ -19,80 +19,48 @@ interface NetworkGraphProps {
 }
 
 export default function NetworkGraph({ files, activeFiles, network }: NetworkGraphProps) {
+    const ref = useRef<SVGSVGElement>(null);
+
+    // TODO: Improve (when nodes change, the edges change too, which means two rerenders are triggered when only one is needed)
+    const [graphNodes, setGraphNodes] = useState<NodeDatum[]>([]);
+    const [graphEdges, setGraphEdges] = useState<EdgeDatum[]>([]);
+
     const dispatch = useConnectionsDispatch();
 
     useEffect(() => {
         dispatch!(new ConnectionAction(ActionType.Clear, []));
 
-        const graph = d3.select<SVGSVGElement, unknown>("#network_graph");
+        const [nodes, edges] = network.getGraphData();
 
-        const dragLayer = graph.select<SVGGElement>(".drag");
-        const zoomLayer = graph.select<SVGGElement>(".zoom");
-
-        const links: LinkDatum[] = graphEdges.map(edge => ({
-            source: graphNodes.find(node => node.name === edge.source)!,
-            target: graphNodes.find(node => node.name === edge.target)!
-        }));
-
-        const link = graph.selectAll<SVGLineElement, LinkDatum>(".edge").data(links);
-
-        const dragBehavior = d3.drag<SVGGElement, NodeDatum>()
-            .on("start", function (_) {
-                d3.select(this).raise();
-                dragLayer.attr("cursor", "grabbing");
-            })
-            .on("drag", function (event, d) {
-                d.x += event.dx;
-                d.y += event.dy;
-
-                const node = d3.select<SVGGElement, NodeDatum>(this);
-                node.attr("transform", `translate(${d.x}, ${d.y})`);
-
-                link.each(function (l) {
-                    const [x1, y1, x2, y2] = calculateLineEnds(l.source.x, l.source.y, l.target.x, l.target.y);
-
-                    d3.select(this)
-                        .attr("x1", x1)
-                        .attr("y1", y1)
-                        .attr("x2", x2)
-                        .attr("y2", y2);
-                });
-            })
-            .on("end", function () {
-                dragLayer.attr("cursor", "grab");
-            });
-
-        dragLayer.selectAll<SVGGElement, NodeDatum>(".node")
-            .data(graphNodes)
-            .call(dragBehavior);
-
-        const zoomBehavior = d3.zoom<SVGSVGElement, unknown>()
-            .extent([[0, 0], [WIDTH, HEIGHT]])
-            .scaleExtent([0.1, 10])
-            .on("zoom", function (event) {
-                zoomLayer.attr("transform", event.transform);
-            });
-
-        graph.call(zoomBehavior);
+        setGraphNodes(nodes);
+        setGraphEdges(edges);
     }, [network]);
 
-    const [graphNodes, graphEdges] = network.getGraphData();
+    useEffect(() => {
+        const zoomBehavior = d3.zoom<SVGSVGElement, unknown>()
+            .on("zoom", event => {
+                d3.select(ref.current)
+                    .select("g.zoom")
+                    .attr("transform", event.transform);
+            });
+
+        d3.select(ref.current!).call(zoomBehavior);
+    });
     
-    const nodes = graphNodes.map(node => <Node key={node.name} fileName={node.name} x={node.x} y={node.y} />);
+    const nodes = graphNodes.map(node => <Node key={node.name} fileName={node.name} x={node.x} y={node.y} onDrag={(dx, dy) => handleNodeDrag(node.name, dx, dy)} />);
 
-    const links: LinkDatum[] = graphEdges.map(edge => ({
-        source: graphNodes.find(node => node.name === edge.source)!,
-        target: graphNodes.find(node => node.name === edge.target)!
-    }));
+    const edges = graphEdges.map(edge => {
+        const source = graphNodes.find(node => node.name === edge.source)!;
+        const target = graphNodes.find(node => node.name === edge.target)!;
 
-    const edges = links.map(link => {
-        const [x1, y1, x2, y2] = calculateLineEnds(link.source.x, link.source.y, link.target.x, link.target.y);
+        const [x1, y1, x2, y2] = calculateLineEnds(source.x, source.y, target.x, target.y);
+
         return <Edge
-            key={`${link.source.name}_${link.target.name}`}
+            key={`${source.name}_${target.name}`}
             x1={x1} y1={y1} x2={x2} y2={y2}
             connections={network.connections.filter(conn =>
-                (conn.startingConn.fileName === link.source.name && conn.acceptingConn.fileName === link.target.name) ||
-                (conn.startingConn.fileName === link.target.name && conn.acceptingConn.fileName === link.source.name)
+                (conn.startingConn.fileName === source.name && conn.acceptingConn.fileName === target.name) ||
+                (conn.startingConn.fileName === target.name && conn.acceptingConn.fileName === source.name)
             )}
             network={network}
         />;
@@ -111,12 +79,10 @@ export default function NetworkGraph({ files, activeFiles, network }: NetworkGra
     }
 
     const diagram = (
-        <svg id="network_graph" width={WIDTH} height={HEIGHT} className="bg-white border border-gray-200 rounded-lg shadow-inner dark:bg-gray-700 dark:border-gray-700">
+        <svg ref={ref} id="network_graph" width={WIDTH} height={HEIGHT} className="bg-white border border-gray-200 rounded-lg shadow-inner dark:bg-gray-700 dark:border-gray-700">
             <g className="zoom">
                 {edges}
-                <g className="drag" cursor="grab">
-                    {nodes}
-                </g>
+                {nodes}
             </g>
         </svg>
     );
@@ -127,6 +93,12 @@ export default function NetworkGraph({ files, activeFiles, network }: NetworkGra
             {diagram}
         </>
     );
+
+    function handleNodeDrag(name: string, dx: number, dy: number) {
+        setGraphNodes(prev => 
+            prev.map(n => n.name === name ? { ...n, x: n.x + dx, y: n.y + dy } : n)
+        )
+    }
 }
 
 function calculateLineEnds(x1: number, y1: number, x2: number, y2: number): [number, number, number, number] {

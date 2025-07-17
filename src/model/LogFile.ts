@@ -192,7 +192,7 @@ class Epoch {
     }
 }
 
-type MoqRole =
+export type MoqRole =
     "publisher" |
     "subscriber" |
     // For scenarios when a peer is considered equally publisher as subscriber (e.g., video conferencing)

@@ -47,7 +47,7 @@ export default function NetworkGraph({ files, activeFiles, network }: NetworkGra
         d3.select(ref.current!).call(zoomBehavior);
     });
     
-    const nodes = graphNodes.map(node => <Node key={node.name} fileName={node.name} x={node.x} y={node.y} onDrag={(dx, dy) => handleNodeDrag(node.name, dx, dy)} />);
+    const nodes = graphNodes.map(node => <Node key={node.name} fileName={node.name} x={node.x} y={node.y} mainRole={node.mainRole} onDrag={(dx, dy) => handleNodeDrag(node.name, dx, dy)} />);
 
     const edges = graphEdges.map(edge => {
         const source = graphNodes.find(node => node.name === edge.source)!;

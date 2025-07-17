@@ -13,10 +13,10 @@ interface EdgeProps {
     network: Network;
 }
 
-const NORMAL_EDGE_CLASS_NAME = "stroke-gray-600";
-const HOVER_EDGE_CLASS_NAME = "stroke-gray-800";
-const NORMAL_CLICKED_EDGE_CLASS_NAME = "stroke-blue-600";
-const HOVER_CLICKED_EDGE_CLASS_NAME = "stroke-blue-800";
+const NORMAL_EDGE_CLASS_NAME = "stroke-gray-500";
+const HOVER_EDGE_CLASS_NAME = "stroke-gray-700";
+const NORMAL_CLICKED_EDGE_CLASS_NAME = "stroke-green-600";
+const HOVER_CLICKED_EDGE_CLASS_NAME = "stroke-green-800";
 
 export default function Edge({ x1, y1, x2, y2, connections, network }: EdgeProps) {
     const [selected, setSelected] = useState(false);

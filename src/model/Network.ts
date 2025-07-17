@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { LogFile } from "./LogFile";
+import { LogFile, MoqRole } from "./LogFile";
 import { LogFileEvent } from "./Events";
 import { StreamStateUpdated } from "./quic";
 import { MoqEventData } from "./moq";
@@ -128,7 +128,9 @@ export class Network {
     
                 nextNodes.push(...this.nodes.filter(node => unhandledConnectedNodes.includes(node.name)));
 
-                nodes.push({name: node.name, x: this.calculatePosition(currentDepth, depth, WIDTH, NODE_SPACE_HORIZONTAL), y: this.calculatePosition(i, startNodes.length, HEIGHT, NODE_SPACE_VERTICAL)});
+                const role = node.details.trace.common_fields?.main_role;
+
+                nodes.push({name: node.name, x: this.calculatePosition(currentDepth, depth, WIDTH, NODE_SPACE_HORIZONTAL), y: this.calculatePosition(i, startNodes.length, HEIGHT, NODE_SPACE_VERTICAL), mainRole: role!});
                 edges.push(...unhandledConnectedNodes.map(targetNode => { return {source: node.name, target: targetNode}; }));
     
                 handledNodes.push(node.name);
@@ -142,7 +144,9 @@ export class Network {
         const unconnectedNodes = this.nodes.filter(node => !handledNodes.includes(node.name));
 
         for (let i = 0; i < unconnectedNodes.length; ++i) {
-            nodes.push({name: unconnectedNodes[i].name, x: this.calculatePosition(depth, depth, WIDTH, NODE_SPACE_HORIZONTAL), y: this.calculatePosition(i, unconnectedNodes.length, HEIGHT, NODE_SPACE_VERTICAL)});
+            const role = unconnectedNodes[i].details.trace.common_fields?.main_role;
+
+            nodes.push({name: unconnectedNodes[i].name, x: this.calculatePosition(depth, depth, WIDTH, NODE_SPACE_HORIZONTAL), y: this.calculatePosition(i, unconnectedNodes.length, HEIGHT, NODE_SPACE_VERTICAL), mainRole: role!});
         }
 
         return [nodes, edges];
@@ -189,6 +193,7 @@ export interface NodeDatum {
     name: string;
     x: number;
     y: number;
+    mainRole: MoqRole;
 }
 
 export interface EdgeDatum {

@@ -45,7 +45,7 @@ export default function SequenceDiagram({ files, activeFiles }: SequenceDiagramP
         ];
 
         // Uses map since IDs aren't always sequential (in case of non MessageEvents)
-        let orderMap: Map<string, number> = new Map();
+        const orderMap: Map<string, number> = new Map();
 
         for (let i = 0; i < order.length; i++) {
             const value = order[i];

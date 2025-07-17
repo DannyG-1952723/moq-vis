@@ -397,7 +397,7 @@ export class Connection {
     }
 
     calculateBlockNestings() {
-        let availableNestings = [true];
+        const availableNestings = [true];
 
         const createdSorted = this.messageEvents.toSorted((a, b) => a.createdEvent.event.time - b.createdEvent.event.time);
         const parsedSorted = this.messageEvents.toSorted((a, b) => a.parsedEvent.event.time - b.parsedEvent.event.time);
@@ -407,8 +407,8 @@ export class Connection {
 
         // Logical AND works here since the created events will be exhausted first, which means nestings won't have to be made available anymore
         while (i < this.messageEvents.length && j < this.messageEvents.length) {
-            let createdEvent = createdSorted[i];
-            let parsedEvent = parsedSorted[j];
+            const createdEvent = createdSorted[i];
+            const parsedEvent = parsedSorted[j];
 
             const created = createdEvent.createdEvent;
             const parsed = parsedEvent.parsedEvent;

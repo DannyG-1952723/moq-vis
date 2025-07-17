@@ -1,20 +1,25 @@
 import * as d3 from "d3";
-import Note from "../Note";
-import { Network } from "@/model/Network";
+import { NetworkSelection } from "@/model/Network";
 import Connection from "./Connection";
 import Axis from "./Axis";
-import { BLOCK_SIZE } from "@/model/util";
+import { BLOCK_SIZE, WIDTH } from "@/model/util";
 import { LogFile } from "@/model/LogFile";
 import { useEffect, useState } from "react";
+import Note from "../Note";
+import { useConnections } from "@/contexts/ConnectionsContext";
+import ProtocolToggle from "../ProtocolToggle";
 
 interface SequenceDiagramProps {
     files: LogFile[];
     activeFiles: LogFile[];
-    network: Network;
 }
 
-export default function SequenceDiagram({ files, activeFiles, network }: SequenceDiagramProps) {
+export default function SequenceDiagram({ files, activeFiles }: SequenceDiagramProps) {
+    const [showQuicEvents, setShowQuicEvents] = useState(true);
+    const [showMoqEvents, setShowMoqEvents] = useState(true);
     const [hoveredId, setHoveredId] = useState<string | null>(null);
+
+    const selectedConnections = useConnections();
 
     useEffect(() => {
         const messageEvents = d3.selectAll<SVGGElement, number>(".message_event");
@@ -54,16 +59,19 @@ export default function SequenceDiagram({ files, activeFiles, network }: Sequenc
         });
 
         messageEvents.sort((a, b) => a - b);
-    }, [hoveredId]);
+    }, [selectedConnections, hoveredId]);
+
+    if (files.length === 0 || activeFiles.length === 0) {
+        return <></>;
+    }
 
     const title = <h3 className="block mt-5 mb-2 text-md font-medium text-gray-900 dark:text-white">Sequence diagram</h3>;
 
-    if (files.length === 0 || activeFiles.length === 0) {
+    if (selectedConnections.length === 0) {
         return (
             <>
                 {title}
-                {files.length === 0 && <Note>There are no imported files</Note>}
-                {files.length !== 0 && activeFiles.length === 0 && <Note>There are no active files</Note>}
+                <Note>Click connections in the network graph to display in the sequence diagram</Note>
             </>
         );
     }
@@ -71,27 +79,28 @@ export default function SequenceDiagram({ files, activeFiles, network }: Sequenc
     const margin = {top: 50, right: 145, bottom: 50, left: 115}
     const axisMargin = 25;
 
-    const width = 1280;
+    const network = new NetworkSelection(selectedConnections, showQuicEvents, showMoqEvents);
+
     const height = (network.maxEventNums - 1) * 50 + BLOCK_SIZE + margin.top + margin.bottom + 2 * axisMargin;
 
-    const innerWidth = width - margin.left - margin.right;
+    const innerWidth = WIDTH - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
-    const xScale = d3.scalePoint().domain(activeFiles.map(file => file.name)).range([0, innerWidth]);
+    const xScale = d3.scalePoint().domain(network.nodes).range([0, innerWidth]);
     const yScale = d3.scaleLinear().domain([0, network.maxEventNums - 1]).range([axisMargin + BLOCK_SIZE / 2, innerHeight - axisMargin - BLOCK_SIZE / 2]);
 
     let startingId = 0;
     const connections = [];
 
-    for (const conn of network.connections) {
-        connections.push(<Connection key={conn.startingConn.connId} conn={conn} xScale={xScale} yScale={yScale} startTime={network.startTime} containsQuicEvents={network.containsQuicEvents} startingId={startingId} handleHover={handleHover} />);
+    for (const conn of selectedConnections) {
+        connections.push(<Connection key={conn.startingConn.connId} conn={conn} xScale={xScale} yScale={yScale} startTime={network.startTime} showQuic={showQuicEvents} showMoq={showMoqEvents} containsQuicEvents={network.containsQuicEvents} startingId={startingId} handleHover={handleHover} />);
 
         startingId += conn.acceptingConn.connEvents.length;
     }
 
     // TODO: Display events that aren't part of any connections (for when the other part of the connection isn't imported)
     const diagram = (
-        <svg width={width} height={height} className="bg-white border border-gray-200 rounded-lg shadow-inner dark:bg-gray-700 dark:border-gray-700">
+        <svg width={WIDTH} height={height} className="bg-white border border-gray-200 rounded-lg shadow-inner dark:bg-gray-700 dark:border-gray-700">
             <defs>
                 <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse" className="fill-gray-600">
                     <path d="M 0 0 L 10 5 L 0 10 z" />
@@ -109,12 +118,23 @@ export default function SequenceDiagram({ files, activeFiles, network }: Sequenc
         </svg>
     );
 
+    const protocolToggle = <ProtocolToggle show={activeFiles.length > 0} showQuic={showQuicEvents} showMoq={showMoqEvents} handleQuicToggle={onQuicToggle} handleMoqToggle={onMoqToggle} />
+
     return (
         <>
             {title}
+            {protocolToggle}
             {diagram}
         </>
     );
+
+    function onQuicToggle(showQuic: boolean) {
+        setShowQuicEvents(showQuic);
+    }
+
+    function onMoqToggle(showMoq: boolean) {
+        setShowMoqEvents(showMoq);
+    }
 
     function handleHover(id: string | null) {
         setHoveredId(id);

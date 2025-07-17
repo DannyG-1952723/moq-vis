@@ -1,56 +1,34 @@
 import * as d3 from "d3";
-import { LogFile } from "./LogFile";
+import { LogFile, MoqRole } from "./LogFile";
 import { LogFileEvent } from "./Events";
 import { StreamStateUpdated } from "./quic";
 import { MoqEventData } from "./moq";
-import { getMinTimestampIndex, groupBy, makeTimestampIter } from "./util";
+import { getMinTimestampIndex, groupBy, HEIGHT, makeTimestampIter, WIDTH } from "./util";
 
-function eventsToConnectionEvents(eventList: LogFileEvent[], fileName: string, showQuicEvents: boolean, showMoqEvents: boolean): ConnectionEvent[] {
-    let list = eventList;
-    
-    if (!showQuicEvents) {
-        list = list.filter(event => !event.name.startsWith("quic"));
-    }
-    if (!showMoqEvents) {
-        list = list.filter(event => !event.name.startsWith("moq"));
-    }
+const NODE_SPACE_HORIZONTAL = 200;
+const NODE_SPACE_VERTICAL = 150;
 
-    return list.map(event => new ConnectionEvent(event, 0, fileName));
-}
-
-function getEventsFromFiles(events: ConnectionEvent[], logFile: LogFile, showQuic: boolean, showMoq: boolean): ConnectionEvent[] {
-    return events.concat(eventsToConnectionEvents(logFile.events, logFile.name, showQuic, showMoq));
+function getEventsFromFiles(events: ConnectionEvent[], logFile: LogFile): ConnectionEvent[] {
+    return events.concat(logFile.events.map(event => new ConnectionEvent(event, 0, 0, logFile.name)));
 }
 
 export class Network {
-    nodes: string[];
+    nodes: LogFile[];
     connections: Connection[];
-    maxEventNums: number;
-    startTime: number;
-    containsQuicEvents: boolean;
 
-    constructor(logFiles: LogFile[], showQuicEvents: boolean, showMoqEvents: boolean) {
-        const allEvents = d3.reduce(logFiles, (events: ConnectionEvent[], logFile: LogFile) => getEventsFromFiles(events, logFile, showQuicEvents, showMoqEvents), []).sort((event1, event2) => event1.event.time - event2.event.time);
+    constructor(logFiles: LogFile[]) {
+        this.nodes = logFiles;
 
-        if (allEvents.length > 0) {
-            this.startTime = allEvents[0].event.time;
-        }
-        else {
-            this.startTime = 0;
+        const allEvents = d3.reduce(logFiles, (events: ConnectionEvent[], logFile: LogFile) => getEventsFromFiles(events, logFile), []).sort((event1, event2) => event1.event.time - event2.event.time);
+
+        for (let i = 0; i < allEvents.length; ++i) {
+            allEvents[i].orderNum = i;
         }
 
-        const fileNames = logFiles.map(file => file.name);
         const groupedEvents = groupBy(allEvents, event => event.fileName);
-        const usedFileNames = fileNames.filter(fileName => groupedEvents[fileName] != null);
-        
-        this.maxEventNums = this.calculateEventNums(groupedEvents, usedFileNames);
-
         const connectionNodes = this.createConnectionNodes(logFiles, groupedEvents);
         
-        this.nodes = logFiles.map(logFile => logFile.name);
         this.connections = this.createConnections(connectionNodes);
-
-        this.containsQuicEvents = showQuicEvents ? this.containsQuicEvent(allEvents) : false;
     }
 
     createConnectionNodes(logFiles: LogFile[], groupedEvents: Partial<Record<string, ConnectionEvent[]>>): Record<string, ConnectionNode> {
@@ -107,8 +85,173 @@ export class Network {
         return connections;
     }
 
-    calculateEventNums(groupedEvents: Record<string, ConnectionEvent[]>, fileNames: string[]): number {
-        const timestampIters = fileNames.map(fileName => makeTimestampIter(groupedEvents[fileName]));
+    getGraphData(): [NodeDatum[], EdgeDatum[]] {
+        let startNodes: LogFile[] = [];
+
+        const nodes: NodeDatum[] = [];
+        const edges: EdgeDatum[] = [];
+
+        const pubs = this.nodes.filter(node => node.details.trace.common_fields?.main_role === "publisher");
+        const subs = this.nodes.filter(node => node.details.trace.common_fields?.main_role === "subscriber");
+        const pubsubs = this.nodes.filter(node => node.details.trace.common_fields?.main_role === "pubsub");
+        const relays = this.nodes.filter(node => node.details.trace.common_fields?.main_role === "relay");
+
+        if (pubs.length > 0) {
+            startNodes = pubs;
+        }
+        else if (subs.length > 0) {
+            startNodes = subs;
+        }
+        else if (pubsubs.length > 0) {
+            startNodes = pubsubs;
+        }
+        else {
+            startNodes = relays;
+        }
+
+        const depth = this.calculateGraphDepth(startNodes);
+        let currentDepth = -1;
+
+        const handledNodes: string[] = [];
+
+        while (startNodes.length > 0) {
+            currentDepth++;
+
+            let nextNodes: LogFile[] = [];
+
+            for (let i = 0; i < startNodes.length; ++i) {
+                const node = startNodes[i];
+
+                const connections = this.connections.filter(conn => conn.startingConn.fileName === node.name || conn.acceptingConn.fileName === node.name);
+                const connectedNodes = [...new Set(connections.map(conn => conn.startingConn.fileName === node.name ? conn.acceptingConn.fileName : conn.startingConn.fileName))];
+                const unhandledConnectedNodes = connectedNodes.filter(node => !handledNodes.includes(node));
+    
+                nextNodes.push(...this.nodes.filter(node => unhandledConnectedNodes.includes(node.name)));
+
+                const role = node.details.trace.common_fields?.main_role;
+
+                nodes.push({name: node.name, x: this.calculatePosition(currentDepth, depth, WIDTH, NODE_SPACE_HORIZONTAL), y: this.calculatePosition(i, startNodes.length, HEIGHT, NODE_SPACE_VERTICAL), mainRole: role!});
+                edges.push(...unhandledConnectedNodes.map(targetNode => { return {source: node.name, target: targetNode}; }));
+    
+                handledNodes.push(node.name);
+            }
+
+            // Remove duplicates (QUIC and MoQ are seen as different connections because of different IDs)
+            nextNodes = [...new Set(nextNodes)];
+            startNodes = nextNodes;
+        }
+
+        const unconnectedNodes = this.nodes.filter(node => !handledNodes.includes(node.name));
+
+        for (let i = 0; i < unconnectedNodes.length; ++i) {
+            const role = unconnectedNodes[i].details.trace.common_fields?.main_role;
+
+            nodes.push({name: unconnectedNodes[i].name, x: this.calculatePosition(depth, depth, WIDTH, NODE_SPACE_HORIZONTAL), y: this.calculatePosition(i, unconnectedNodes.length, HEIGHT, NODE_SPACE_VERTICAL), mainRole: role!});
+        }
+
+        return [nodes, edges];
+    }
+
+    calculateGraphDepth(startNodes: LogFile[]): number {
+        let depth = 0;
+        const handledNodes: string[] = [];
+
+        while (startNodes.length > 0) {
+            depth++;
+
+            let nextNodes: LogFile[] = [];
+
+            for (let i = 0; i < startNodes.length; ++i) {
+                const node = startNodes[i];
+
+                const connections = this.connections.filter(conn => conn.startingConn.fileName === node.name || conn.acceptingConn.fileName === node.name);
+                const connectedNodes = [...new Set(connections.map(conn => conn.startingConn.fileName === node.name ? conn.acceptingConn.fileName : conn.startingConn.fileName))];
+    
+                nextNodes.push(...this.nodes.filter((node) => connectedNodes.includes(node.name) && !handledNodes.includes(node.name)));
+    
+                handledNodes.push(node.name);
+            }
+
+            // Remove duplicates
+            nextNodes = [...new Set(nextNodes)];
+            startNodes = nextNodes;
+        }
+
+        return depth;
+    }
+
+    calculatePosition(index: number, numNodes: number, dimensionLength: number, nodeSpace: number): number {
+        const startPos = numNodes % 2 === 0 ?
+            dimensionLength / 2 - nodeSpace / 2 - (numNodes / 2 - 1) * nodeSpace :
+            dimensionLength / 2 - ((numNodes - 1) / 2) * nodeSpace;
+
+        return startPos + index * nodeSpace;
+    }
+}
+
+export interface NodeDatum {
+    name: string;
+    x: number;
+    y: number;
+    mainRole: MoqRole;
+}
+
+export interface EdgeDatum {
+    source: string;
+    target: string;
+}
+
+export interface LinkDatum {
+    source: NodeDatum;
+    target: NodeDatum;
+}
+
+function getEventsFromConnections(events: ConnectionEvent[], connection: Connection, showQuic: boolean, showMoq: boolean): ConnectionEvent[] {
+    const msgEvents = d3.reduce(connection.messageEvents, (events: ConnectionEvent[], msgEvent: MessageEvent) => events.concat(msgEvent.createdEvent, msgEvent.parsedEvent), []);
+    const halfMsgEvents = connection.halfMessageEvents.map(halfMsgEvent => halfMsgEvent.event);
+
+    let list = [...connection.startingConn.connEvents, ...connection.acceptingConn.connEvents, ...msgEvents, ...halfMsgEvents];
+
+    if (!showQuic) {
+        list = list.filter(event => !event.event.name.startsWith("quic"));
+    }
+    if (!showMoq) {
+        list = list.filter(event => !event.event.name.startsWith("moq"));
+    }
+
+    return events.concat(list);
+}
+
+export class NetworkSelection {
+    nodes: string[];
+    connections: Connection[];
+    maxEventNums: number;
+    startTime: number;
+    containsQuicEvents: boolean;
+
+    constructor(connections: Connection[], showQuicEvents: boolean, showMoqEvents: boolean) {
+        this.connections = connections;
+
+        // Removes duplicates
+        this.nodes = [...new Set(d3.reduce(connections, (nodes: string[], connection: Connection) => nodes.concat(connection.startingConn.fileName, connection.acceptingConn.fileName), []))];
+
+        const allEvents = d3.reduce(connections, (events: ConnectionEvent[], connection: Connection) => getEventsFromConnections(events, connection, showQuicEvents, showMoqEvents), []).sort((event1, event2) => event1.orderNum - event2.orderNum);
+
+        if (allEvents.length > 0) {
+            this.startTime = allEvents[0].event.time;
+        }
+        else {
+            this.startTime = 0;
+        }
+
+        const groupedEvents = groupBy(allEvents, event => event.fileName);
+        this.maxEventNums = this.calculateEventNums(groupedEvents);
+
+        this.containsQuicEvents = showQuicEvents ? this.containsQuicEvent(allEvents) : false;
+    }
+
+    calculateEventNums(groupedEvents: Record<string, ConnectionEvent[]>): number {
+        const timestampIters = this.nodes.map(fileName => makeTimestampIter(groupedEvents[fileName]));
 
         const timestamps = timestampIters.map(iter => iter.next());
         let timestampIndices = timestamps.map(timestamp => timestamp.value[1]);
@@ -134,7 +277,7 @@ export class Network {
 
             prevMin = min;
 
-            const fileName = fileNames[minIndex];
+            const fileName = this.nodes[minIndex];
             const timestampIndex = timestampIndices[minIndex];
 
             groupedEvents[fileName][timestampIndex].eventNum = eventNum;
@@ -146,7 +289,11 @@ export class Network {
             done = timestamps.every(value => value.done);
         }
 
-        const maxEventNums = fileNames.map(fileName => {
+        const maxEventNums = this.nodes.map(fileName => {
+            if (groupedEvents[fileName] === undefined) {
+                return 0;
+            }
+
             const length = groupedEvents[fileName].length;
             return groupedEvents[fileName][length - 1].eventNum;
         });
@@ -277,7 +424,7 @@ export class Connection {
             }
 
             // Created event happens first
-            if (created.eventNum < parsed.eventNum) {
+            if (created.orderNum < parsed.orderNum) {
                 const firstAvailable = availableNestings.findIndex(value => value);
 
                 // No nestings available, create a new one
@@ -291,22 +438,6 @@ export class Connection {
                 }
 
                 i += 1;
-            }
-            // On the same line, so no other events inbetween
-            else if (created.eventNum === parsed.eventNum) {
-                const firstAvailable = availableNestings.findIndex(value => value);
-
-                // No nestings available, create a new one
-                if (firstAvailable === -1) {
-                    availableNestings.push(true);
-                    createdEvent.nesting = availableNestings.length - 1;
-                }
-                else {
-                    createdEvent.nesting = firstAvailable;
-                }
-
-                i += 1;
-                j += 1;
             }
             // Parsed event happens first
             else {
@@ -336,11 +467,15 @@ class ConnectionNode {
 
 export class ConnectionEvent {
     event: LogFileEvent;
+    // Order of the event within all events (used for sorting when timestamps are the same)
+    orderNum: number;
+    // Number of the event in the sequence diagram (used to determine the position in the visualization)
     eventNum: number;
     fileName: string;
 
-    constructor(event: LogFileEvent, eventNum: number, fileName: string) {
+    constructor(event: LogFileEvent, orderNum: number, eventNum: number, fileName: string) {
         this.event = event;
+        this.orderNum = orderNum;
         this.eventNum = eventNum;
         this.fileName = fileName;
     }

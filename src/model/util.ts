@@ -2,6 +2,9 @@ import { LogFileEvent } from "./Events";
 import { MoqEventData, Stream } from "./moq";
 import { ConnectionEvent } from "./Network";
 
+export const WIDTH: number = 1280;
+export const HEIGHT: number = 720;
+
 export const BLOCK_SIZE: number = 30;
 
 export const NORMAL_ARROW_CLASS_NAME = "stroke-gray-600";
@@ -162,7 +165,11 @@ export function groupBy<T, K extends PropertyKey>(
     }, {} as Record<K, T[]>);
 }
 
-export function makeTimestampIter(events: ConnectionEvent[]): Iterator<[number, number]> {
+export function makeTimestampIter(events: ConnectionEvent[] | undefined): Iterator<[number, number]> {
+    if (events === undefined) {
+        events = [];
+    }
+
     let nextIndex = 0;
     
     const timestampIter: Iterator<[number, number]> = {

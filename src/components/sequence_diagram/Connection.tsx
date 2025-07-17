@@ -11,12 +11,14 @@ interface ConnectionProps {
     xScale: d3.ScalePoint<string>;
     yScale: d3.ScaleLinear<number, number, never>;
     startTime: number;
+    showQuic: boolean;
+    showMoq: boolean;
     containsQuicEvents: boolean;
     startingId: number;
     handleHover: (id: string | null) => void;
 }
 
-export default function Connection({ conn, xScale, yScale, startTime, containsQuicEvents, startingId, handleHover }: ConnectionProps) {
+export default function Connection({ conn, xScale, yScale, startTime, showQuic, showMoq, containsQuicEvents, startingId, handleHover }: ConnectionProps) {
     return (
         <>
             {createEvents()}
@@ -31,19 +33,52 @@ export default function Connection({ conn, xScale, yScale, startTime, containsQu
 
         for (let i = 0; i < conn.messageEvents.length; i++) {
             const event = conn.messageEvents[i];
+
+            if (!showQuic && event.createdEvent.event.name.startsWith("quic")) {
+                continue;
+            }
+
+            if (!showMoq && event.createdEvent.event.name.startsWith("moq")) {
+                continue;
+            }
+
             events.push(createMessageEvent(event, `${startingId + i}`));
         }
 
         for (const event of conn.halfMessageEvents) {
+            if (!showQuic && event.event.event.name.startsWith("quic")) {
+                continue;
+            }
+
+            if (!showMoq && event.event.event.name.startsWith("moq")) {
+                continue;
+            }
+
             const otherFileName = event.event.fileName === fileName1 ? fileName2 : fileName1;
             events.push(createHalfMessageEvent(event.event, otherFileName));
         }
 
         for (const event of conn.startingConn.connEvents) {
+            if (!showQuic && event.event.name.startsWith("quic")) {
+                continue;
+            }
+
+            if (!showMoq && event.event.name.startsWith("moq")) {
+                continue;
+            }
+
             events.push(createEvent(event));
         }
 
         for (const event of conn.acceptingConn.connEvents) {
+            if (!showQuic && event.event.name.startsWith("quic")) {
+                continue;
+            }
+
+            if (!showMoq && event.event.name.startsWith("moq")) {
+                continue;
+            }
+
             events.push(createEvent(event));
         }
 
@@ -56,10 +91,10 @@ export default function Connection({ conn, xScale, yScale, startTime, containsQu
     }
 
     function createMessageEvent(messageEvent: MsgEvent, id: string): JSX.Element {
-        return <MessageEvent messageEvent={messageEvent} xScale={xScale} yScale={yScale} startTime={startTime} isBlock={containsQuicEvents} id={id} handleHover={handleHover} />;
+        return <MessageEvent key={id} messageEvent={messageEvent} xScale={xScale} yScale={yScale} startTime={startTime} isBlock={containsQuicEvents} id={id} handleHover={handleHover} />;
     }
 
     function createHalfMessageEvent(event: ConnectionEvent, otherFileName: string): JSX.Element {
-        return <HalfMessageEvent event={event} otherFileName={otherFileName} xScale={xScale} yScale={yScale} startTime={startTime} />
+        return <HalfMessageEvent key={event.orderNum} event={event} otherFileName={otherFileName} xScale={xScale} yScale={yScale} startTime={startTime} />
     }
 }

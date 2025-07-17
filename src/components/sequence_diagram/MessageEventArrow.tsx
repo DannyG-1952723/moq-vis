@@ -26,7 +26,7 @@ export default function MessageEventArrow({ messageEvent, x1, y1, x2, y2, colors
     const [textMiddleX, textMiddleY] = arrow.getMiddleCoords();
     const textAngle = radiansToDegrees(Math.atan(arrow.m));
 
-    const [textRef, textBgRef] = useTextBackground([messageEvent.createdEvent, messageEvent.parsedEvent], textAngle, textMiddleX, textMiddleY);
+    const [textRef, textBgRef] = useTextBackground([messageEvent.createdEvent, messageEvent.parsedEvent, arrow], textAngle, textMiddleX, textMiddleY);
 
     const shortName = messageEvent.createdEvent.event.getShortNameWithoutAction();
 

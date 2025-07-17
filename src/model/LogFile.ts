@@ -111,13 +111,18 @@ class CommonFields {
     time_format?: TimeFormat;
     reference_time?: ReferenceTime;
     group_id?: string;
-    // TODO: Maybe replace 'any'
-    custom_fields?: any;
+    // TODO: Replace with general custom fields (this is the only custom field yet in use for MoQ)
+    // TODO: Make main_role optional (maybe look at bytes published and subscribed to in order to determine pub/sub/pubsub)
+    main_role: MoqRole;
 
     constructor(json: any, fileName: string) {
+        if (!("main_role" in json)) {
+            throw new InvalidFileError(fileName);
+        }
+
         this.path = json["path"];
         this.group_id = json["group_id"];
-        this.custom_fields = json["custom_fields"];
+        this.main_role = json["main_role"];
 
         if ("time_format" in json && typeof json["time_format"] === "string") {
             this.time_format = stringToTimeFormat(json["time_format"], fileName);
@@ -186,6 +191,13 @@ class Epoch {
         }
     }
 }
+
+export type MoqRole =
+    "publisher" |
+    "subscriber" |
+    // For scenarios when a peer is considered equally publisher as subscriber (e.g., video conferencing)
+    "pubsub" |
+    "relay";
 
 class VantagePoint {
     name?: string;

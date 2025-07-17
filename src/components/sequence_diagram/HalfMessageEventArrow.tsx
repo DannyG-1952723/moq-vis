@@ -34,7 +34,7 @@ export default function HalfMessageEventArrow({ event, x1, y1, x2, y2, colors, i
     const [textMiddleX, textMiddleY] = arrow.getMiddleCoords();
     const textAngle = radiansToDegrees(Math.atan(arrow.m));
 
-    const [textRef, textBgRef] = useTextBackground([event], textAngle, textMiddleX, textMiddleY);
+    const [textRef, textBgRef] = useTextBackground([event, arrow], textAngle, textMiddleX, textMiddleY);
 
     const shortName = event.event.getShortName();
 

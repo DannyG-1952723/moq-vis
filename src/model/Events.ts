@@ -83,6 +83,7 @@ export class LogFileEvent {
         return {
             time_sent: this.time,
             time_received: parsedEvent.time,
+            latency: `${parsedEvent.time - this.time} ms`,
             name: `${this.name} / ${parsedEvent.name}`,
             data: this.data.getSummary(parsedEvent.data),
             // Both events should have the same group ID

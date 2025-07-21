@@ -319,6 +319,7 @@ export class Connection {
     acceptingConn: ConnectionNode;
     messageEvents!: MessageEvent[];
     halfMessageEvents!: HalfMessageEvent[];
+    connectionType: ConnectionType;
 
     constructor(connNode1: ConnectionNode, connNode2: ConnectionNode) {
         // Both nodes have at least 1 event
@@ -330,6 +331,8 @@ export class Connection {
             this.startingConn = connNode2;
             this.acceptingConn = connNode1;
         }
+
+        this.connectionType = this.startingConn.connEvents[0].event.name.startsWith("quic") ? "quic" : "moq";
 
         this.createEvents();
         this.calculateBlockNestings();
@@ -448,6 +451,8 @@ export class Connection {
         }
     }
 }
+
+export type ConnectionType = "quic" | "moq";
 
 class ConnectionNode {
     fileName: string

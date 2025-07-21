@@ -1,6 +1,6 @@
 "use client";
 
-import Chart from "@/components/chart/Chart";
+import Charts from "@/components/chart/Charts";
 import { useFiles } from "@/contexts/FilesContext";
 import { Network } from "@/model/Network";
 
@@ -14,10 +14,7 @@ export default function Page() {
     return (
         <div className="font-[family-name:var(--font-geist-sans)]">
             <main className="flex flex-col row-start-0 sm:items-start w-full">   
-                <h3 className="block mt-5 mb-2 text-md font-medium text-gray-900 dark:text-white">Latency charts</h3>
-                <div className="flex flex-wrap">
-                    {network.connections.map(connection => <Chart connection={connection} />)}
-                </div>
+                <Charts network={network} />
             </main>
         </div>
     );

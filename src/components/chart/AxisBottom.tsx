@@ -15,7 +15,7 @@ export default function AxisBottom({ xScale, width, height }: AxisBottomProps) {
                     <text className="font-mono text-[14px]" textAnchor="middle" y={height + 3} dy="1em">{tickValue / 1000}</text>
                 </g>
             )}
-            <text fontSize="1.1em" x={width / 2} y={height + 40} textAnchor="middle">Time since connection start (s)</text>
+            <text fontSize="1.1em" x={width / 2} y={height + 42} textAnchor="middle">Time since connection start (s)</text>
         </>
     );
 }

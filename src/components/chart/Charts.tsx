@@ -15,7 +15,7 @@ export default function Charts({ network }: ChartsProps) {
     const charts: ReactNode[] = [];
 
     const connections = getConnectionPairs(network);
-    connections.forEach(connection => charts.push(<Chart quicConnection={connection.quicConnection} moqConnection={connection.moqConnection} />));
+    connections.forEach((connection, key) => charts.push(<Chart key={key} quicConnection={connection.quicConnection} moqConnection={connection.moqConnection} />));
 
     return (
         <>

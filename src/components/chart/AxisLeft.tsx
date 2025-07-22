@@ -10,9 +10,9 @@ export default function AxisLeft({ yScale, height }: AxisLeftProps) {
     const textMiddleY = height / 2;
 
     return (
-        <>
-            {yScale.ticks().map(tickValue => <TickLeft value={tickValue} position={yScale(tickValue)} />)}
+        <g className="axis-left">
+            {yScale.ticks().map(tickValue => <TickLeft key={tickValue} value={tickValue} position={yScale(tickValue)} />)}
             <text transform={`rotate(-90, ${textMiddleX}, ${textMiddleY})`} fontSize="1.1em" x={textMiddleX} y={textMiddleY} textAnchor="middle">Latency (ms)</text>
-        </>
+        </g>
     );
 }

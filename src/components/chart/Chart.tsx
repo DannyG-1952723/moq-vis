@@ -3,8 +3,9 @@ import * as d3 from "d3";
 import AxisBottom from "./AxisBottom";
 import AxisLeft from "./AxisLeft";
 import Marks from "./Marks";
+import { useRef } from "react";
 
-const MARGIN = { top: 40, bottom: 50, left: 65, right: 20 };
+const MARGIN = { top: 60, bottom: 50, left: 65, right: 50 };
 const WIDTH = 624;
 const HEIGHT = 351;
 const INNER_WIDTH = WIDTH - MARGIN.left - MARGIN.right;
@@ -17,6 +18,8 @@ interface ChartProps {
 }
 
 export default function Chart({ quicConnection, moqConnection }: ChartProps) {
+    const popupContainerRef = useRef<SVGGElement>(null);
+
     const quicTimestamps = quicConnection?.messageEvents.map(event => event.createdEvent.event.time) ?? [];
     const moqTimestamps = moqConnection?.messageEvents.map(event => event.createdEvent.event.time) ?? [];
 
@@ -53,8 +56,9 @@ export default function Chart({ quicConnection, moqConnection }: ChartProps) {
             <g transform={`translate(${MARGIN.left}, ${MARGIN.top})`}>
                 <AxisBottom xScale={xScale} width={INNER_WIDTH} height={INNER_HEIGHT} />
                 <AxisLeft yScale={yScale} height={INNER_HEIGHT} />
-                <Marks latencies={quicLatencies} timestamps={normalizedQuicTimestamps} xScale={xScale} yScale={yScale} connectionType="quic" />
-                <Marks latencies={moqLatencies} timestamps={normalizedMoqTimestamps} xScale={xScale} yScale={yScale} connectionType="moq" />
+                <Marks latencies={quicLatencies} timestamps={normalizedQuicTimestamps} xScale={xScale} yScale={yScale} connectionType="quic" popupContainerRef={popupContainerRef} />
+                <Marks latencies={moqLatencies} timestamps={normalizedMoqTimestamps} xScale={xScale} yScale={yScale} connectionType="moq" popupContainerRef={popupContainerRef} />
+                <g ref={popupContainerRef} className="popup-container" />
             </g>
         </svg>
     );

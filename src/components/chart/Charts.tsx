@@ -12,8 +12,15 @@ export default function Charts({ network }: ChartsProps) {
     const [showQuicData, setShowQuicData] = useState(true);
     const [showMoqData, setShowMoqData] = useState(true);
 
+    const title = <h3 className="block mt-5 mb-2 text-md font-medium text-gray-900 dark:text-white">Latency charts</h3>;
+
     if (network.connections.length === 0) {
-        return <Note>There are no connections</Note>;
+        return (
+            <>
+                {title}
+                <Note>There are no connections</Note>
+            </>
+        );
     }
 
     const charts: ReactNode[] = [];
@@ -23,7 +30,7 @@ export default function Charts({ network }: ChartsProps) {
 
     return (
         <>
-            <h3 className="block mt-5 mb-2 text-md font-medium text-gray-900 dark:text-white">Latency charts</h3>
+            {title}
             <ProtocolToggle show={charts.length > 0} showQuic={showQuicData} showMoq={showMoqData} handleQuicToggle={onQuicToggle} handleMoqToggle={onMoqToggle} />
             <div className="flex flex-wrap">
                 {charts}

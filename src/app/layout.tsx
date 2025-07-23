@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import { FilesProvider } from "@/contexts/FilesContext";
+import { ConnectionProvider } from "@/contexts/ConnectionsContext";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -25,7 +26,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}>
                 <Header />
                 <FilesProvider>
-                    <div className="max-w-screen-xl mx-auto p-4">{children}</div>
+                    <ConnectionProvider>
+                        <div className="max-w-screen-xl mx-auto p-4">{children}</div>
+                    </ConnectionProvider>
                 </FilesProvider>
             </body>
         </html>

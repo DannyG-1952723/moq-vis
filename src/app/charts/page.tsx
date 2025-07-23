@@ -18,7 +18,7 @@ export default function Page() {
             <main className="flex flex-col row-start-0 sm:items-start w-full">
                 <FileList />
                 <NetworkGraph files={files} activeFiles={activeFiles} network={network} />
-                <Charts network={network} />
+                <Charts numNetworkConnections={network.connections.length} />
             </main>
         </div>
     );

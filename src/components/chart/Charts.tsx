@@ -1,13 +1,17 @@
 import { Connection, Network } from "@/model/Network";
 import Chart from "./Chart";
 import Note from "../Note";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
+import ProtocolToggle from "./ProtocolToggle";
 
 interface ChartsProps {
     network: Network;
 }
 
 export default function Charts({ network }: ChartsProps) {
+    const [showQuicData, setShowQuicData] = useState(true);
+    const [showMoqData, setShowMoqData] = useState(true);
+
     if (network.connections.length === 0) {
         return <Note>There are no connections</Note>;
     }
@@ -15,16 +19,25 @@ export default function Charts({ network }: ChartsProps) {
     const charts: ReactNode[] = [];
 
     const connections = getConnectionPairs(network);
-    connections.forEach((connection, key) => charts.push(<Chart key={key} quicConnection={connection.quicConnection} moqConnection={connection.moqConnection} />));
+    connections.forEach((connection, key) => charts.push(<Chart key={key} showQuicData={showQuicData} showMoqData={showMoqData} quicConnection={connection.quicConnection} moqConnection={connection.moqConnection} />));
 
     return (
         <>
             <h3 className="block mt-5 mb-2 text-md font-medium text-gray-900 dark:text-white">Latency charts</h3>
+            <ProtocolToggle show={charts.length > 0} showQuic={showQuicData} showMoq={showMoqData} handleQuicToggle={onQuicToggle} handleMoqToggle={onMoqToggle} />
             <div className="flex flex-wrap">
                 {charts}
             </div>
         </>
     );
+
+    function onQuicToggle(showQuic: boolean) {
+        setShowQuicData(showQuic);
+    }
+
+    function onMoqToggle(showMoq: boolean) {
+        setShowMoqData(showMoq);
+    }
 }
 
 interface ConnectionPair {

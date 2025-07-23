@@ -13,11 +13,13 @@ const INNER_HEIGHT = HEIGHT - MARGIN.top - MARGIN.bottom;
 
 // At least one of the connections is not undefined
 interface ChartProps {
+    showQuicData: boolean;
+    showMoqData: boolean;
     quicConnection?: Connection;
     moqConnection?: Connection;
 }
 
-export default function Chart({ quicConnection, moqConnection }: ChartProps) {
+export default function Chart({ showQuicData, showMoqData, quicConnection, moqConnection }: ChartProps) {
     const popupContainerRef = useRef<SVGGElement>(null);
 
     const quicTimestamps = quicConnection?.messageEvents.map(event => event.createdEvent.event.time) ?? [];
@@ -50,14 +52,24 @@ export default function Chart({ quicConnection, moqConnection }: ChartProps) {
     const startingConnFileName = quicConnection === undefined ? moqConnection!.startingConn.fileName : quicConnection.startingConn.fileName;
     const acceptingConnFileName = quicConnection === undefined ? moqConnection!.acceptingConn.fileName : quicConnection.acceptingConn.fileName;
 
+    // Calculates everything with both connections in mind in order to not change the scales
+    const quicMarks = showQuicData ?
+        <Marks latencies={quicLatencies} timestamps={normalizedQuicTimestamps} xScale={xScale} yScale={yScale} connectionType="quic" popupContainerRef={popupContainerRef} />
+        :
+        <></>;
+    const moqMarks = showMoqData ?
+        <Marks latencies={moqLatencies} timestamps={normalizedMoqTimestamps} xScale={xScale} yScale={yScale} connectionType="moq" popupContainerRef={popupContainerRef} />
+        :
+        <></>;
+
     return (
         <svg className="flex-shrink-0 mb-5" width={WIDTH} height={HEIGHT}>
             <text fontSize="1.2em" x={WIDTH / 2} y={30} textAnchor="middle">{`Connection ${startingConnFileName} \u2013 ${acceptingConnFileName}`}</text>
             <g transform={`translate(${MARGIN.left}, ${MARGIN.top})`}>
                 <AxisBottom xScale={xScale} width={INNER_WIDTH} height={INNER_HEIGHT} />
                 <AxisLeft yScale={yScale} height={INNER_HEIGHT} />
-                <Marks latencies={quicLatencies} timestamps={normalizedQuicTimestamps} xScale={xScale} yScale={yScale} connectionType="quic" popupContainerRef={popupContainerRef} />
-                <Marks latencies={moqLatencies} timestamps={normalizedMoqTimestamps} xScale={xScale} yScale={yScale} connectionType="moq" popupContainerRef={popupContainerRef} />
+                {quicMarks}
+                {moqMarks}
                 <g ref={popupContainerRef} className="popup-container" />
             </g>
         </svg>

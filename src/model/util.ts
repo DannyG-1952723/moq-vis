@@ -12,6 +12,8 @@ export const HOVER_ARROW_CLASS_NAME = "stroke-gray-800";
 export const NORMAL_ARROW_MARKER = "url(#arrow)";
 export const HOVER_ARROW_MARKER = "url(#hover-arrow)";
 
+export const TICK_MARK_LENGTH = 6;
+
 export class Colors {
     normal: string;
     hover: string;

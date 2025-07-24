@@ -9,8 +9,19 @@ export default function Header() {
     const activeLinkStyling = "block p-0 rounded-sm bg-transparent text-blue-700 dark:text-blue-500 dark:bg-transparent";
     const inactiveLinkStyling = "block p-0 text-gray-900 rounded-sm hover:bg-transparent border-0 hover:text-blue-700 dark:hover:text-blue-500 dark:hover:text-white dark:hover:bg-transparent";
 
-    const links = [{ name: "Files", path: "/" }, { name: "Sequence", path: "/sequence" }];
-    const linkElements = links.map((link) => <li key={link.path}><Link href={link.path} className={pathName === link.path ? activeLinkStyling : inactiveLinkStyling}>{link.name}</Link></li>);
+    const links = [
+        { name: "Files", path: "/" },
+        { name: "Sequence", path: "/sequence" },
+        { name: "Charts", path: "/charts" }
+    ];
+
+    const linkElements = links.map((link) =>
+        <li key={link.path}>
+            <Link href={link.path} className={pathName === link.path ? activeLinkStyling : inactiveLinkStyling}>
+                {link.name}
+            </Link>
+        </li>
+    );
 
     return (
         <nav className="border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-700">

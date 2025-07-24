@@ -32,7 +32,7 @@ export default function Marks({ latencies, timestamps, xScale, yScale, connectio
         <g className={connectionType === "quic" ? "quic-marks" : "moq-marks"}>
             {lines}
             {latencies.map((latency, i) =>
-                <Mark x={xScale(timestamps[i])} y={yScale(latency)} latency={latency} timestamp={timestamps[i]} connectionType={connectionType} popupContainerRef={popupContainerRef} />
+                <Mark key={i} x={xScale(timestamps[i])} y={yScale(latency)} latency={latency} timestamp={timestamps[i]} connectionType={connectionType} popupContainerRef={popupContainerRef} />
             )}
         </g>
     );

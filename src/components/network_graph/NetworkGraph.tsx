@@ -38,6 +38,7 @@ export default function NetworkGraph({ files, activeFiles, network }: NetworkGra
 
     useEffect(() => {
         const zoomBehavior = d3.zoom<SVGSVGElement, unknown>()
+            .scaleExtent([0.25, 8])
             .on("zoom", event => {
                 d3.select(ref.current)
                     .select("g.zoom")

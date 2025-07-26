@@ -136,7 +136,7 @@ export class ArrowProperties {
     }
 
     getIconCoords(isCreatedEvent: boolean): [number, number] {
-        const iconOffset = 8 * (this.arrowStartX < this.arrowEndX ? 1 : -1)
+        const iconOffset = 8 * (this.arrowStartX < this.arrowEndX ? 1 : -5.5);
         let x = 0;
 
         if (isCreatedEvent) {

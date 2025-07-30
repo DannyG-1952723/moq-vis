@@ -13,7 +13,8 @@ export default function FileImport() {
     const files = useFiles();
     const dispatch = useFilesDispatch();
 
-    const demoLogs = ["clock_pub.sqlog", "relay.sqlog", "clock_sub.sqlog"];
+    const clockDemoLogs = ["clock_pub.sqlog", "relay.sqlog", "clock_sub.sqlog"];
+    const clockDemoLogsLoss = ["clock_pub_loss.sqlog", "relay_loss.sqlog", "clock_sub_loss.sqlog"];
 
     const githubPages = process.env.NEXT_PUBLIC_GITHUB_PAGES !== undefined;
 
@@ -23,7 +24,8 @@ export default function FileImport() {
             <Note>Only <InlineCode>.sqlog</InlineCode> files are currently supported</Note>
             <Note>Files won&apos;t be uploaded to the server</Note>
             <h3 className="block mt-5 mb-2 text-md font-medium text-gray-900 dark:text-white">Import demo files</h3>
-            <Button onClick={handleDemoImport}>Import demo files</Button>
+            <Button onClick={handleClockDemoImport}>Import clock demo files</Button>
+            <Button onClick={handleClockLossDemoImport}>Import clock with packet loss demo files</Button>
             <FileList />
         </form>
     );
@@ -37,7 +39,15 @@ export default function FileImport() {
         handleFileImport(event.target.files);
     }
 
-    function handleDemoImport(event: MouseEvent<HTMLButtonElement>) {
+    function handleClockDemoImport(event: MouseEvent<HTMLButtonElement>) {
+        handleDemoImport(event, clockDemoLogs);
+    }
+
+    function handleClockLossDemoImport(event: MouseEvent<HTMLButtonElement>) {
+        handleDemoImport(event, clockDemoLogsLoss);
+    }
+
+    function handleDemoImport(event: MouseEvent<HTMLButtonElement>, demoLogs: string[]) {
         event.preventDefault();
 
         const fetchLogs = async () => {

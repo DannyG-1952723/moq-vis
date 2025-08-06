@@ -1,0 +1,2748 @@
+{
+  "file_schema": "urn:ietf:params:qlog:file:sequential",
+  "serialization_format": "application/qlog+json-seq",
+  "title": "MoQ Clock Logs",
+  "trace": {
+    "title": "Publisher",
+    "description": "Logs taken from the perspective of the publisher",
+    "common_fields": {
+      "time_format": "relative_to_epoch",
+      "reference_time": {
+        "clock_type": "system",
+        "epoch": "1970-01-01T00:00:00Z"
+      },
+      "main_role": "publisher"
+    },
+    "vantage_point": {
+      "name": "clock-pub",
+      "type": "client"
+    },
+    "event_schemas": [
+      "urn:ietf:params:qlog:events:moq-transfork-03",
+      "urn:ietf:params:qlog:events:quic-10"
+    ]
+  }
+}
+{
+  "time": 1754509964817,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "initial",
+      "packet_number": 0,
+      "token": {
+        "raw": {
+          "length": 0
+        }
+      },
+      "length": 1162,
+      "version": "1",
+      "scid": "e4531b811b4c512f",
+      "dcid": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+    },
+    "frames": [
+      {
+        "frame_type": "crypto",
+        "offset": 0,
+        "length": 292
+      },
+      {
+        "frame_type": "padding",
+        "raw": {
+          "length": 849
+        }
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509964902,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "initial",
+      "packet_number": 0,
+      "token": {
+        "raw": {
+          "length": 0
+        }
+      },
+      "length": 120,
+      "version": "1",
+      "scid": "a4a86d50a83f4343",
+      "dcid": "e4531b811b4c512f"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 225.0,
+        "acked_ranges": [
+          [
+            0
+          ]
+        ]
+      },
+      {
+        "frame_type": "crypto",
+        "offset": 0,
+        "length": 90
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509964903,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "handshake",
+      "packet_number": 0,
+      "length": 1029,
+      "version": "1",
+      "scid": "a4a86d50a83f4343",
+      "dcid": "e4531b811b4c512f"
+    },
+    "frames": [
+      {
+        "frame_type": "crypto",
+        "offset": 0,
+        "length": 650
+      },
+      {
+        "frame_type": "padding",
+        "raw": {
+          "length": 358
+        }
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509964904,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 0,
+      "dcid": "e4531b811b4c512f"
+    },
+    "frames": [
+      {
+        "frame_type": "new_connection_id",
+        "sequence_number": 1,
+        "retire_prior_to": 0,
+        "connection_id_length": 8,
+        "connection_id": "febf3da2f337203b",
+        "stateless_reset_token": "5b9ecfefdb92b0b2a496e49be673377e"
+      },
+      {
+        "frame_type": "new_connection_id",
+        "sequence_number": 2,
+        "retire_prior_to": 0,
+        "connection_id_length": 8,
+        "connection_id": "2c2c82af947324fb",
+        "stateless_reset_token": "7a2356f97df84e19702d3075a9bcacb3"
+      },
+      {
+        "frame_type": "new_connection_id",
+        "sequence_number": 3,
+        "retire_prior_to": 0,
+        "connection_id_length": 8,
+        "connection_id": "6f00b98fe5f48444",
+        "stateless_reset_token": "3b9be3c760cd2b891843c7f2f9bd9bcc"
+      },
+      {
+        "frame_type": "new_connection_id",
+        "sequence_number": 4,
+        "retire_prior_to": 0,
+        "connection_id_length": 8,
+        "connection_id": "183a826c272f43a5",
+        "stateless_reset_token": "056586ff3dc965d265ae67b99cede148"
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509964904,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "initial",
+      "packet_number": 1,
+      "token": {
+        "raw": {
+          "length": 0
+        }
+      },
+      "length": 26,
+      "version": "1",
+      "scid": "e4531b811b4c512f",
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 206.0,
+        "acked_ranges": [
+          [
+            0
+          ]
+        ]
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509964904,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "handshake",
+      "packet_number": 0,
+      "length": 1123,
+      "version": "1",
+      "scid": "e4531b811b4c512f",
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 206.0,
+        "acked_ranges": [
+          [
+            0
+          ]
+        ]
+      },
+      {
+        "frame_type": "crypto",
+        "offset": 0,
+        "length": 52
+      },
+      {
+        "frame_type": "padding",
+        "raw": {
+          "length": 1042
+        }
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509964904,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 0,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "new_connection_id",
+        "sequence_number": 1,
+        "retire_prior_to": 0,
+        "connection_id_length": 8,
+        "connection_id": "7f7cd8f385d16f3a",
+        "stateless_reset_token": "8e0286665ec1a4631e167c84cc5a5d92"
+      },
+      {
+        "frame_type": "new_connection_id",
+        "sequence_number": 2,
+        "retire_prior_to": 0,
+        "connection_id_length": 8,
+        "connection_id": "69b250c555f7424b",
+        "stateless_reset_token": "25bb1ac7691b97ea41b5eda3311d3b08"
+      },
+      {
+        "frame_type": "new_connection_id",
+        "sequence_number": 3,
+        "retire_prior_to": 0,
+        "connection_id_length": 8,
+        "connection_id": "775618d392b9b51f",
+        "stateless_reset_token": "cee45274804b223512d40e6351a6ff88"
+      },
+      {
+        "frame_type": "new_connection_id",
+        "sequence_number": 4,
+        "retire_prior_to": 0,
+        "connection_id_length": 8,
+        "connection_id": "cf6d61b1f24088cb",
+        "stateless_reset_token": "55d57ec7b39d3acf5f77e0a9ce02cf47"
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509964904,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 1,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 2,
+        "offset": 0,
+        "length": 31,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509964985,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 1,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "handshake_done"
+      },
+      {
+        "frame_type": "ack",
+        "ack_delay": 81.0,
+        "acked_ranges": [
+          [
+            0,
+            1
+          ]
+        ]
+      },
+      {
+        "frame_type": "crypto",
+        "offset": 0,
+        "length": 162
+      },
+      {
+        "frame_type": "retire_connection_id",
+        "sequence_number": 0
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509964985,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 2,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 3,
+        "offset": 0,
+        "length": 31,
+        "fin": false
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509964985,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 2,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 29.0,
+        "acked_ranges": [
+          [
+            0,
+            2
+          ]
+        ]
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509964985,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 3,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "new_connection_id",
+        "sequence_number": 5,
+        "retire_prior_to": 0,
+        "connection_id_length": 8,
+        "connection_id": "2df5407206aa3470",
+        "stateless_reset_token": "5c0bb62620053b7ddcc969adeed1dfe5"
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509964986,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 4,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 0,
+        "offset": 0,
+        "length": 47,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509965026,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 3,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 29.0,
+        "acked_ranges": [
+          [
+            2,
+            4
+          ]
+        ]
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509965026,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 4,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 0,
+        "offset": 0,
+        "length": 43,
+        "fin": false
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509965026,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 5,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 4,
+        "offset": 0,
+        "length": 3,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509965026,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 6,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 4,
+        "offset": 3,
+        "length": 1,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509965026,
+  "name": "moq-transfork-03:stream_created",
+  "data": {
+    "stream_type": "session"
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509965026,
+  "name": "moq-transfork-03:session_started_created",
+  "data": {
+    "supported_versions": [
+      4278955268
+    ],
+    "extension_ids": [],
+    "tracing_id": 1947777784313160121
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509965027,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 7,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 4,
+        "offset": 4,
+        "length": 18,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509965064,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 8,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 4791.0,
+        "acked_ranges": [
+          [
+            3,
+            4
+          ]
+        ]
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509965110,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 5,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 24.0,
+        "acked_ranges": [
+          [
+            2,
+            7
+          ]
+        ]
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509965110,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 6,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 1,
+        "offset": 0,
+        "length": 3,
+        "fin": false
+      },
+      {
+        "frame_type": "stream",
+        "stream_id": 4,
+        "offset": 0,
+        "length": 9,
+        "fin": false
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509965110,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 8,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 1,
+        "offset": 3,
+        "length": 2,
+        "fin": false
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509965110,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 9,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 20.0,
+        "acked_ranges": [
+          [
+            3,
+            6
+          ],
+          [
+            8
+          ]
+        ]
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509965111,
+  "name": "moq-transfork-03:session_started_parsed",
+  "data": {
+    "selected_version": 4278955268,
+    "extension_ids": []
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509965111,
+  "name": "moq-transfork-03:stream_parsed",
+  "data": {
+    "stream_type": "announced"
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509965111,
+  "name": "moq-transfork-03:announce_please_parsed",
+  "data": {
+    "track_prefix_parts": []
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509965111,
+  "name": "moq-transfork-03:announce_created",
+  "data": {
+    "announce_status": "live",
+    "track_suffix_parts": []
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509965111,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 10,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 1,
+        "offset": 0,
+        "length": 1,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509965112,
+  "name": "moq-transfork-03:announce_created",
+  "data": {
+    "announce_status": "active",
+    "track_suffix_parts": [
+      [
+        "clock2"
+      ]
+    ]
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509965112,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 11,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 1,
+        "offset": 1,
+        "length": 9,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509965193,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 9,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 14.0,
+        "acked_ranges": [
+          [
+            8,
+            11
+          ]
+        ]
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509966213,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 10,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 5,
+        "offset": 0,
+        "length": 17,
+        "fin": false
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509966213,
+  "name": "moq-transfork-03:stream_parsed",
+  "data": {
+    "stream_type": "subscribe"
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509966213,
+  "name": "moq-transfork-03:subscription_started_parsed",
+  "data": {
+    "subscribe_id": 0,
+    "track_path_parts": [
+      "clock2"
+    ],
+    "track_priority": 0,
+    "group_order": 1,
+    "group_min": 0,
+    "group_max": 0
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509966215,
+  "name": "moq-transfork-03:info_created",
+  "data": {
+    "track_priority": 0,
+    "group_latest": 52,
+    "group_order": 1
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509966215,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 12,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 5,
+        "offset": 0,
+        "length": 3,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509966215,
+  "name": "moq-transfork-03:stream_created",
+  "data": {
+    "stream_type": "group"
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509966215,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 13,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 6,
+        "offset": 0,
+        "length": 3,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509966215,
+  "name": "moq-transfork-03:group_created",
+  "data": {
+    "subscribe_id": 0,
+    "group_sequence": 52
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509966215,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 14,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 6,
+        "offset": 3,
+        "length": 1,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509966215,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 17
+    }
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509966215,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 15,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 6,
+        "offset": 4,
+        "length": 2,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509966216,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509966216,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 16,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 6,
+        "offset": 6,
+        "length": 18,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509966216,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509966216,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 17,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 6,
+        "offset": 24,
+        "length": 3,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509966216,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 18,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 6,
+        "offset": 27,
+        "length": 3,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509966244,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 19,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 3796.0,
+        "acked_ranges": [
+          [
+            9,
+            10
+          ]
+        ]
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509966244,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 11,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 11.0,
+        "acked_ranges": [
+          [
+            8,
+            13
+          ]
+        ]
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509966244,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 12,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 27.0,
+        "acked_ranges": [
+          [
+            8,
+            18
+          ]
+        ]
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509967003,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509967003,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 20,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 6,
+        "offset": 30,
+        "length": 3,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509967080,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 13,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 3221.0,
+        "acked_ranges": [
+          [
+            12,
+            20
+          ]
+        ]
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509968015,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509968015,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 21,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 6,
+        "offset": 33,
+        "length": 3,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509968095,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 14,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 3799.0,
+        "acked_ranges": [
+          [
+            12,
+            21
+          ]
+        ]
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509969007,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509969007,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 22,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 6,
+        "offset": 36,
+        "length": 3,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509969069,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 15,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 3226.0,
+        "acked_ranges": [
+          [
+            12,
+            22
+          ]
+        ]
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509970014,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509970014,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 23,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 6,
+        "offset": 39,
+        "length": 3,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509970120,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 16,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 4888.0,
+        "acked_ranges": [
+          [
+            12,
+            23
+          ]
+        ]
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509971007,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509971008,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 24,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 6,
+        "offset": 42,
+        "length": 3,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509971134,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 17,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 3916.0,
+        "acked_ranges": [
+          [
+            12,
+            24
+          ]
+        ]
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509972013,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509972014,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 25,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 6,
+        "offset": 45,
+        "length": 3,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509972091,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 18,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 4125.0,
+        "acked_ranges": [
+          [
+            12,
+            25
+          ]
+        ]
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509973008,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509973009,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 26,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 6,
+        "offset": 48,
+        "length": 3,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509973086,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 19,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 3902.0,
+        "acked_ranges": [
+          [
+            12,
+            26
+          ]
+        ]
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509974013,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509974014,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 27,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 6,
+        "offset": 51,
+        "length": 3,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509974117,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 20,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 5013.0,
+        "acked_ranges": [
+          [
+            12,
+            27
+          ]
+        ]
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509975003,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509975004,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 28,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 6,
+        "offset": 54,
+        "length": 3,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509975132,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 21,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 3864.0,
+        "acked_ranges": [
+          [
+            12,
+            28
+          ]
+        ]
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509976014,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509976014,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 29,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 110256.0,
+        "acked_ranges": [
+          [
+            11,
+            21
+          ]
+        ]
+      },
+      {
+        "frame_type": "stream",
+        "stream_id": 6,
+        "offset": 57,
+        "length": 3,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509976106,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 22,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 4306.0,
+        "acked_ranges": [
+          [
+            29
+          ]
+        ]
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509977006,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509977007,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 30,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 6,
+        "offset": 60,
+        "length": 3,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509977081,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 23,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 3623.0,
+        "acked_ranges": [
+          [
+            29,
+            30
+          ]
+        ]
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509978003,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509978003,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 31,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 6,
+        "offset": 63,
+        "length": 3,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509978082,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 24,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 4503.0,
+        "acked_ranges": [
+          [
+            29,
+            31
+          ]
+        ]
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509979009,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509979010,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 32,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 6,
+        "offset": 66,
+        "length": 3,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509979068,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 25,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 3596.0,
+        "acked_ranges": [
+          [
+            29,
+            32
+          ]
+        ]
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509980005,
+  "name": "moq-transfork-03:stream_created",
+  "data": {
+    "stream_type": "group"
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509980005,
+  "name": "moq-transfork-03:group_created",
+  "data": {
+    "subscribe_id": 0,
+    "group_sequence": 53
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509980005,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 17
+    }
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509980005,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509980005,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 33,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 10,
+        "offset": 0,
+        "length": 27,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509980005,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 34,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 6,
+        "offset": 69,
+        "length": 0,
+        "fin": true
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509980083,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 26,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 23.0,
+        "acked_ranges": [
+          [
+            29,
+            34
+          ]
+        ]
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509981015,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509981015,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 35,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 10,
+        "offset": 27,
+        "length": 3,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509981124,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 27,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 4148.0,
+        "acked_ranges": [
+          [
+            29,
+            35
+          ]
+        ]
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509982004,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509982004,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 36,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 10,
+        "offset": 30,
+        "length": 3,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509982097,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 28,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 4510.0,
+        "acked_ranges": [
+          [
+            29,
+            36
+          ]
+        ]
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509983014,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509983014,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 37,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 10,
+        "offset": 33,
+        "length": 3,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509983124,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 29,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 4476.0,
+        "acked_ranges": [
+          [
+            29,
+            37
+          ]
+        ]
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509984009,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509984009,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 38,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 10,
+        "offset": 36,
+        "length": 3,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509984098,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 30,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 3644.0,
+        "acked_ranges": [
+          [
+            29,
+            38
+          ]
+        ]
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509985002,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509985002,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 39,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 10,
+        "offset": 39,
+        "length": 3,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509985095,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 31,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 4140.0,
+        "acked_ranges": [
+          [
+            29,
+            39
+          ]
+        ]
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509986008,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509986008,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 40,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 10,
+        "offset": 42,
+        "length": 3,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509986084,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 32,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 3474.0,
+        "acked_ranges": [
+          [
+            29,
+            40
+          ]
+        ]
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509987013,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509987013,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 41,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 116159.0,
+        "acked_ranges": [
+          [
+            22,
+            32
+          ]
+        ]
+      },
+      {
+        "frame_type": "stream",
+        "stream_id": 10,
+        "offset": 45,
+        "length": 3,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509987123,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 33,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 4148.0,
+        "acked_ranges": [
+          [
+            41
+          ]
+        ]
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509988009,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509988009,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 42,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 10,
+        "offset": 48,
+        "length": 3,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509988103,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 34,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 4809.0,
+        "acked_ranges": [
+          [
+            41,
+            42
+          ]
+        ]
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509989003,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509989003,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 43,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 10,
+        "offset": 51,
+        "length": 3,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509989111,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 35,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 3907.0,
+        "acked_ranges": [
+          [
+            41,
+            43
+          ]
+        ]
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509990009,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509990010,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 44,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 10,
+        "offset": 54,
+        "length": 3,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509990103,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 36,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 4347.0,
+        "acked_ranges": [
+          [
+            41,
+            44
+          ]
+        ]
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509991005,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509991005,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 45,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 10,
+        "offset": 57,
+        "length": 3,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509991079,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 37,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 3538.0,
+        "acked_ranges": [
+          [
+            41,
+            45
+          ]
+        ]
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509992017,
+  "name": "moq-transfork-03:frame_created",
+  "data": {
+    "payload": {
+      "length": 2
+    }
+  },
+  "group_id": "1947777784313160121"
+}
+{
+  "time": 1754509992017,
+  "name": "quic-10:packet_sent",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 46,
+      "dcid": "a4a86d50a83f4343"
+    },
+    "frames": [
+      {
+        "frame_type": "stream",
+        "stream_id": 10,
+        "offset": 60,
+        "length": 3,
+        "fin": false
+      }
+    ],
+    "is_mtu_probe_packet": false
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}
+{
+  "time": 1754509992071,
+  "name": "quic-10:packet_received",
+  "data": {
+    "header": {
+      "quic_bit": true,
+      "packet_type": "1RTT",
+      "packet_number": 38,
+      "dcid": "7f7cd8f385d16f3a"
+    },
+    "frames": [
+      {
+        "frame_type": "ack",
+        "ack_delay": 3819.0,
+        "acked_ranges": [
+          [
+            41,
+            46
+          ]
+        ]
+      }
+    ]
+  },
+  "group_id": "8e5000461f1df88b4c1f575a5e9e3a9b7b22a94f"
+}

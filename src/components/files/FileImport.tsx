@@ -15,6 +15,7 @@ export default function FileImport() {
 
     const clockDemoLogs = ["clock_pub.sqlog", "relay.sqlog", "clock_sub.sqlog"];
     const clockDemoLogsLoss = ["clock_pub_loss.sqlog", "relay_loss.sqlog", "clock_sub_loss.sqlog"];
+    const largeClockDemoLogs = ["clock1_pub.sqlog", "clock2_pub.sqlog", "clocks_relay1.sqlog", "clocks_relay2.sqlog", "clock1_sub1.sqlog", "clock1_sub2.sqlog", "clock2_sub.sqlog"];
 
     const githubPages = process.env.NEXT_PUBLIC_GITHUB_PAGES !== undefined;
 
@@ -26,6 +27,7 @@ export default function FileImport() {
             <h3 className="block mt-5 mb-2 text-md font-medium text-gray-900 dark:text-white">Import demo files</h3>
             <Button onClick={handleClockDemoImport}>Import clock demo files</Button>
             <Button onClick={handleClockLossDemoImport}>Import clock with packet loss demo files</Button>
+            <Button onClick={handleLargeClockDemoImport}>Import large clock demo files</Button>
             <FileList />
         </form>
     );
@@ -45,6 +47,10 @@ export default function FileImport() {
 
     function handleClockLossDemoImport(event: MouseEvent<HTMLButtonElement>) {
         handleDemoImport(event, clockDemoLogsLoss);
+    }
+
+    function handleLargeClockDemoImport(event: MouseEvent<HTMLButtonElement>) {
+        handleDemoImport(event, largeClockDemoLogs);
     }
 
     function handleDemoImport(event: MouseEvent<HTMLButtonElement>, demoLogs: string[]) {

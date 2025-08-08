@@ -38,8 +38,11 @@ export default function HalfMessageEventArrow({ event, x1, y1, x2, y2, colors, i
 
     const shortName = event.event.getShortName();
 
-    const [iconX, iconY] = arrow.getIconCoords(isCreatedEvent);
-    const icon = isCreatedEvent ? <Close x={iconX} y={iconY - iconSize / 2} width={iconSize} height={iconSize} color={iconColor} /> : <QuestionMark x={iconX} y={iconY - iconSize / 2} width={iconSize - 8} height={iconSize - 8} fill={iconColor} />;
+    const [iconX, iconY] = arrow.getIconCoords(isCreatedEvent, !isCreatedEvent);
+    const icon = isCreatedEvent ?
+        <Close x={iconX} y={iconY - iconSize / 2} width={iconSize} height={iconSize} color={iconColor} />
+        :
+        <QuestionMark x={iconX} y={iconY - iconSize / 2} width={iconSize - 8} height={iconSize - 8} fill={iconColor} />;
 
     return (
         <>

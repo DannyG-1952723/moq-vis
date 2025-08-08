@@ -135,8 +135,13 @@ export class ArrowProperties {
         return [x, y];
     }
 
-    getIconCoords(isCreatedEvent: boolean): [number, number] {
-        const iconOffset = 8 * (this.arrowStartX < this.arrowEndX ? 1 : -5.5);
+    getIconCoords(isCreatedEvent: boolean, isQuestionMarkIcon: boolean): [number, number] {
+        let iconOffset = 8 * (this.arrowStartX < this.arrowEndX ? 1 : -5.5);
+
+        if (isQuestionMarkIcon) {
+            iconOffset = 8 * (this.arrowStartX < this.arrowEndX ? 4.5 : -1);
+        }
+
         let x = 0;
 
         if (isCreatedEvent) {
